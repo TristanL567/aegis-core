@@ -1,6 +1,8 @@
 # Consuming This Library
 
-External runtimes should treat this repository as a canonical prompt and contract library.
+External runtimes should treat this repository as the canonical Aegis framework
+source for prompts, contracts, documentation, execution guidance, and validation
+tools.
 
 ## Consumption Pattern
 
@@ -12,22 +14,30 @@ External runtimes should treat this repository as a canonical prompt and contrac
 6. Return the validator result to the `master`.
 7. Ask the human for approval only through the `master`.
 
-## Canonical vs Derived
+## Canonical vs Local Runtime
 
 Canonical content in this repo:
 
 - role prompts,
 - handoff contract,
 - validator policy,
-- provider adapter notes.
+- provider adapter notes,
+- provider-agnostic execution and operator guidance,
+- validation and maintenance tools.
 
-Derived content in an execution runtime:
+Local or provider-specific runtime content can still be derived outside the
+canonical framework when needed:
 
 - orchestration scripts,
 - provider-specific wrappers,
 - operator playbooks,
 - state tracking,
 - artifact persistence.
+
+Execution guidance should be documented in this repo under a planned dedicated
+in-repo execution area. The existing `templates/aegis-execution/` scaffold
+remains in place for now; this document does not imply files have moved or that a
+separate execution repository is required.
 
 ## Runtime Expectations
 

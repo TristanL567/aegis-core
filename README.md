@@ -1,8 +1,8 @@
 # Aegis Core Skill Library
 
-This repository is the canonical source of truth for a portable swarm skill library.
-It stores provider-agnostic role prompts, shared contracts, and adapter notes that can
-be consumed by an external execution runtime.
+This repository is the canonical source of truth for the Aegis swarm framework.
+It stores provider-agnostic role prompts, shared contracts, framework docs,
+execution guidance, and validation tools in one place.
 
 ## Core Model
 
@@ -17,8 +17,9 @@ Codex, Claude Code, and Antigravity without changing the core prompt text.
 
 - `skills/`: canonical skill definitions, one skill per folder.
 - `contracts/`: shared handoff and output contract for all skills.
-- `docs/`: library-level guidance for roles, gating, adapters, and tests.
-- `templates/aegis-execution/`: scaffold for the separate execution/docs repo.
+- `docs/`: framework-level guidance for roles, gating, adapters, tests, and execution.
+- planned in-repo execution area: dedicated guidance for operating the swarm across providers.
+- `templates/aegis-execution/`: existing scaffold retained in place for now; it is not the required starting point for a separate repository.
 - `tools/`: validation utilities for discovery and frontmatter checks.
 
 ## Canonical Contract
@@ -54,14 +55,17 @@ Allowed statuses are:
 Validators are blocking by default. A master can only override a validator finding when
 the human explicitly approves the override.
 
-## Separate Execution Repo
+## Execution Guidance
 
-This repo intentionally does not implement a runtime. Use the scaffold in
-`templates/aegis-execution/` as the starting point for a second repository that:
+This repo owns canonical execution guidance as part of the framework. Runtime
+implementation can still be provider-specific, but the operator guidance,
+orchestration expectations, and execution documentation should live in this repo
+under a dedicated in-repo execution area.
 
-- documents the orchestration loop,
-- explains how to execute the swarm in each provider,
-- and contains starter templates/configuration for Codex, Claude Code, and Antigravity.
+The current `templates/aegis-execution/` scaffold remains in place for now. Do
+not treat it as a required separate repository, and do not assume files have been
+moved. Future work should clarify the internal boundary across `contracts/`,
+`skills/`, `docs/`, the dedicated execution guidance area, and `tools/`.
 
 ## Validation
 

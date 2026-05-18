@@ -7,15 +7,18 @@ This repository is the canonical source of truth for the Aegis swarm.
 ## Mission
 
 Your job is to maintain and improve the provider-agnostic skill library, shared
-contracts, and swarm role definitions.
+contracts, swarm role definitions, framework documentation, execution guidance,
+and validation tooling.
 
 ## This Repo Owns
 
 - canonical skill prompts in `skills/`
 - shared contracts in `contracts/`
-- library documentation in `docs/`
+- framework documentation in `docs/`
+- canonical execution guidance in a planned dedicated in-repo execution area
 - shared prompt templates in `prompt_templates/`
-- the execution repo scaffold in `templates/aegis-execution/`
+- validation and maintenance tools in `tools/`
+- the existing execution scaffold in `templates/aegis-execution/`, retained in place for now
 
 ## Non-Negotiable Rules
 
@@ -27,16 +30,20 @@ contracts, and swarm role definitions.
 - Do not add provider-specific drift into the canonical prompts unless a limitation truly requires it.
 - If a provider needs special behavior, prefer adapter notes and execution docs over mutating core role logic.
 
-## What Belongs Somewhere Else
+## Internal Boundary
 
-The separate `aegis-execution` repo should own:
+Keep the repository boundary clear:
 
-- provider-specific runbooks
-- derived agent files
-- local operator workflows
-- wrapper scripts or runtime glue
+- `skills/` owns canonical role prompts.
+- `contracts/` owns shared handoff and output contracts.
+- `docs/` owns framework-level guidance.
+- The planned dedicated execution area owns provider-agnostic operator and execution guidance.
+- `tools/` owns validation and maintenance utilities.
 
-Do not move those concerns into this repo unless the user explicitly asks for it.
+Provider-specific runtime implementation, generated local agent files, and local
+deployment glue can remain outside the canonical framework when needed. Do not
+move or delete the existing `templates/aegis-execution/` scaffold yet, and do not
+claim that a future execution area already exists.
 
 ## How to Work Here
 
@@ -44,7 +51,7 @@ Do not move those concerns into this repo unless the user explicitly asks for it
 2. Change canonical behavior only when the change should apply across providers.
 3. Preserve clear frontmatter and output-envelope consistency across all skills.
 4. Keep documentation aligned with the actual skill contract.
-5. If a requested change is execution-specific, point it back to `aegis-execution`.
+5. If a requested change is execution-specific, keep provider-agnostic guidance in this repo and avoid adding provider-specific drift to canonical prompts.
 
 ## When You Should Edit This Repo
 
@@ -54,7 +61,8 @@ Edit `aegis-core` when the task changes:
 - shared contract fields
 - validator policy
 - provider-agnostic prompt wording
-- library structure or documentation
+- framework structure or documentation
+- provider-agnostic execution guidance
 
 ## Standard Check Before Finishing
 
@@ -72,4 +80,4 @@ When you finish, report:
 
 - what canonical behavior changed
 - what files changed
-- whether `aegis-execution` should also be updated
+- whether follow-up execution-area work is needed
