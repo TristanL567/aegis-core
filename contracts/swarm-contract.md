@@ -2,6 +2,8 @@
 
 This document defines the portable contract that every skill in this repository follows.
 Execution runtimes should treat this document as the interface between roles.
+Ticket-based execution must also follow the canonical ticket contract in
+`contracts/ticket-contract.md`.
 
 ## Input Envelope
 
@@ -57,3 +59,5 @@ Every skill should return the following fields in a structured, easy-to-parse sh
 - `worker` roles do not self-approve.
 - `validator` roles do not implement new features as part of review.
 - Cross-domain work should be rerouted instead of silently absorbed by the current role.
+- Ticket workers execute only the assigned ticket and must honor the ticket's
+  declared `allowed_areas`, `must_not_touch`, `requirements`, and `non_goals`.
