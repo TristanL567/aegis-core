@@ -1,0 +1,24 @@
+# Example completion report. Canonical field definitions live in contracts/ticket-contract.md.
+status: completed
+summary: Added the requested provider-neutral execution template and verified it remains within ticket scope.
+artifacts:
+  - execution/templates/workflow.example.yaml
+findings:
+  - No boundary conflicts found.
+next_recommended_role: validator
+changed_files:
+  - execution/templates/workflow.example.yaml
+verification:
+  commands:
+    - command: git diff -- execution/templates/
+      result: passed
+      notes: Reviewed the scoped diff and confirmed only allowed files changed.
+    - command: py -3.10 .\tools\validate_skill_library.py
+      result: passed
+      notes: Skill library validator completed successfully.
+  manual:
+    required: true
+    status: completed
+    steps:
+      - Confirmed the template is provider-neutral.
+      - Confirmed all changed files are inside the allowed areas.

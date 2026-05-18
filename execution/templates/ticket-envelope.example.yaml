@@ -1,0 +1,34 @@
+# Example ticket envelope. Canonical field definitions live in contracts/ticket-contract.md.
+ticket_id: EXAMPLE-TICKET-001
+goal: Add a provider-neutral execution template for a bounded workflow.
+dependencies:
+  - EXAMPLE-TICKET-000 completed
+allowed_areas:
+  - execution/templates/
+must_not_touch:
+  - contracts/
+  - docs/
+  - skills/
+  - templates/
+  - execution/prompts/
+  - execution/runbooks/
+requirements:
+  - Keep the template usable across current and future execution providers.
+  - Follow the repository's existing naming and formatting conventions.
+  - Report any scope conflict before modifying restricted areas.
+non_goals:
+  - Do not change canonical contracts.
+  - Do not add provider-specific execution behavior.
+  - Do not stage, commit, push, or open pull requests unless explicitly required.
+acceptance_criteria:
+  - The template includes all required ticket fields from the canonical contract.
+  - The template can be understood without provider-specific runbooks.
+  - Verification guidance is explicit and scoped to the allowed areas.
+manual_verification_required: true
+manual_verification_steps:
+  - Confirm the template is provider-neutral.
+  - Confirm all changed files are inside the allowed areas.
+verification_commands:
+  - git diff -- execution/templates/
+  - py -3.10 .\tools\validate_skill_library.py
+completion_report_required: true
