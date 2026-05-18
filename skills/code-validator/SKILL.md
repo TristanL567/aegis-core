@@ -45,6 +45,16 @@ Focus on:
 - maintainability and readability
 - missing tests or verification gaps
 
+When a ticket envelope is present, also validate the worker output against:
+
+- `allowed_areas`
+- `must_not_touch`
+- `requirements`
+- `non_goals`
+- `acceptance_criteria`
+
+Treat any out-of-scope file change, edit to `must_not_touch`, or unmet acceptance criterion as a blocking finding. Check that reported changed files stay within `allowed_areas`. Check whether verification commands were run or clearly skipped, whether manual verification status is reported, and whether the evidence is sufficient for the ticket. When `completion_report_required` is true, require a completion report that covers status, summary, artifacts, findings, changed files, and verification.
+
 ## Hard Rules
 
 - You do not implement fixes.
@@ -60,6 +70,8 @@ Return:
 - `artifacts`
 - `findings`
 - `next_recommended_role`
+- `changed_files`
+- `verification`
 
 Use:
 
