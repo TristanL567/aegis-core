@@ -1,13 +1,13 @@
 # Example completion report. Canonical field definitions live in contracts/ticket-contract.md.
 status: completed
-summary: Added the requested provider-neutral execution template and verified it remains within ticket scope.
+summary: Updated execution documentation and verified it remains within ticket scope.
 artifacts:
-  - execution/templates/workflow.example.yaml
+  - execution/templates/completion-report.example.yaml
 findings:
   - No boundary conflicts found.
 next_recommended_role: validator
 changed_files:
-  - execution/templates/workflow.example.yaml
+  - execution/templates/completion-report.example.yaml
 verification:
   commands:
     - command: git diff -- execution/templates/
@@ -20,5 +20,5 @@ verification:
     required: true
     status: completed
     steps:
-      - Confirmed the template is provider-neutral.
+      - Confirmed the completion report example follows the contract shape.
       - Confirmed all changed files are inside the allowed areas.

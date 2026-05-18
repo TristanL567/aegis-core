@@ -1,5 +1,10 @@
 # Execution Templates
 
-This directory will contain reusable execution templates and apply-to-project material.
+This directory contains reusable execution templates for ticket-based AEGIS workflows.
 
-Final template content is intentionally deferred to later tickets. Existing material under `templates/aegis-execution/` is not migrated, copied, moved, or deleted by this placeholder.
+Current templates:
+
+- `ticket-envelope.example.yaml`: example ticket envelope shape for dispatching scoped work.
+- `completion-report.example.yaml`: example completion report shape for closing a ticket.
+
+Canonical field definitions remain in `contracts/ticket-contract.md`. These templates support execution prompts and runbooks without redefining the contract.

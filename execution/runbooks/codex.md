@@ -21,7 +21,7 @@ Every Codex call should include:
 - **Prior artifacts**: only the relevant master decision, worker output, validator findings, changed-file list, or verification evidence needed for the current phase.
 - **Output envelope instruction**: an explicit request to return `status`, `summary`, `artifacts`, `findings`, and `next_recommended_role`.
 
-Reusable envelope examples and provider-neutral execution shapes may be added under `execution/templates/`. Until such templates exist, keep the same fields explicit in the prompt rather than relying on implicit context.
+Reusable envelope examples live under `execution/templates/`. Keep required fields explicit in prompts rather than relying on implicit context.
 
 ## Ticket-Based Execution
 
