@@ -18,8 +18,7 @@ Codex, Claude Code, and Antigravity without changing the core prompt text.
 - `skills/`: canonical skill definitions, one skill per folder.
 - `contracts/`: shared handoff and output contract for all skills.
 - `docs/`: framework-level guidance for roles, gating, adapters, tests, and execution.
-- planned in-repo execution area: dedicated guidance for operating the swarm across providers.
-- `templates/aegis-execution/`: existing scaffold retained in place for now; it is not the required starting point for a separate repository.
+- `execution/`: dedicated guidance, prompts, and templates for operating the swarm across providers.
 - `tools/`: validation utilities for discovery and frontmatter checks.
 
 ## Canonical Contract
@@ -60,12 +59,12 @@ the human explicitly approves the override.
 This repo owns canonical execution guidance as part of the framework. Runtime
 implementation can still be provider-specific, but the operator guidance,
 orchestration expectations, and execution documentation should live in this repo
-under a dedicated in-repo execution area.
+under `execution/`.
 
-The current `templates/aegis-execution/` scaffold remains in place for now. Do
-not treat it as a required separate repository, and do not assume files have been
-moved. Future work should clarify the internal boundary across `contracts/`,
-`skills/`, `docs/`, the dedicated execution guidance area, and `tools/`.
+The `execution/` area owns provider-agnostic runbooks, launch prompts, ticket
+templates, clean-commit guidance, and apply-to-project guidance. The internal
+boundary remains split across `contracts/`, `skills/`, `docs/`, `execution/`,
+and `tools/`.
 
 ## Validation
 

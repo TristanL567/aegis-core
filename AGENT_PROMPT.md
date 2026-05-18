@@ -15,10 +15,9 @@ and validation tooling.
 - canonical skill prompts in `skills/`
 - shared contracts in `contracts/`
 - framework documentation in `docs/`
-- canonical execution guidance in a planned dedicated in-repo execution area
+- canonical execution guidance in `execution/`
 - shared prompt templates in `prompt_templates/`
 - validation and maintenance tools in `tools/`
-- the existing execution scaffold in `templates/aegis-execution/`, retained in place for now
 
 ## Non-Negotiable Rules
 
@@ -37,13 +36,11 @@ Keep the repository boundary clear:
 - `skills/` owns canonical role prompts.
 - `contracts/` owns shared handoff and output contracts.
 - `docs/` owns framework-level guidance.
-- The planned dedicated execution area owns provider-agnostic operator and execution guidance.
+- `execution/` owns provider-agnostic operator and execution guidance.
 - `tools/` owns validation and maintenance utilities.
 
 Provider-specific runtime implementation, generated local agent files, and local
-deployment glue can remain outside the canonical framework when needed. Do not
-move or delete the existing `templates/aegis-execution/` scaffold yet, and do not
-claim that a future execution area already exists.
+deployment glue can remain outside the canonical framework when needed.
 
 ## How to Work Here
 

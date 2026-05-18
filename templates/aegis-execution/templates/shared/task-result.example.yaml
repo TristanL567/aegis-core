@@ -1,7 +1,0 @@
-status: completed
-summary: Implemented the authenticated account summary endpoint and added backend tests.
-artifacts:
-  - src/api/accounts.ts
-  - tests/accounts.test.ts
-findings: []
-next_recommended_role: validator

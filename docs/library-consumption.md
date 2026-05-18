@@ -34,10 +34,10 @@ canonical framework when needed:
 - state tracking,
 - artifact persistence.
 
-Execution guidance should be documented in this repo under a planned dedicated
-in-repo execution area. The existing `templates/aegis-execution/` scaffold
-remains in place for now; this document does not imply files have moved or that a
-separate execution repository is required.
+Execution guidance is documented in this repo under `execution/`. That area
+contains provider-agnostic runbooks, launch prompts, ticket templates,
+clean-commit guidance, and apply-to-project guidance; this document does not
+require a separate execution repository.
 
 ## Runtime Expectations
 
