@@ -57,7 +57,7 @@ When a ticket envelope is present, also validate the worker output against:
 - `non_goals`
 - `acceptance_criteria`
 
-Treat violations of the ticket envelope or operating discipline as blocking findings. Confirm changed files, verification evidence, manual verification status, and completion-report coverage against `skills/discipline/operating-discipline.md` and `contracts/ticket-contract.md`.
+Treat violations of the ticket envelope or operating discipline as blocking findings. Confirm changed files, verification evidence, manual verification status, and completion-report coverage against `skills/discipline/operating-discipline.md` and `contracts/ticket-contract.md`. When `completion_report_required` is true, require the report to include a complete `human_readability` block with concise evidence, abstraction evidence, a one-paragraph `diff_summary`, valid `layer_touched`, and `layer_separation_preserved: true`.
 
 ## Hard Rules
 

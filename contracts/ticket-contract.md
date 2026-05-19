@@ -59,6 +59,17 @@ report using the swarm output envelope and include these fields:
 - `next_recommended_role`: recommended next role, usually `validator`, `master`, or `human`.
 - `changed_files`: short list of file paths changed by the worker.
 - `verification`: commands run, results observed, and manual verification status.
+- `human_readability`: evidence that the work stayed concise, scoped, and understandable to a human reviewer.
 
 If verification could not be run, the report must say why and identify the
 remaining risk.
+
+The `human_readability` block must include:
+
+- `concise`: `true` when the report and implementation avoid unnecessary detail.
+- `unnecessary_elements_removed`: `true` when unrelated or redundant elements were not added or were removed.
+- `abstraction_added`: boolean indicating whether the worker added a new abstraction.
+- `abstraction_rationale`: short rationale for the abstraction, or `null` when `abstraction_added` is false.
+- `diff_summary`: one-paragraph human-readable explanation of the changed files and intent.
+- `layer_touched`: one of `discipline`, `role`, `procedure`, `meta`, or `infrastructure`.
+- `layer_separation_preserved`: `true` when the work preserved layer boundaries.

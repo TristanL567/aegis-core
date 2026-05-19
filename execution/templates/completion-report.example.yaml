@@ -22,3 +22,11 @@ verification:
     steps:
       - Confirmed the completion report example follows the contract shape.
       - Confirmed all changed files are inside the allowed areas.
+human_readability:
+  concise: true
+  unnecessary_elements_removed: true
+  abstraction_added: false
+  abstraction_rationale: null
+  diff_summary: Updated the completion report example to show the required human-readable evidence fields without changing the surrounding report shape.
+  layer_touched: meta
+  layer_separation_preserved: true
