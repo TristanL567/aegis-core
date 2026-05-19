@@ -19,6 +19,17 @@ REQUIRED_FRONTMATTER = {
     "blocking_rules",
     "provider_notes",
 }
+REQUIRED_PROCEDURAL_FRONTMATTER = {
+    "trigger",
+    "non_trigger",
+    "failure_modes_addressed",
+    "attention_signals",
+    "procedure",
+    "scope_boundary",
+    "composition_points",
+    "verification",
+    "output_contract",
+}
 REQUIRED_OUTPUT_FIELDS = {
     "status",
     "summary",
@@ -87,11 +98,19 @@ def validate_skill(path: Path) -> SkillRecord:
     )
 
 
+def validate_procedural_skill(path: Path) -> None:
+    data = extract_frontmatter(path)
+    missing = REQUIRED_PROCEDURAL_FRONTMATTER - set(data.keys())
+    if missing:
+        raise ValueError(f"missing procedural frontmatter keys: {sorted(missing)}")
+
+
 def main() -> int:
     skill_paths = sorted((SKILLS_DIR / "roles").glob("*/SKILL.md"))
     if not skill_paths:
         print("No skills found.")
         return 1
+    procedural_skill_paths = sorted((SKILLS_DIR / "procedures").glob("*/SKILL.md"))
 
     records: list[SkillRecord] = []
     errors: list[str] = []
@@ -99,6 +118,12 @@ def main() -> int:
     for path in skill_paths:
         try:
             records.append(validate_skill(path))
+        except Exception as exc:  # noqa: BLE001
+            errors.append(f"{path.relative_to(ROOT)}: {exc}")
+
+    for path in procedural_skill_paths:
+        try:
+            validate_procedural_skill(path)
         except Exception as exc:  # noqa: BLE001
             errors.append(f"{path.relative_to(ROOT)}: {exc}")
 
