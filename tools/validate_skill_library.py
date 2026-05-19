@@ -88,7 +88,7 @@ def validate_skill(path: Path) -> SkillRecord:
 
 
 def main() -> int:
-    skill_paths = sorted(SKILLS_DIR.glob("*/SKILL.md"))
+    skill_paths = sorted((SKILLS_DIR / "roles").glob("*/SKILL.md"))
     if not skill_paths:
         print("No skills found.")
         return 1

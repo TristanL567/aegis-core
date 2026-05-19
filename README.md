@@ -1,8 +1,8 @@
 # Aegis Core Skill Library
 
 This repository is the canonical source of truth for the Aegis swarm framework.
-It stores provider-agnostic role prompts, shared contracts, framework docs,
-execution guidance, and validation tools in one place.
+It stores provider-agnostic skills, shared contracts, framework docs, execution
+guidance, and validation tools in one place.
 
 ## Core Model
 
@@ -15,7 +15,10 @@ Codex, Claude Code, and Antigravity without changing the core prompt text.
 
 ## Repository Layout
 
-- `skills/`: canonical skill definitions, one skill per folder.
+- `skills/`: canonical skill definitions, split into stable layers.
+- `skills/roles/`: canonical role prompt definitions, one role per folder.
+- `skills/discipline/`: reserved for future discipline-layer skills.
+- `skills/procedures/`: reserved for future procedural skills.
 - `contracts/`: shared handoff and output contract for all skills.
 - `docs/`: framework-level guidance for roles, gating, adapters, tests, and execution.
 - `execution/`: dedicated guidance, prompts, and templates for operating the swarm across providers.
@@ -63,8 +66,8 @@ under `execution/`.
 
 The `execution/` area owns provider-agnostic runbooks, launch prompts, ticket
 templates, clean-commit guidance, and apply-to-project guidance. The internal
-boundary remains split across `contracts/`, `skills/`, `docs/`, `execution/`,
-and `tools/`.
+boundary remains split across `contracts/`, `skills/roles/`,
+`skills/discipline/`, `skills/procedures/`, `docs/`, `execution/`, and `tools/`.
 
 ## Validation
 
@@ -74,5 +77,5 @@ Run the library validator from the repository root:
 py -3.10 .\tools\validate_skill_library.py
 ```
 
-The validator enumerates all skills, checks the required frontmatter, and verifies the
-basic role and handoff contract.
+The validator enumerates role skills under `skills/roles/`, checks the required
+frontmatter, and verifies the basic role and handoff contract.

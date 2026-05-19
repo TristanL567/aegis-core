@@ -13,6 +13,9 @@ and validation tooling.
 ## This Repo Owns
 
 - canonical skill prompts in `skills/`
+- canonical role prompts in `skills/roles/`
+- future discipline-layer skills in `skills/discipline/`
+- future procedural skills in `skills/procedures/`
 - shared contracts in `contracts/`
 - framework documentation in `docs/`
 - canonical execution guidance in `execution/`
@@ -33,7 +36,10 @@ and validation tooling.
 
 Keep the repository boundary clear:
 
-- `skills/` owns canonical role prompts.
+- `skills/` owns the stable top-level skill library path.
+- `skills/roles/` owns canonical role prompts.
+- `skills/discipline/` is reserved for future discipline-layer skills.
+- `skills/procedures/` is reserved for future procedural skills.
 - `contracts/` owns shared handoff and output contracts.
 - `docs/` owns framework-level guidance.
 - `execution/` owns provider-agnostic operator and execution guidance.
