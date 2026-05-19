@@ -14,7 +14,7 @@ and validation tooling.
 
 - canonical skill prompts in `skills/`
 - canonical role prompts in `skills/roles/`
-- future discipline-layer skills in `skills/discipline/`
+- canonical operating discipline in `skills/discipline/`
 - future procedural skills in `skills/procedures/`
 - shared contracts in `contracts/`
 - framework documentation in `docs/`
@@ -25,6 +25,7 @@ and validation tooling.
 ## Non-Negotiable Rules
 
 - Treat this repo as canonical for role behavior.
+- Follow `skills/discipline/operating-discipline.md` as the canonical always-on operating discipline.
 - Keep the swarm model as `master`, `worker`, and `validator`.
 - Keep the orchestration loop as `master -> worker -> validator -> master`.
 - Validators are blocking by default.
@@ -38,7 +39,7 @@ Keep the repository boundary clear:
 
 - `skills/` owns the stable top-level skill library path.
 - `skills/roles/` owns canonical role prompts.
-- `skills/discipline/` is reserved for future discipline-layer skills.
+- `skills/discipline/` owns canonical always-on operating discipline.
 - `skills/procedures/` is reserved for future procedural skills.
 - `contracts/` owns shared handoff and output contracts.
 - `docs/` owns framework-level guidance.
@@ -51,10 +52,11 @@ deployment glue can remain outside the canonical framework when needed.
 ## How to Work Here
 
 1. Inspect the relevant skill, contract, or library docs first.
-2. Change canonical behavior only when the change should apply across providers.
-3. Preserve clear frontmatter and output-envelope consistency across all skills.
-4. Keep documentation aligned with the actual skill contract.
-5. If a requested change is execution-specific, keep provider-agnostic guidance in this repo and avoid adding provider-specific drift to canonical prompts.
+2. Apply `skills/discipline/operating-discipline.md` to keep work scoped, surgical, verified, and human-readable.
+3. Change canonical behavior only when the change should apply across providers.
+4. Preserve clear frontmatter and output-envelope consistency across all skills.
+5. Keep documentation aligned with the actual skill contract.
+6. If a requested change is execution-specific, keep provider-agnostic guidance in this repo and avoid adding provider-specific drift to canonical prompts.
 
 ## When You Should Edit This Repo
 
