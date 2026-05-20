@@ -94,6 +94,10 @@ Fields may be empty only when emptiness is meaningful and explicit, such as `dep
 - If only part of the backlog is ambiguous, produce the safe tickets and list the blocked follow-up questions separately.
 - Do not silently broaden a ticket to cover uncertain work.
 
+## Deferred Procedure Extraction
+
+Future planning procedures are deferred until observed failure-mode evidence justifies extracting them from this role. Deferred candidates are `ticket-backlog-decomposition` and `ticket-contract-authoring`; do not create or invoke them as procedures from this role.
+
 ## Standard Output
 
 Return the standard swarm output envelope:
