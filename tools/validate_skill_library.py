@@ -27,9 +27,11 @@ REQUIRED_PROCEDURAL_FRONTMATTER = {
     "procedure",
     "scope_boundary",
     "composition_points",
+    "reference_pointers",
     "verification",
     "output_contract",
 }
+REQUIRED_REFERENCE_POINTER_KEYS = {"ref", "section", "open_when"}
 REQUIRED_OUTPUT_FIELDS = {
     "status",
     "summary",
@@ -39,6 +41,9 @@ REQUIRED_OUTPUT_FIELDS = {
 }
 ALLOWED_ROLES = {"master", "worker", "validator"}
 ALLOWED_HANDOFFS = {"master", "worker", "validator", "human"}
+PROCEDURAL_CLOSET_LINE_BUDGET = 200
+REFERENCE_INDEX_LINE_BUDGET = 120
+REFERENCE_SECTION_LINE_BUDGET = 150
 
 
 @dataclass
@@ -63,6 +68,10 @@ def extract_frontmatter(path: Path) -> dict:
     if not isinstance(data, dict):
         raise ValueError("frontmatter did not parse into a mapping")
     return data
+
+
+def line_count(path: Path) -> int:
+    return len(path.read_text(encoding="utf-8").splitlines())
 
 
 def validate_skill(path: Path) -> SkillRecord:
@@ -99,10 +108,113 @@ def validate_skill(path: Path) -> SkillRecord:
 
 
 def validate_procedural_skill(path: Path) -> None:
+    lines = line_count(path)
+    if lines > PROCEDURAL_CLOSET_LINE_BUDGET:
+        raise ValueError(
+            "exceeds closet budget: "
+            f"{lines} lines > {PROCEDURAL_CLOSET_LINE_BUDGET}"
+        )
+
     data = extract_frontmatter(path)
     missing = REQUIRED_PROCEDURAL_FRONTMATTER - set(data.keys())
     if missing:
         raise ValueError(f"missing procedural frontmatter keys: {sorted(missing)}")
+
+    pointers = data["reference_pointers"]
+    if not isinstance(pointers, list):
+        raise ValueError("reference_pointers must be a list")
+
+    for index, pointer in enumerate(pointers):
+        if not isinstance(pointer, dict):
+            raise ValueError(f"reference_pointers[{index}] must be a mapping")
+
+        missing_pointer_keys = REQUIRED_REFERENCE_POINTER_KEYS - set(pointer.keys())
+        if missing_pointer_keys:
+            raise ValueError(
+                "reference_pointers["
+                f"{index}] missing keys: {sorted(missing_pointer_keys)}"
+            )
+
+        ref = pointer["ref"]
+        section = pointer["section"]
+        open_when = pointer["open_when"]
+        if not all(isinstance(value, str) and value for value in (ref, section, open_when)):
+            raise ValueError(
+                f"reference_pointers[{index}] ref, section, and open_when must be non-empty strings"
+            )
+
+        reference_dir = SKILLS_DIR / "references" / ref
+        if not reference_dir.is_dir():
+            raise ValueError(
+                f"unresolved reference pointer: ref '{ref}' does not exist"
+            )
+
+        section_path = reference_dir / "sections" / f"{section}.md"
+        if not section_path.is_file():
+            raise ValueError(
+                "unresolved reference pointer: "
+                f"'{ref}/{section}' does not resolve to sections/{section}.md"
+            )
+
+
+def extract_sections_table_ids(readme_path: Path) -> list[str]:
+    lines = readme_path.read_text(encoding="utf-8").splitlines()
+    for index, line in enumerate(lines):
+        if line.strip() != "## Sections":
+            continue
+
+        table_ids: list[str] = []
+        for table_line in lines[index + 1 :]:
+            stripped = table_line.strip()
+            if not stripped:
+                if table_ids:
+                    break
+                continue
+            if not stripped.startswith("|"):
+                if table_ids:
+                    break
+                continue
+
+            cells = [cell.strip() for cell in stripped.strip("|").split("|")]
+            if len(cells) < 3:
+                continue
+            if cells[0] in {"id", "---"}:
+                continue
+            table_ids.append(cells[0])
+
+        if table_ids:
+            return table_ids
+        raise ValueError("Sections table has no section ids")
+
+    raise ValueError("missing Sections table")
+
+
+def validate_reference(readme_path: Path) -> None:
+    lines = line_count(readme_path)
+    if lines > REFERENCE_INDEX_LINE_BUDGET:
+        raise ValueError(
+            "reference index exceeds budget: "
+            f"{lines} lines > {REFERENCE_INDEX_LINE_BUDGET}"
+        )
+
+    section_ids = extract_sections_table_ids(readme_path)
+    reference_dir = readme_path.parent
+    for section_id in section_ids:
+        section_path = reference_dir / "sections" / f"{section_id}.md"
+        if not section_path.is_file():
+            raise ValueError(
+                f"Sections table id '{section_id}' does not resolve to sections/{section_id}.md"
+            )
+
+    sections_dir = reference_dir / "sections"
+    if sections_dir.exists():
+        for section_path in sorted(sections_dir.glob("*.md")):
+            section_lines = line_count(section_path)
+            if section_lines > REFERENCE_SECTION_LINE_BUDGET:
+                raise ValueError(
+                    f"{section_path.relative_to(ROOT)} exceeds section budget: "
+                    f"{section_lines} lines > {REFERENCE_SECTION_LINE_BUDGET}"
+                )
 
 
 def main() -> int:
@@ -111,6 +223,7 @@ def main() -> int:
         print("No skills found.")
         return 1
     procedural_skill_paths = sorted((SKILLS_DIR / "procedures").glob("*/SKILL.md"))
+    reference_readme_paths = sorted((SKILLS_DIR / "references").glob("*/README.md"))
 
     records: list[SkillRecord] = []
     errors: list[str] = []
@@ -124,6 +237,12 @@ def main() -> int:
     for path in procedural_skill_paths:
         try:
             validate_procedural_skill(path)
+        except Exception as exc:  # noqa: BLE001
+            errors.append(f"{path.relative_to(ROOT)}: {exc}")
+
+    for path in reference_readme_paths:
+        try:
+            validate_reference(path)
         except Exception as exc:  # noqa: BLE001
             errors.append(f"{path.relative_to(ROOT)}: {exc}")
 
