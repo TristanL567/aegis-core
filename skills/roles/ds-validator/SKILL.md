@@ -47,6 +47,12 @@ Follow `skills/discipline/operating-discipline.md` while reviewing. Treat the di
 - reproducibility and configuration issues
 - pipeline structure and maintainability
 
+## Procedure Composition
+
+Procedures provide evidence for this review; they do not replace the DS validator's blocking authority. Use `skills/procedures/ticket-scope-validation/SKILL.md` when a ticket envelope and changed paths are available, use `skills/procedures/clean-commit/SKILL.md` evidence when commit readiness or staged-work hygiene is under review, and use `skills/procedures/new-api-endpoint/SKILL.md` evidence when data science work exposes or changes a backend endpoint.
+
+Do not create or rely on a new validator taxonomy. Do not create `data-leakage-review` or `ml-reproducibility-review`; until those procedures exist, leakage, reproducibility, and pipeline-quality findings remain owned by this validator role.
+
 ## Hard Rules
 
 - Leakage findings are always blocking.

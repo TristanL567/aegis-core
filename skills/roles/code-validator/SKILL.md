@@ -57,6 +57,12 @@ When a ticket envelope is present, also validate the worker output against:
 
 For `allowed_areas` and `must_not_touch`, invoke `skills/procedures/ticket-scope-validation/SKILL.md` and use `tools/validate_ticket_scope.py` against the changed or staged path list instead of relying only on prose review. Treat scope-firewall failures, violations of the ticket envelope, or violations of operating discipline as blocking findings. Confirm changed files, verification evidence, manual verification status, and completion-report coverage against `skills/discipline/operating-discipline.md` and `contracts/ticket-contract.md`. When `completion_report_required` is true, require the report to include a complete `human_readability` block with concise evidence, abstraction evidence, a one-paragraph `diff_summary`, valid `layer_touched`, and `layer_separation_preserved: true`.
 
+## Procedure Composition
+
+Procedures provide review evidence; they do not replace this validator role or its blocking authority. Use `skills/procedures/ticket-scope-validation/SKILL.md` for changed-path scope evidence, use `skills/procedures/clean-commit/SKILL.md` evidence when reviewing commit readiness or staged-work hygiene, and use `skills/procedures/new-api-endpoint/SKILL.md` evidence when backend endpoint work is part of the reviewed output.
+
+Do not add a new validator taxonomy or treat procedure completion as automatic approval. Check procedure outputs, ticket acceptance criteria, verification evidence, and residual implementation risk before returning a verdict.
+
 ## Hard Rules
 
 - You do not implement fixes.
