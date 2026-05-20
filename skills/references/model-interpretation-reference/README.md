@@ -6,33 +6,20 @@ Reference scope: Axis-2 knowledge for interpreting model outputs, including
 uncertainty, feature effects, causal caution, evidence boundaries, and domain
 interpretation limits used by future interpretation procedures.
 
-It is not a procedural skill and is not independently executable. The
-consuming skill is `model-output-interpretation`.
+It is not a procedural skill and is not independently executable.
 
-## Interpretation Knowledge
+## Consuming Skills
 
-- Treat model output as evidence with uncertainty, not as a direct statement of
-  ground truth. Preserve confidence intervals, credible intervals, prediction
-  intervals, calibration evidence, or other uncertainty estimates when present.
-- Distinguish fitted associations from causal claims. Do not imply causality
-  from predictive importance, correlations, coefficients, SHAP values, partial
-  dependence, or counterfactual-style displays unless the study design supports
-  that claim.
-- Explain feature effects in the scale and context of the model output. Name
-  whether effects are marginal, conditional, local, global, linearized,
-  transformed, standardized, or otherwise dependent on modeling assumptions.
-- Keep interpretation tied to the population, time period, sampling frame,
-  label definition, and feature construction used by the model. Note when a
-  conclusion may not transfer to adjacent domains or future data.
-- Surface model limitations that materially affect interpretation, including
-  missingness, leakage risk, proxy variables, class imbalance, extrapolation,
-  weak calibration, sparse segments, or unstable feature attribution.
-- Separate statistical explanation from domain judgment. Domain conclusions
-  should be marked as interpretation bounded by the available evidence, not as
-  policy, clinical, legal, financial, or operational advice by default.
-- Preserve disagreement between metrics, diagnostics, and narrative claims.
-  When evidence conflicts, report the conflict rather than smoothing it into a
-  single confident explanation.
+- `model-output-interpretation`
+
+## Sections
+
+| id | topic | open when |
+| --- | --- | --- |
+| uncertainty-evidence | Uncertainty and model output as evidence. | Open when an interpretation needs uncertainty, intervals, calibration evidence, or evidence-strength boundaries. |
+| causal-caution-feature-effects | Causal caution and feature effect explanations. | Open when an interpretation discusses coefficients, importance, SHAP, partial dependence, or causal-sounding claims. |
+| population-and-limitations | Population, time period, sampling frame, feature construction, and model limitations. | Open when interpretation depends on transferability, data limits, extrapolation, leakage risk, or unstable attribution. |
+| domain-boundaries-and-conflicts | Domain judgment boundaries and conflicting evidence. | Open when an interpretation makes domain, policy, operational, or narrative claims from model evidence. |
 
 ## Out Of Scope
 
