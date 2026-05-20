@@ -34,6 +34,14 @@ The architecture separates orchestration roles, operating discipline, and proced
 
 **Relationship to other layers:** Procedural skills are invoked by orchestration roles and constrained by operating discipline; they compose orthogonally with adjacent procedures instead of bundling multiple concerns into broad skillsets.
 
+## Progressive Disclosure
+
+- **progressive-disclosure rule:** A procedural skill opens reference knowledge only through declared `reference_pointers`; it does not pull an entire reference into the active context.
+- **closet-budget rule:** A procedural `SKILL.md` is a compact closet with a 200-line budget, and detailed domain knowledge belongs in reference drawers rather than inline.
+- **pointer-integrity rule:** Every non-empty `reference_pointers` entry must resolve to an existing reference and section drawer.
+- **empty-pointer honesty rule:** `reference_pointers` is required, but an empty list is correct when a procedure consumes no reference.
+- **indexed-reference rule:** Every reference is an indexed drawer set with a `README.md` Sections table and addressable section files.
+
 ## Doctrinal Constraints
 
 - **existence gate:** No procedural skill is written unless a named failure mode has been observed in real work, because speculative skills dilute attention and create false precision.

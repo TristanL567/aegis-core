@@ -23,6 +23,10 @@ scope_boundary:
   - What this procedure explicitly does not cover.
 composition_points:
   - Adjacent roles, discipline, or procedures this skill composes with.
+reference_pointers:
+  - ref: Reference directory name under skills/references/.
+    section: Addressable section drawer id inside that reference.
+    open_when: The condition under which the agent should open that drawer.
 verification:
   - The closed loop used to check the result where checking is possible.
 output_contract:
@@ -46,6 +50,21 @@ output_contract:
 
 `composition_points` identifies adjacent skills, roles, or discipline constraints that should handle related work. Use this to compose orthogonally instead of bundling concerns.
 
+`reference_pointers` is required and names the reference drawers this procedure may open. Each entry must include `ref`, `section`, and `open_when`: `ref` is the reference directory name, `section` is the section drawer id, and `open_when` is the concrete condition under which the agent should open that drawer. Use `reference_pointers: []` when the procedure genuinely consumes no reference.
+
 `verification` defines how the output is checked. Where direct verification is possible, include a closed loop that can fail and cause revision.
 
 `output_contract` defines the expected final artifact, fields, or reporting shape for the procedure. It should make completion auditable by a downstream role or human reviewer.
+
+## Closet Size Budget
+
+The closet size budget for a procedural `SKILL.md` is at most 200 lines total.
+
+The `procedure` field is a skeleton: it should carry the ordered control flow,
+decision points, and terminal checks needed to execute the situation without
+embedding detailed domain knowledge.
+
+Detailed domain knowledge belongs in reference drawers rather than inline.
+Use `reference_pointers` to point from the compact procedure closet to the
+specific reference sections that should be opened only when their `open_when`
+conditions apply.
