@@ -51,13 +51,11 @@ Focus on:
 
 When a ticket envelope is present, also validate the worker output against:
 
-- `allowed_areas`
-- `must_not_touch`
 - `requirements`
 - `non_goals`
 - `acceptance_criteria`
 
-Treat violations of the ticket envelope or operating discipline as blocking findings. Confirm changed files, verification evidence, manual verification status, and completion-report coverage against `skills/discipline/operating-discipline.md` and `contracts/ticket-contract.md`. When `completion_report_required` is true, require the report to include a complete `human_readability` block with concise evidence, abstraction evidence, a one-paragraph `diff_summary`, valid `layer_touched`, and `layer_separation_preserved: true`.
+For `allowed_areas` and `must_not_touch`, invoke `skills/procedures/ticket-scope-validation/SKILL.md` and use `tools/validate_ticket_scope.py` against the changed or staged path list instead of relying only on prose review. Treat scope-firewall failures, violations of the ticket envelope, or violations of operating discipline as blocking findings. Confirm changed files, verification evidence, manual verification status, and completion-report coverage against `skills/discipline/operating-discipline.md` and `contracts/ticket-contract.md`. When `completion_report_required` is true, require the report to include a complete `human_readability` block with concise evidence, abstraction evidence, a one-paragraph `diff_summary`, valid `layer_touched`, and `layer_separation_preserved: true`.
 
 ## Hard Rules
 
