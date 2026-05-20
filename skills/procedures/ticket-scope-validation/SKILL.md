@@ -34,6 +34,7 @@ composition_points:
   - "Clean-commit composes with this procedure when staged files need a mechanical scope check before commit readiness."
   - "Operating discipline supplies always-on one-ticket boundaries and protected-path behavior."
   - "Master role handles sequencing and remediation routing when the scope firewall rejects a change."
+reference_pointers: []
 verification:
   - "Run a passing example with a changed file inside allowed_areas and confirm the tool exits 0 with a concise success message."
   - "Run a rejecting example with a changed file outside allowed_areas or under must_not_touch and confirm the tool exits nonzero with a clear violation message."

@@ -16,27 +16,38 @@ attention_signals:
   - "Chart source inputs, generated data files, scripts, notebooks, seeds, parameters, and commands needed to reproduce the artifact."
   - "Visual evidence that the exported chart may be blank, clipped, unreadable, stale, or saved to an unexpected path."
   - "Data limitations such as missing data, filtering, aggregation, stale extracts, incomplete coverage, or provisional values that materially affect the artifact."
-  - "Charting-artifact-reference guidance about clear titles, labels, units, source notes, defensible scales, and legibility at the intended export size."
+  - "Reference pointer conditions for chart claim, chart type, context, encoding, scales, styling, and export legibility."
 procedure:
-  - "Confirm the task is specifically producing or exporting a chart artifact, then identify the expected artifact format, destination path, source inputs, and generation path or script."
-  - "Use the charting-artifact-reference as shared chart-artifact knowledge while keeping this procedure focused on artifact production evidence."
-  - "Generate or update the chart through a reproducible script, notebook, command, or documented render path rather than an undocumented manual export when feasible."
-  - "Save the artifact to a stable path and record any supporting data, parameters, seed, command, or source file needed to regenerate it."
-  - "Check that the artifact exists at the reported path after generation and that the completion evidence names that exact path."
-  - "Perform a nonblank visual check or manual visual review appropriate to the artifact format, revising if the artifact is blank, clipped, stale, or visually unusable."
-  - "Add or report a concise data-quality note when known data limitations, filtering, aggregation, stale extracts, or incomplete coverage materially affect the artifact."
-  - "Leave visual-style conformance, chart data-quality investigation, frontend embedding, model interpretation, and broad report writing to their owning procedures or roles."
+  - "Classify the chart artifact request, expected output format, destination path, source inputs, and generation path."
+  - "Open the matching charting reference drawers from reference_pointers when artifact design or export details need reference knowledge."
+  - "Generate or update the artifact through a reproducible script, notebook, command, or documented render path."
+  - "Save the artifact to a stable path and record the generation evidence needed to regenerate it."
+  - "Verify artifact existence, nonblank/manual visual review, and any required data-quality note."
+  - "Route excluded concerns to their owning procedures or roles."
 scope_boundary:
   - "Covers the narrow procedure for producing an auditable chart artifact: generation path, stable artifact path, reproducibility evidence, existence check, nonblank/manual visual review, and data-quality note when limitations affect the artifact."
   - "Does not cover visual-style conformance, brand polish, typography systems, palette approval, accessibility style review, or chart appearance governance."
   - "Does not cover chart data-quality investigation, source-data auditing, missingness diagnosis, outlier analysis, provenance review, or statistical interpretation of the underlying data."
   - "Does not cover model interpretation, frontend chart embedding, dashboard integration, interactive client behavior, broad report writing, or narrative synthesis."
 composition_points:
-  - "charting-artifact-reference supplies shared chart-artifact knowledge for readable labels, units, source notes, defensible scales, encoding choices, and export legibility."
+  - "reference_pointers bind this procedure to charting-artifact-reference drawers for chart claim, encoding, scale, styling, and export legibility knowledge."
   - "Future visual-style-conformance procedure owns appearance, brand, accessibility palette, typography, and visual polish checks beyond nonblank artifact usability."
   - "Future chart-data-quality-investigation procedure owns source-data validation, missingness, outliers, provenance, and data limitation diagnosis beyond noting known artifact limitations."
   - "Future frontend chart embedding procedure owns application integration, dashboard wiring, responsiveness, and client-side rendering behavior."
   - "Future report-writing procedure owns narrative synthesis, report structure, surrounding prose, and non-artifact analytical communication."
+reference_pointers:
+  - ref: charting-artifact-reference
+    section: claim-and-chart-type
+    open_when: "Open when the artifact's intended analytical comparison or chart form needs to be checked."
+  - ref: charting-artifact-reference
+    section: context-and-encoding
+    open_when: "Open when titles, labels, legends, units, source notes, or encodings need reference guidance."
+  - ref: charting-artifact-reference
+    section: scales-and-styling
+    open_when: "Open when scale, transformation, styling, contrast, or readability choices materially affect interpretation."
+  - ref: charting-artifact-reference
+    section: export-legibility
+    open_when: "Open when the artifact is being exported, saved, reused, or inspected at final size."
 verification:
   - "Verify the chart artifact exists at the exact reported output path after generation or export."
   - "Verify the generation path is reproducible by naming the script, notebook, command, parameters, seed, or documented render path used to create the artifact."
@@ -58,4 +69,4 @@ output_contract:
 
 Use this procedure when the work is to generate, export, render, save, or deliver a chart artifact. It keeps the completion evidence centered on the artifact path, the reproducible generation path, a nonblank/manual visual review, and any data-quality note needed for known limitations that materially affect the artifact.
 
-This procedure composes with `charting-artifact-reference` for shared chart-artifact knowledge. It does not own visual-style conformance, chart data-quality investigation, model interpretation, frontend chart embedding, or broad report writing; those concerns belong to adjacent future procedures or roles.
+This procedure uses `reference_pointers` to open only the needed `charting-artifact-reference` drawers. It does not own visual-style conformance, chart data-quality investigation, model interpretation, frontend chart embedding, or broad report writing; those concerns belong to adjacent future procedures or roles.

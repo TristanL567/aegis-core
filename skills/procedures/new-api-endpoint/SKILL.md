@@ -21,14 +21,13 @@ attention_signals:
   - "Authentication, authorization, tenancy, ownership, role checks, or permission language that may indicate an auth-boundary-change concern rather than ordinary endpoint wiring."
   - "Migration files, schema declarations, ORM model changes, generated database artifacts, or persistence constraints that indicate a database-migration concern."
 procedure:
-  - "Confirm the task is specifically adding or changing an API endpoint surface, then identify the endpoint name, method, route path or callable name, owning handler, and caller-visible behavior."
-  - "Separate endpoint surface work from excluded concerns before editing: database schema changes belong to the future database-migration procedure, and auth boundary changes belong to the future auth-boundary-change procedure."
-  - "Define the request contract at the boundary, including accepted parameters, body shape, required fields, validation failures, and any existing framework validator or schema to use."
-  - "Define the response contract, including success status, success payload shape, error status codes, error payload shape, and content type or serializer behavior."
-  - "Wire the route using existing router, controller, handler, middleware, validation, and error-handling patterns already present in the codebase."
-  - "Add focused endpoint tests or update existing endpoint-level tests for the normal case, request validation failure, and relevant response shape or status-code behavior."
-  - "Check that no database schema files, migration files, auth policy files, or permission-boundary behavior changed unless a separate assigned procedure or ticket explicitly owns that work."
-  - "Report the endpoint contract, tests run, request validation coverage, response shape checks, and any excluded concern handed to another procedure or role."
+  - "Classify the task as adding or changing an API endpoint surface and identify the endpoint boundary."
+  - "Separate endpoint surface work from excluded database schema and auth boundary concerns before editing."
+  - "Open the matching backend API pattern drawers from reference_pointers when contracts, validation, errors, compatibility, or test evidence need reference knowledge."
+  - "Define request and response contracts at the endpoint boundary."
+  - "Wire the route using existing framework patterns."
+  - "Add or update focused endpoint tests and endpoint completion evidence."
+  - "Check protected adjacent concerns and report endpoint-owned evidence."
 scope_boundary:
   - "Covers the narrow procedure for adding or changing one API endpoint surface: route registration, handler entry point, request validation, response shape, endpoint-level tests, and completion evidence."
   - "Does not cover database schema changes, migration files, persistence model ownership, seed data, or data backfill work."
@@ -40,6 +39,20 @@ composition_points:
   - "Future auth-boundary-change procedure owns authentication, authorization, tenancy, permission, and access-policy concerns that may be discovered while adding an endpoint."
   - "Ticket-scope-validation can verify that changed files stay inside the ticket envelope before endpoint completion evidence is trusted."
   - "Clean-commit can review staged endpoint files, validation evidence, and commit-message specificity after implementation is complete."
+  - "reference_pointers bind this procedure to backend-api-patterns-reference drawers for endpoint contract, validation, error, compatibility, and test evidence knowledge."
+reference_pointers:
+  - ref: backend-api-patterns-reference
+    section: api-contracts
+    open_when: "Open when endpoint work needs caller-visible request or response contract boundaries."
+  - ref: backend-api-patterns-reference
+    section: validation-and-errors
+    open_when: "Open when endpoint work needs invalid-input, auth, conflict, or server-error behavior guidance."
+  - ref: backend-api-patterns-reference
+    section: idempotency-pagination-compatibility
+    open_when: "Open when endpoint work includes retries, list endpoints, filters, sorting, versioning, or caller compatibility concerns."
+  - ref: backend-api-patterns-reference
+    section: endpoint-test-evidence
+    open_when: "Open when endpoint completion evidence or review needs endpoint-level test coverage expectations."
 verification:
   - "Run the relevant endpoint unit, integration, or API test command for the changed route and report the exact command and result."
   - "Check request validation by testing or contract-checking at least one invalid request for required fields, type or format errors, and rejected unsupported input where applicable."

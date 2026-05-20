@@ -15,26 +15,38 @@ attention_signals:
   - "Narrative claims that use causal language such as caused, due to, drives, explains, impact, effect, or because without supporting design or evidence."
   - "Domain conclusions, policy recommendations, operational decisions, or risk statements that exceed the supplied model evidence."
   - "Uncertainty, segment size, sampling frame, time period, label definition, feature construction, missingness, leakage risk, extrapolation, calibration weakness, or conflicting diagnostics."
-  - "Guidance from skills/references/model-interpretation-reference/README.md about uncertainty, feature effects, causal caution, evidence boundaries, and domain interpretation limits."
+  - "Reference pointer conditions for uncertainty, feature effects, causal caution, evidence boundaries, and domain interpretation limits."
 procedure:
-  - "Confirm the task is interpretation of existing model output rather than model training, calibration, leakage validation, implementation, or broad reporting."
-  - "Read the supplied model artifacts and identify the evidence available for interpretation: outputs, metrics, uncertainty estimates, feature effects, diagnostics, population, time period, and label or target definition."
-  - "Consult skills/references/model-interpretation-reference/README.md for shared interpretation knowledge before drafting or reviewing claims."
-  - "Separate directly supported observations from uncertainty, assumptions, caveats, domain inferences, and unsupported causal explanations."
-  - "Rewrite or flag causal, domain, or operational claims that are not supported by the supplied evidence, using bounded language when only association or predictive evidence is available."
-  - "Preserve conflicting evidence instead of smoothing it into a single confident narrative."
-  - "Record excluded concerns discovered during interpretation, including model training, calibration, leakage validation, ML validation, implementation, chart generation, or report-writing work."
+  - "Classify the task as interpretation of existing model output rather than excluded model, validation, implementation, or reporting work."
+  - "Inventory the supplied model artifacts and available interpretation evidence."
+  - "Open the matching model interpretation drawers from reference_pointers when uncertainty, feature effects, limitations, or domain claims need reference knowledge."
+  - "Separate supported observations from assumptions, caveats, domain inferences, and unsupported causal explanations."
+  - "Rewrite or flag unsupported causal, domain, or operational claims while preserving conflicting evidence."
+  - "Record excluded concerns discovered during interpretation."
 scope_boundary:
   - "Covers evidence-bound interpretation of existing model output, including uncertainty, feature effects, causal caution, unsupported-claim review, and interpretation caveats."
   - "Does not cover model training, model fitting, feature engineering, hyperparameter tuning, or model architecture selection."
   - "Does not cover calibration repair, probability recalibration, threshold tuning, or metric optimization."
   - "Does not cover data leakage validation, train/test split review, reproducibility review, ML validation procedures, implementation work, chart artifact generation, frontend embedding, or broad report writing."
 composition_points:
-  - "skills/references/model-interpretation-reference/README.md supplies Axis-2 knowledge for uncertainty, feature effects, causal caution, and domain interpretation boundaries."
+  - "reference_pointers bind this procedure to model-interpretation-reference drawers for uncertainty, feature effects, causal caution, limitations, and domain boundaries."
   - "Future model-calibration-review procedure owns calibration repair, probability reliability review, and threshold or metric concerns discovered during interpretation."
   - "Future data-leakage-review and ML reproducibility procedures own leakage, split integrity, validation, and reproducibility concerns discovered during interpretation."
   - "Model-interpreter-worker may route applicable interpretation work to this procedure while remaining a fallback for broader or ambiguous model interpretation tasks."
   - "Chart-artifact-generation owns chart artifact creation when interpretation work requires producing or exporting a visualization artifact."
+reference_pointers:
+  - ref: model-interpretation-reference
+    section: uncertainty-evidence
+    open_when: "Open when interpretation needs uncertainty, intervals, calibration evidence, or evidence-strength boundaries."
+  - ref: model-interpretation-reference
+    section: causal-caution-feature-effects
+    open_when: "Open when interpretation discusses coefficients, importance, SHAP, partial dependence, or causal-sounding claims."
+  - ref: model-interpretation-reference
+    section: population-and-limitations
+    open_when: "Open when interpretation depends on transferability, data limits, extrapolation, leakage risk, or unstable attribution."
+  - ref: model-interpretation-reference
+    section: domain-boundaries-and-conflicts
+    open_when: "Open when interpretation makes domain, policy, operational, or narrative claims from model evidence."
 verification:
   - "Perform an evidence check that maps each substantive interpretation claim to supplied model output, diagnostics, uncertainty estimates, feature evidence, or explicitly stated assumptions."
   - "Manually review the final interpretation for unsupported causal claims, smoothed-over conflicts, overstated domain conclusions, and recommendations that exceed the model evidence."
@@ -53,4 +65,4 @@ output_contract:
 
 Use this procedure when the work is to interpret existing model output without unsupported narrative overreach. Keep interpretation evidence-bound: distinguish observed model behavior from causal claims, domain judgment, and operational recommendations.
 
-Consult `skills/references/model-interpretation-reference/README.md` for shared interpretation knowledge. This procedure does not own model training, calibration, leakage validation, ML validation, implementation work, chart artifact generation, or broad report writing.
+Use `reference_pointers` to open only the needed `model-interpretation-reference` drawers. This procedure does not own model training, calibration, leakage validation, ML validation, implementation work, chart artifact generation, or broad report writing.

@@ -39,6 +39,7 @@ composition_points:
   - "The validator role checks the reported evidence and blocks approval when staged files, message content, or validation evidence do not match the ticket envelope."
   - "The master role handles cross-ticket sequencing, role handoffs, and decisions that exceed this procedure's single-ticket boundary."
   - "No adjacent procedure is bundled here; broader scope enforcement remains with operating discipline and validator review unless a separate procedure is explicitly assigned."
+reference_pointers: []
 verification:
   - "Run git status --short and verify unrelated dirty or untracked files are identified and not claimed as ticket-owned."
   - "Run git diff --stat and compare every changed path against the ticket envelope allowed write area and must-not-touch list."
