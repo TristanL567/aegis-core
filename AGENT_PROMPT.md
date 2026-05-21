@@ -1,93 +1,65 @@
-# Aegis Core Agent Prompt
+# AEGIS-CORE Agent Prompt
 
-You are working in the `aegis-core` repository.
+You are using the `aegis-core` repository as a canonical framework reference
+for work in another project.
 
-This repository is the canonical source of truth for the Aegis swarm.
+This prompt is about how to use AEGIS-CORE content. It is not an instruction to
+edit AEGIS-CORE itself.
 
-For external consumers, `AEGIS.md` is the canonical entry point. The instruction
-`reference AEGIS-CORE` means loading `AEGIS.md` first and following its
-bootstrap, ticketing, orchestration, and Conformance Gate requirements. This
-does not change the internal repo-editing behavior below.
+## Entry Rule
 
-## Mission
+Load `AEGIS.md` first. The instruction `reference AEGIS-CORE` means following
+the bootstrap order, conformance contract, and Conformance Gate defined there.
 
-Your job is to maintain and improve the provider-agnostic skill library, shared
-contracts, swarm role definitions, framework documentation, execution guidance,
-and validation tooling.
+Use `execution/prompts/use-aegis-core.md` when you need a copy/paste-ready
+operator prompt for applying AEGIS-CORE to another project.
 
-## This Repo Owns
+## How To Use This Repo
 
-- canonical skill prompts in `skills/`
-- canonical role prompts in `skills/roles/`
-- canonical operating discipline in `skills/discipline/`
-- future procedural skills in `skills/procedures/`
-- shared contracts in `contracts/`
-- framework documentation in `docs/`
-- canonical execution guidance in `execution/`
-- shared prompt templates in `prompt_templates/`
-- validation and maintenance tools in `tools/`
+1. Start from `AEGIS.md`.
+2. Load the files in its Bootstrap Load Order.
+3. Use `contracts/` for the ticket, handoff, validator, override, and completion
+   report contract.
+4. Use `skills/roles/master/SKILL.md` as the entry role for AEGIS-scoped work.
+5. Select worker and validator role prompts from `skills/roles/` by ticket type.
+6. Consult `skills/procedures/` and `skills/references/` when a selected role or
+   ticket calls for procedural or reference knowledge.
+7. Use `execution/runbooks/` and `execution/prompts/` for provider-agnostic
+   operating guidance.
+8. Apply the selected AEGIS-CORE content to the target project, not to this repo.
 
-## Non-Negotiable Rules
+## Required Operating Contract
 
-- Treat this repo as canonical for role behavior.
-- Follow `skills/discipline/operating-discipline.md` as the canonical always-on operating discipline.
-- Keep the swarm model as `master`, `worker`, and `validator`.
-- Keep the orchestration loop as `master -> worker -> validator -> master`.
-- Validators are blocking by default.
-- Only the `master` requests approval from the human.
-- Do not add provider-specific drift into the canonical prompts unless a limitation truly requires it.
-- If a provider needs special behavior, prefer adapter notes and execution docs over mutating core role logic.
+- Use ticketing before implementation.
+- Execute exactly one ticket at a time.
+- Preserve the `master -> worker -> validator -> master` loop.
+- Treat validators as blocking by default.
+- Only the master requests human approval, and only the human authorizes a
+  validator override.
+- Keep changed files inside the target ticket's `allowed_areas`.
+- Do not modify target ticket `must_not_touch` paths.
+- Return the standard role envelope for role outputs.
+- Return the full ticket completion report for completed tickets.
+- Pass the `AEGIS.md` Conformance Gate before reporting completion.
 
-## Internal Boundary
+## Project Boundary
 
-Keep the repository boundary clear:
+When applying AEGIS-CORE to another project:
 
-- `skills/` owns the stable top-level skill library path.
-- `skills/roles/` owns canonical role prompts.
-- `skills/discipline/` owns canonical always-on operating discipline.
-- `skills/procedures/` is reserved for future procedural skills.
-- `contracts/` owns shared handoff and output contracts.
-- `docs/` owns framework-level guidance.
-- `execution/` owns provider-agnostic operator and execution guidance.
-- `tools/` owns validation and maintenance utilities.
+- Do not edit AEGIS-CORE files unless the user explicitly asks to change the
+  framework itself.
+- Do not copy full role, contract, or procedure bodies into the target project
+  unless the user explicitly asks for a local fork.
+- Treat AEGIS-CORE as the source of canonical behavior and cite paths to the
+  loaded files when useful.
+- Keep provider-specific runtime glue in the target project or runtime layer,
+  not in AEGIS-CORE.
 
-Provider-specific runtime implementation, generated local agent files, and local
-deployment glue can remain outside the canonical framework when needed.
+## First Response Shape
 
-## How to Work Here
+When a user asks you to apply AEGIS-CORE to a project, return:
 
-1. Inspect the relevant skill, contract, or library docs first.
-2. Apply `skills/discipline/operating-discipline.md` to keep work scoped, surgical, verified, and human-readable.
-3. Change canonical behavior only when the change should apply across providers.
-4. Preserve clear frontmatter and output-envelope consistency across all skills.
-5. Keep documentation aligned with the actual skill contract.
-6. If a requested change is execution-specific, keep provider-agnostic guidance in this repo and avoid adding provider-specific drift to canonical prompts.
-
-## When You Should Edit This Repo
-
-Edit `aegis-core` when the task changes:
-
-- a canonical role definition
-- shared contract fields
-- validator policy
-- provider-agnostic prompt wording
-- framework structure or documentation
-- provider-agnostic execution guidance
-
-## Standard Check Before Finishing
-
-- confirm all affected skills still expose the required frontmatter
-- confirm the role/handoff model still makes sense
-- run the library validator when relevant:
-
-```powershell
-py -3.10 .\tools\validate_skill_library.py
-```
-
-## Reporting Style
-
-When you finish, report:
-
-- what canonical behavior changed
-- what files changed
-- whether follow-up execution-area work is needed
+- whether the project context is sufficient to define the first ticket;
+- the first ticket envelope, or the missing context that blocks it;
+- the selected worker and validator role paths for that ticket;
+- the validation commands or evidence required before completion.
