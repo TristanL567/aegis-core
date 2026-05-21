@@ -2,6 +2,9 @@
 
 Use this runbook when applying AEGIS to another repository or project. It is operator guidance only: canonical role behavior remains in `skills/`, canonical ticket and swarm rules remain in `contracts/`, and the execution loop remains defined by `execution/runbooks/shared-orchestration-loop.md`.
 
+For AEGIS-CORE consumption, load `AEGIS.md` first and follow its Bootstrap Load
+Order. Completion is blocked until the `AEGIS.md` Conformance Gate passes.
+
 The target may be any project, such as an "MT project" used as an example label. Do not hardcode local paths, secrets, credentials, repository URLs, or project-specific configuration into reusable AEGIS guidance.
 
 ## Operating Model
@@ -92,6 +95,12 @@ The worker must not expand scope because the target project contains adjacent is
 ## Validate the Ticket
 
 Route the worker output to a validator using `execution/prompts/validate-ticket.md`.
+
+The validator applies the `AEGIS.md` Conformance Gate before approval. This gate
+checks the ticket envelope, one-ticket execution, the
+`master -> worker -> validator -> master` loop, validator approval or
+human-authorized override, role envelope evidence, full completion report
+evidence, and changed files against `allowed_areas` and `must_not_touch`.
 
 The validator checks:
 

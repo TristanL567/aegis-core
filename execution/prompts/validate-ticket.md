@@ -9,6 +9,7 @@ Load and follow the selected validator skill:
 - <validator skill path, for example skills/code-validator/SKILL.md or skills/ds-validator/SKILL.md>
 
 Also follow:
+- AEGIS.md
 - contracts/ticket-contract.md
 - contracts/swarm-contract.md
 
@@ -24,6 +25,8 @@ Validation rules:
 - Validate this ticket only.
 - Do not implement fixes, edit files, or broaden scope.
 - Check the worker output against the ticket envelope, write scope, must-not-touch areas, acceptance criteria, and verification evidence.
+- Apply the `AEGIS.md` Conformance Gate before validator approval. Validator approval requires independent evidence for the gate items; worker or master self-attestation is not enough.
+- For scope-specific procedural validation, compose with `skills/procedures/ticket-scope-validation/SKILL.md` instead of duplicating that procedure.
 - Confirm no files outside the ticket's allowed areas were changed.
 - Treat missing required verification as a finding unless the worker explains why it could not be run.
 - Return `status: completed` only if the ticket satisfies the acceptance criteria and no blocking findings remain.

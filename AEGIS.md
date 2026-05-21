@@ -40,6 +40,38 @@ A consuming agent that references AEGIS-CORE MUST honor these clauses:
   consumers must not re-author role behavior, handoff behavior, ticket behavior,
   validation behavior, or completion-report semantics.
 
+## Conformance Gate
+
+Before any AEGIS-scoped ticket is reported complete, the validator MUST apply
+this Conformance Gate against observable evidence. The worker and master may
+self-check it, but validator approval requires an independent gate check.
+
+A failed gate item blocks completion unless the master records a
+human-authorized override for the validator finding.
+
+- Ticket envelope: verify a ticket envelope existed before implementation and
+  included objective, `allowed_areas`, `must_not_touch`, acceptance criteria,
+  and validation commands.
+- One ticket: verify exactly one ticket was executed and no adjacent ticket,
+  future ticket, or non-goal work was started.
+- Orchestration loop: verify the `master -> worker -> validator -> master`
+  handoff occurred, or verify the ticket was blocked before implementation.
+- Validator decision: verify validator approval exists before completion, or
+  verify a human-authorized override was requested by the master and recorded.
+- Standard role envelope: verify role outputs include `status`, `summary`,
+  `artifacts`, `findings`, and `next_recommended_role`.
+- Full completion report: verify completed tickets include the full completion
+  report with `changed_files`, `verification`, and `human_readability` in
+  addition to the standard role envelope.
+- Scope evidence: verify changed files stay inside `allowed_areas` and no
+  `must_not_touch` path was modified. Ticket scope validation composes with
+  `skills/procedures/ticket-scope-validation/SKILL.md`; use that procedure
+  when the ticket scope itself needs procedural validation rather than
+  duplicating it here.
+- Canonical behavior: verify the work relied on `skills/` and `contracts/` for
+  role, handoff, ticket, validation, and completion-report behavior instead of
+  re-authoring those bodies downstream.
+
 ## Canonical Sources
 
 This anchor states the binding entry contract. It does not replace the canonical
