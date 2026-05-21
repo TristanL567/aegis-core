@@ -4,6 +4,11 @@ You are working in the `aegis-core` repository.
 
 This repository is the canonical source of truth for the Aegis swarm.
 
+For external consumers, `AEGIS.md` is the canonical entry point. The instruction
+`reference AEGIS-CORE` means loading `AEGIS.md` first and following its
+bootstrap, ticketing, orchestration, and Conformance Gate requirements. This
+does not change the internal repo-editing behavior below.
+
 ## Mission
 
 Your job is to maintain and improve the provider-agnostic skill library, shared

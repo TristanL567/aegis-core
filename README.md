@@ -4,6 +4,12 @@ This repository is the canonical source of truth for the Aegis swarm framework.
 It stores provider-agnostic skills, shared contracts, framework docs, execution
 guidance, and validation tools in one place.
 
+## Consumer Entry
+
+External consumers should start with `AEGIS.md` as the canonical entry point.
+The instruction `reference AEGIS-CORE` means loading `AEGIS.md` first, following
+its bootstrap order, and passing its Conformance Gate before completion.
+
 ## Core Model
 
 - `master` coordinates work, talks to the human, and owns approvals.

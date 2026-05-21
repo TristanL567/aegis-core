@@ -6,6 +6,19 @@ When an operator or project says `reference AEGIS-CORE`, that means: load
 `AEGIS.md` first, follow the Bootstrap Load Order below, and treat the
 Conformance Contract in this file as binding before implementation begins.
 
+## Canonical Invocation
+
+Use this canonical invocation when applying AEGIS-CORE to another project:
+
+```text
+Reference AEGIS-CORE. Load AEGIS.md first, follow its Bootstrap Load Order,
+use ticketing, route work through master -> worker -> validator -> master, and
+pass the AEGIS.md Conformance Gate before reporting completion.
+```
+
+For a complete copy/paste-ready prompt, use
+`execution/prompts/use-aegis-core.md`.
+
 ## Bootstrap Load Order
 
 Load these files in this exact order before executing AEGIS-scoped work:

@@ -4,6 +4,11 @@ External runtimes should treat this repository as the canonical Aegis framework
 source for prompts, contracts, documentation, execution guidance, and validation
 tools.
 
+Before using any other consumption guidance, load root `AEGIS.md` as the
+canonical entry point for external consumers. The instruction
+`reference AEGIS-CORE` means following the `AEGIS.md` bootstrap order,
+conformance contract, and Conformance Gate.
+
 ## Consumption Pattern
 
 1. Discover skills under `skills/*/SKILL.md`.
