@@ -1,90 +1,152 @@
-# Aegis Core Skill Library
+# AEGIS Core
 
-This repository is the canonical source of truth for the Aegis swarm framework.
-It stores provider-agnostic skills, shared contracts, framework docs, execution
-guidance, and validation tools in one place.
+AEGIS Core is the canonical source of truth for the AEGIS agentic coding
+framework. It defines how agents should plan, implement, validate, and report
+software work without losing human overview or letting AI-generated code drift
+into broad, fragile changes.
 
-## Consumer Entry
+The framework is provider-agnostic. Its prompts, contracts, procedures,
+references, runbooks, and validation tools can be used from Codex, Claude Code,
+Antigravity, or another agent runtime without rewriting the core behavior.
 
-External consumers should start with `AEGIS.md` as the canonical entry point.
-The instruction `reference AEGIS-CORE` means loading `AEGIS.md` first, following
-its bootstrap order, and passing its Conformance Gate before completion.
+## Start Here
 
-## Core Model
+External agents and target projects should start with [`AEGIS.md`](AEGIS.md).
+The instruction `reference AEGIS-CORE` means:
 
-- `master` coordinates work, talks to the human, and owns approvals.
-- `worker` roles execute scoped tasks and produce artifacts.
-- `validator` roles review worker output and block completion by default.
+1. Load `AEGIS.md` first.
+2. Follow its bootstrap load order.
+3. Work from a ticket envelope before implementation.
+4. Execute exactly one ticket at a time.
+5. Route work through `master -> worker -> validator -> master`.
+6. Treat validators as blocking unless the human explicitly approves an override.
+7. Pass the `AEGIS.md` Conformance Gate before reporting completion.
 
-The library is authored in `Markdown + YAML frontmatter` so it can be adapted into
-Codex, Claude Code, and Antigravity without changing the core prompt text.
+For a copy/paste prompt, use
+[`execution/prompts/use-aegis-core.md`](execution/prompts/use-aegis-core.md).
+
+## What This Repo Provides
+
+- **A conformance anchor:** `AEGIS.md` defines the binding entry contract for
+  external agents.
+- **Swarm roles:** `master`, `worker`, and `validator` role prompts define the
+  orchestration topology.
+- **Ticket contracts:** tickets carry scope, dependencies, protected paths,
+  acceptance criteria, verification commands, and completion-report evidence.
+- **Operating discipline:** always-on rules keep diffs small, scoped,
+  reviewable, and human-readable.
+- **Procedural skills:** narrow, situation-triggered procedures guide repeated
+  work such as endpoint changes, test-first implementation, module-boundary
+  review, deployment triage, and model calibration review.
+- **References:** indexed knowledge drawers provide domain and technical context
+  without bloating every skill.
+- **Execution guidance:** runbooks and prompts describe how to apply AEGIS across
+  providers and target projects.
+- **Validation tools:** local checks enforce skill-library structure and ticket
+  scope boundaries.
+
+## Core Architecture
+
+AEGIS separates three layers that should not be conflated:
+
+1. **Orchestration roles** live in `skills/roles/`.
+   They define who acts next: master, worker, validator, or human.
+2. **Operating discipline** lives in `skills/discipline/`.
+   It defines universal anti-slope behavior: one ticket, narrow scope, no
+   speculative work, concrete verification, and concise reporting.
+3. **Procedural skills** live in `skills/procedures/`.
+   They are narrow procedures for recognized situations and observed failure
+   modes. They compose with references under `skills/references/`.
+
+The master routes work. Workers execute scoped tickets. Validators independently
+review the result and block completion when evidence, scope, correctness, or
+readability is insufficient.
 
 ## Repository Layout
 
-- `skills/`: canonical skill definitions, split into stable layers.
-- `skills/roles/`: canonical role prompt definitions, one role per folder.
-- `skills/discipline/`: always-on operating discipline for scoped,
-  human-readable AEGIS work.
-- `skills/procedures/`: narrow, triggerable procedural skills for repeated
-  situations.
-- `skills/references/`: indexed knowledge drawers consumed by procedures.
-- `contracts/`: shared handoff and output contract for all skills.
-- `docs/`: framework-level guidance for roles, gating, adapters, tests, and execution.
-- `execution/`: dedicated guidance, prompts, and templates for operating the swarm across providers.
-- `tools/`: validation utilities for discovery and frontmatter checks.
+- `AEGIS.md`: canonical consumer entry point and conformance gate.
+- `contracts/`: swarm and ticket contracts.
+- `skills/roles/`: master, worker, and validator role prompts.
+- `skills/discipline/`: always-on operating discipline.
+- `skills/procedures/`: triggerable procedural skills.
+- `skills/references/`: indexed reference drawers consumed by procedures.
+- `docs/`: architecture, authoring, migration, provider, and testing guidance.
+- `execution/`: runbooks, prompts, and ticket/completion templates.
+- `tools/`: validation utilities.
+- `to-do/`: active roadmap only.
 
-## Canonical Contract
+Completed epics are summarized in
+[`docs/completed-work.md`](docs/completed-work.md).
 
-Every skill must expose the following frontmatter fields:
+## How To Use AEGIS On Another Project
 
-- `name`
-- `role`
-- `description`
-- `inputs_expected`
-- `outputs_produced`
-- `allowed_handoffs`
-- `blocking_rules`
-- `provider_notes`
+1. Tell the agent to `reference AEGIS-CORE`.
+2. Give it the target project context and constraints.
+3. Require the master role to create or validate one ticket envelope.
+4. Dispatch one worker for that ticket only.
+5. Send the complete worker output to a validator.
+6. Fix validator findings through the master before continuing.
+7. Commit only ticket-owned files with the ticket ID and validation evidence.
 
-Every skill response must produce the same output envelope:
+Use [`execution/runbooks/apply-to-project.md`](execution/runbooks/apply-to-project.md)
+for the full operating flow.
 
-- `status`
-- `summary`
-- `artifacts`
-- `findings`
-- `next_recommended_role`
+## Ticket-Driven Work
 
-Allowed statuses are:
+Every implementation ticket should define:
 
-- `completed`
-- `needs_clarification`
-- `blocked`
-- `fixes_required`
+- `ticket_id`
+- `goal`
+- `dependencies`
+- `allowed_areas`
+- `must_not_touch`
+- `requirements`
+- `non_goals`
+- `acceptance_criteria`
+- `verification_commands`
+- `completion_report_required`
 
-## Validator Policy
+When product, workflow, business, or architecture intent affects the change,
+tickets should also include business and architecture context fields such as
+`business_context`, `user_or_operator_outcome`, `design_concept`,
+`architecture_boundary`, `success_signal`, and `tradeoffs_or_constraints`.
 
-Validators are blocking by default. A master can only override a validator finding when
-the human explicitly approves the override.
+See [`contracts/ticket-contract.md`](contracts/ticket-contract.md) and
+[`execution/templates/ticket-envelope.example.yaml`](execution/templates/ticket-envelope.example.yaml).
 
-## Execution Guidance
+## Why This Exists
 
-This repo owns canonical execution guidance as part of the framework. Runtime
-implementation can still be provider-specific, but the operator guidance,
-orchestration expectations, and execution documentation should live in this repo
-under `execution/`.
+AI coding is useful when it is bounded by architecture, tests, scope, and human
+review. It becomes expensive when agents generate plausible code without shared
+design intent, project language, verification, or module-boundary discipline.
 
-The `execution/` area owns provider-agnostic runbooks, launch prompts, ticket
-templates, clean-commit guidance, and apply-to-project guidance. The internal
-boundary remains split across `contracts/`, `skills/roles/`,
-`skills/discipline/`, `skills/procedures/`, `docs/`, `execution/`, and `tools/`.
+AEGIS treats the human as the strategic director and the agents as tactical
+workers. The goal is not autonomous volume. The goal is small, inspectable,
+validated changes that preserve system architecture and practical business
+intent.
 
 ## Validation
 
-Run the library validator from the repository root:
+Run the skill-library validator from the repository root:
 
 ```powershell
 py -3.10 .\tools\validate_skill_library.py
 ```
 
-The validator enumerates role skills under `skills/roles/`, checks the required
-frontmatter, and verifies the basic role and handoff contract.
+For ticket scope checks, use:
+
+```powershell
+py -3.10 .\tools\validate_ticket_scope.py --ticket <ticket-file> --changed-file <path>
+```
+
+## Contributing To This Repo
+
+Changes to AEGIS Core should follow AEGIS itself:
+
+- create or use one ticket;
+- keep the diff scoped;
+- avoid unrelated refactors;
+- preserve the role, discipline, procedure, and reference layer boundaries;
+- run validation when possible;
+- report changed files, verification, and residual risk.
+
