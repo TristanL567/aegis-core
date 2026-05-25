@@ -23,8 +23,11 @@ Codex, Claude Code, and Antigravity without changing the core prompt text.
 
 - `skills/`: canonical skill definitions, split into stable layers.
 - `skills/roles/`: canonical role prompt definitions, one role per folder.
-- `skills/discipline/`: reserved for future discipline-layer skills.
-- `skills/procedures/`: reserved for future procedural skills.
+- `skills/discipline/`: always-on operating discipline for scoped,
+  human-readable AEGIS work.
+- `skills/procedures/`: narrow, triggerable procedural skills for repeated
+  situations.
+- `skills/references/`: indexed knowledge drawers consumed by procedures.
 - `contracts/`: shared handoff and output contract for all skills.
 - `docs/`: framework-level guidance for roles, gating, adapters, tests, and execution.
 - `execution/`: dedicated guidance, prompts, and templates for operating the swarm across providers.

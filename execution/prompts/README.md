@@ -10,6 +10,10 @@ Current prompts:
 - `completion-report.md`: request a structured completion report.
 - `clean-commit.md`: prepare a clean, scoped commit after validation.
 - `apply-to-project.md`: apply AEGIS guidance to another repository or project.
+- `use-aegis-core.md`: bind an external agent to the AEGIS contract when it is told to reference this repo.
+- `aegis-conformance-check.md`: helper prompt for self-auditing a run against
+  the AEGIS conformance gate before reporting done. `AEGIS.md` remains the
+  canonical Conformance Gate source.
 - `claude-code-agent-setup.md`: set up Claude Code local agent stubs.
 - `antigravity-master-session.md`: run an Antigravity master session.
 
