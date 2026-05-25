@@ -62,8 +62,19 @@ When Understand Anything affects a ticket, the worker or validator should report
 Understand Anything may create graph artifacts such as files under
 `.understand-anything/`. Treat those as generated artifacts.
 
-At this stage, do not commit generated graph artifacts unless a ticket explicitly
-allows them. Detailed artifact policy is deferred to `AEGIS-UA-005`.
+Generated artifacts are not committed by default.
+
+- Local scratch artifacts stay uncommitted. This includes
+  `.understand-anything/intermediate/` and
+  `.understand-anything/diff-overlay.json`.
+- Shareable graph artifacts may be committed only when an explicit ticket allows
+  them and lists the artifact paths in `allowed_areas`.
+- Generated graph claims are advisory until source confirmation is performed.
+  Confirm claims against source files, tests, docs, routes, schemas, or other
+  primary evidence before using them as AEGIS evidence.
+- Report the artifact policy in the completion report: generated artifacts,
+  ignored scratch paths, any explicitly allowed shareable graph artifacts, and
+  source confirmation performed.
 
 ## Risks
 

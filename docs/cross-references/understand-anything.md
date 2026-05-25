@@ -76,6 +76,24 @@ routing, validator approval, scope validation, or `AEGIS.md` Conformance Gate.
   allows generated graph artifacts and states the artifact policy.
 - Do not install or run the tool as part of this reference ticket.
 
+## Artifact Policy
+
+Generated artifacts are not committed by default. AEGIS distinguishes local
+scratch artifacts from shareable graph artifacts:
+
+- Local scratch artifacts are temporary run products and must stay out of
+  commits. This includes `.understand-anything/intermediate/` and
+  `.understand-anything/diff-overlay.json`.
+- Shareable graph artifacts, such as a durable graph JSON intended for team
+  onboarding or review, may be committed only when an explicit ticket allows
+  them and names the generated artifact paths in `allowed_areas`.
+- Graph claims are advisory until source confirmation is performed. Before using
+  generated graph output as AEGIS evidence, confirm the claim against source
+  files, tests, docs, routes, schemas, or other primary project evidence.
+- A completion report that uses graph evidence must state the artifact policy:
+  what was generated, what was ignored, what was committed if explicitly
+  allowed, and what source confirmation was performed.
+
 ## Risks
 
 - Stale graph artifacts can mislead agents after code changes.

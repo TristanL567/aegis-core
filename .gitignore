@@ -1,2 +1,6 @@
 .idea/
 *.iml
+
+# Understand Anything local scratch artifacts
+.understand-anything/intermediate/
+.understand-anything/diff-overlay.json
