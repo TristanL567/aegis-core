@@ -33,6 +33,7 @@ composition_points:
   - "Design-clarification-interview should run first when behavior intent is unclear."
   - "Ubiquitous-language-map should run first when behavior names or domain terms are ambiguous."
   - "Future module-boundary-review can compose after behavior is defined when implementation risks crossing ownership boundaries."
+  - "codebase-map-generation may provide optional advisory map evidence for locating likely tests or seams, but it does not replace failing tests, reproduction, or pre-change evidence."
   - "Code-validator uses this procedure's evidence to check that implementation did not outrun verification."
   - "Clean-commit composes after verification passes and cleanup remains scoped."
 reference_pointers: []

@@ -59,7 +59,7 @@ For `allowed_areas` and `must_not_touch`, invoke `skills/procedures/ticket-scope
 
 ## Procedure Composition
 
-Procedures provide review evidence; they do not replace this validator role or its blocking authority. Use `skills/procedures/ticket-scope-validation/SKILL.md` for changed-path scope evidence, use `skills/procedures/clean-commit/SKILL.md` evidence when reviewing commit readiness or staged-work hygiene, and use `skills/procedures/new-api-endpoint/SKILL.md` evidence when backend endpoint work is part of the reviewed output.
+Procedures provide review evidence; they do not replace this validator role or its blocking authority. Use `skills/procedures/ticket-scope-validation/SKILL.md` for changed-path scope evidence, use `skills/procedures/clean-commit/SKILL.md` evidence when reviewing commit readiness or staged-work hygiene, and use `skills/procedures/new-api-endpoint/SKILL.md` evidence when backend endpoint work is part of the reviewed output. Reported `codebase-map-generation` map evidence may inform review as optional advisory context, but it does not replace source review, tests, ticket-scope-validation, acceptance criteria, or validator judgment.
 
 Do not add a new validator taxonomy or treat procedure completion as automatic approval. Check procedure outputs, ticket acceptance criteria, verification evidence, and residual implementation risk before returning a verdict.
 

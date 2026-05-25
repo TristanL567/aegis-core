@@ -34,6 +34,7 @@ composition_points:
   - "Future ubiquitous-language-map owns durable domain vocabulary after clarification reveals important recurring terms."
   - "Future test-first-change owns the test loop after behavior is clear enough to specify."
   - "Future module-boundary-review owns architecture boundary review after the intended change shape is known."
+  - "codebase-map-generation may provide optional advisory map evidence for product, workflow, or architecture questions when local context is insufficient."
 reference_pointers: []
 verification:
   - "Verify that every blocking ambiguity is either expressed as a clarification question or resolved in the design brief."

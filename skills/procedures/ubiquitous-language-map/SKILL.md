@@ -34,6 +34,7 @@ composition_points:
   - "Future test-first-change can use the term map to name behavior and assertions consistently."
   - "Future module-boundary-review can use the term map to check whether module names and ownership match domain concepts."
   - "Validators can use the term map as review evidence when language mismatch could hide an incorrect implementation."
+  - "codebase-map-generation may provide optional advisory map evidence for aligning business terms with code, docs, schemas, routes, tests, or UI labels."
 reference_pointers: []
 verification:
   - "Verify each mapped term includes meaning, source evidence, related code or docs, aliases or forbidden synonyms, and open ambiguities."

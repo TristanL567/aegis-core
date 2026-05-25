@@ -36,6 +36,7 @@ composition_points:
   - "Test-first-change supplies behavior evidence before implementation when the boundary decision depends on executable behavior."
   - "Code-validator can use this procedure to review whether implementation preserved module ownership and public interface discipline."
   - "Ticket-planner-worker can split broad refactors into separate tickets when this review finds a boundary change outside current scope."
+  - "codebase-map-generation may provide optional advisory map evidence for dependencies, public interfaces, layers, and coupling when local context is insufficient."
 reference_pointers: []
 verification:
   - "Verify affected modules, public interfaces, dependencies, and ownership boundaries are named from observable project evidence."
