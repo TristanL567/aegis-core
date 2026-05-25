@@ -30,6 +30,34 @@ Completed epics are no longer active planning files in `to-do/`.
 
 ## Active Backlog
 
+### AEGIS-DESIGN: AI Coding Design Discipline
+
+Goal: reduce software entropy before implementation by making agents clarify
+design intent, business language, test expectations, and module boundaries
+before code changes.
+
+Problem: AI coding can produce plausible code while missing the business and
+architecture intent. Common failure modes are unclear design intent, weak domain
+language, missing test-first loops, and shallow module boundaries that make the
+system harder to evolve.
+
+Planned ticket sequence:
+
+1. `design-clarification-interview`: define when the master must ask design and
+   business-context questions before implementation.
+2. `ubiquitous-language-map`: capture project/domain terms so tickets and code
+   use the same business language.
+3. `test-first-change`: require a failing test or explicit test evidence before
+   feasible behavior changes.
+4. `module-boundary-review`: check whether a change respects meaningful module
+   ownership and avoids shallow architecture.
+5. `ticket-template-business-architecture-context`: extend future ticket
+   authoring so business intent and architecture context are explicit.
+
+Implementation proceeds one ticket at a time. No procedural skills, contracts,
+tools, roles, references, or execution prompts are changed until their own
+ticket is created and approved.
+
 ### TODO-001: Revise Worker Skill Architecture
 
 Goal: collapse the current worker set to the most important durable roles, then
