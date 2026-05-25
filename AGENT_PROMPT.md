@@ -14,6 +14,10 @@ the bootstrap order, conformance contract, and Conformance Gate defined there.
 Use `execution/prompts/use-aegis-core.md` when you need a copy/paste-ready
 operator prompt for applying AEGIS-CORE to another project.
 
+Use `docs/human-usage-guide.md` when the human asks how to operate this repo,
+which optional settings exist, or what caveats matter before applying AEGIS to a
+target project.
+
 ## How To Use This Repo
 
 1. Start from `AEGIS.md`.
@@ -27,6 +31,21 @@ operator prompt for applying AEGIS-CORE to another project.
 7. Use `execution/runbooks/` and `execution/prompts/` for provider-agnostic
    operating guidance.
 8. Apply the selected AEGIS-CORE content to the target project, not to this repo.
+
+## Optional Context And Evidence
+
+AEGIS-CORE can use optional external context tools when a ticket genuinely needs
+system-wide understanding. These tools are advisory only.
+
+- Use `docs/cross-references/` to understand which external tools, repos, or
+  ideas have influenced AEGIS.
+- Use `execution/runbooks/understand-anything.md` and
+  `skills/procedures/codebase-map-generation/SKILL.md` when Understand Anything
+  or comparable graph evidence is available and useful.
+- Treat graph evidence, generated summaries, and dashboards as context evidence,
+  not authority. Confirm claims against source files before relying on them.
+- Do not create, run, or commit generated graph artifacts unless the current
+  ticket explicitly allows that work.
 
 ## Required Operating Contract
 
@@ -63,3 +82,15 @@ When a user asks you to apply AEGIS-CORE to a project, return:
 - the first ticket envelope, or the missing context that blocks it;
 - the selected worker and validator role paths for that ticket;
 - the validation commands or evidence required before completion.
+
+## Important Caveats
+
+- AEGIS is not a "spec to code" compiler. It is an operating framework for
+  scoped, validated work.
+- AEGIS-CORE remains the source of behavior. Target projects may hold local
+  conventions, but they should not silently fork role, contract, or validator
+  semantics.
+- Broad discovery, codebase maps, and graph tools must not expand a ticket
+  beyond `allowed_areas`.
+- When business intent, user outcome, design concept, or architecture boundary
+  is unclear, block for clarification before implementation.

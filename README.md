@@ -25,6 +25,10 @@ The instruction `reference AEGIS-CORE` means:
 For a copy/paste prompt, use
 [`execution/prompts/use-aegis-core.md`](execution/prompts/use-aegis-core.md).
 
+Human operators can use
+[`docs/human-usage-guide.md`](docs/human-usage-guide.md) for practical usage
+instructions, optional settings, and caveats.
+
 ## What This Repo Provides
 
 - **A conformance anchor:** `AEGIS.md` defines the binding entry contract for
@@ -149,4 +153,3 @@ Changes to AEGIS Core should follow AEGIS itself:
 - preserve the role, discipline, procedure, and reference layer boundaries;
 - run validation when possible;
 - report changed files, verification, and residual risk.
-
