@@ -24,6 +24,28 @@ Every ticket must define the following fields:
 Fields may be empty only when emptiness is meaningful and explicit. For example,
 `dependencies: []` means the ticket has no known dependencies.
 
+## Business and Architecture Context Fields
+
+Tickets should also carry lightweight business and architecture context when
+product intent, user workflow, operator workflow, architecture shape, or business
+outcome affects implementation. These fields are required when they matter for
+the work and may be empty or omitted only when irrelevant, such as for purely
+mechanical cleanup, formatting, or generated-file refreshes.
+
+- `business_context`: why the work matters in domain, product, operational, or
+  business terms.
+- `user_or_operator_outcome`: the user, operator, or stakeholder outcome the
+  ticket should enable.
+- `design_concept`: the intended product, UX, workflow, or behavior concept the
+  implementation must preserve.
+- `architecture_boundary`: the relevant module, layer, service, component,
+  data, or integration boundary the work must respect.
+- `success_signal`: observable evidence that the intended outcome or behavior is
+  achieved.
+- `tradeoffs_or_constraints`: known constraints, non-obvious tradeoffs,
+  compatibility needs, performance limits, compliance limits, rollout limits, or
+  review concerns.
+
 ## One-Ticket-Only Execution
 
 - A worker executes exactly one assigned ticket at a time.

@@ -61,6 +61,12 @@ Every generated ticket must follow `contracts/ticket-contract.md` and include al
 - `ticket_id`
 - `goal`
 - `dependencies`
+- `business_context` when product, workflow, architecture, operator, or business intent affects implementation
+- `user_or_operator_outcome` when a human, user, operator, or stakeholder outcome matters
+- `design_concept` when the ticket must preserve a product, UX, workflow, or behavior concept
+- `architecture_boundary` when module, layer, service, component, data, or integration ownership matters
+- `success_signal` when observable outcome evidence is needed
+- `tradeoffs_or_constraints` when compatibility, performance, rollout, review, or business constraints matter
 - `allowed_areas`
 - `must_not_touch`
 - `requirements`
@@ -71,13 +77,15 @@ Every generated ticket must follow `contracts/ticket-contract.md` and include al
 - `verification_commands`
 - `completion_report_required`
 
-Fields may be empty only when emptiness is meaningful and explicit, such as `dependencies: []`.
+Fields may be empty only when emptiness is meaningful and explicit, such as `dependencies: []`. Business and architecture context fields are required when they affect implementation and may be empty or omitted only for genuinely mechanical tickets where the field is irrelevant.
 
 ## Planning Rules
 
 - Keep each ticket small enough for one worker to complete and one validator to review independently.
 - Prefer more tickets with clear boundaries over broad tickets with hidden coupling.
 - Make dependencies explicit and directional.
+- Populate or request `business_context`, `user_or_operator_outcome`, `design_concept`, `architecture_boundary`, `success_signal`, and `tradeoffs_or_constraints` when product, workflow, architecture, operator, or business intent affects implementation.
+- If those context fields matter but are missing, ask focused clarification questions before producing implementation-ready tickets.
 - Set `allowed_areas` narrowly; include exact files, directories, systems, or domains when known.
 - Set `must_not_touch` to protect unrelated or high-risk areas, especially areas outside the ticket's intended ownership.
 - Put mandatory behavior, implementation, documentation, and process constraints in `requirements`.

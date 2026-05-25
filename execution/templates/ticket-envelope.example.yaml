@@ -3,6 +3,14 @@ ticket_id: EXAMPLE-TICKET-001
 goal: Add a provider-neutral execution template for a bounded workflow.
 dependencies:
   - EXAMPLE-TICKET-000 completed
+business_context: This template helps external agents produce bounded AEGIS tickets without guessing process expectations.
+user_or_operator_outcome: The operator can hand off one ticket with clear scope, verification, and completion-report expectations.
+design_concept: Keep the ticket envelope small, explicit, provider-neutral, and reviewable before implementation starts.
+architecture_boundary: Changes belong in execution/templates/ and must not redefine canonical contracts, prompts, roles, tools, or runbooks.
+success_signal: A reader can identify the goal, allowed areas, protected areas, verification path, and completion report requirement without other context.
+tradeoffs_or_constraints:
+  - Keep context fields meaningful; leave them empty only for genuinely mechanical tickets.
+  - Prefer explicit boundaries over broad explanatory prose.
 allowed_areas:
   - execution/templates/
 must_not_touch:
