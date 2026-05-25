@@ -10,5 +10,7 @@ Current runbooks:
 - `antigravity.md`: Antigravity execution guidance.
 - `clean-commit.md`: scoped staging and commit preparation guidance.
 - `apply-to-project.md`: guidance for applying AEGIS to another repository or project.
+- `understand-anything.md`: guidance for using Understand Anything as optional
+  graph and context evidence under AEGIS governance.
 
 Canonical role behavior remains in `skills/`, and canonical ticket and swarm rules remain in `contracts/`.
