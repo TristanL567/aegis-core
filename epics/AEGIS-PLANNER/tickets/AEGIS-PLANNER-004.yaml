@@ -1,0 +1,86 @@
+ticket_id: AEGIS-PLANNER-004
+
+goal: >
+  Add the three execution templates that make the epic contract usable in
+  practice: epic envelope example, epic ledger example, and checkpoint
+  summary example.
+
+dependencies:
+  - AEGIS-PLANNER-001
+  - AEGIS-PLANNER-002
+  - AEGIS-PLANNER-003
+
+business_context: >
+  Templates turn contracts into copy/paste artifacts. Without them,
+  operators reinvent shapes and the contract drifts.
+
+user_or_operator_outcome: >
+  The operator copies three files into a target project to start running a
+  parallel epic, instead of reading three contract files first.
+
+design_concept: >
+  Templates mirror the existing ticket-envelope.example.yaml pattern. Each
+  template is illustrative, not canonical; the contracts remain the source
+  of truth.
+
+architecture_boundary: >
+  New files under execution/templates/ only. No contract edits, no role
+  edits, no runbook edits.
+
+success_signal: >
+  A reader can populate an epic and start a planner run using only the
+  three templates plus the canonical contracts.
+
+tradeoffs_or_constraints:
+  - Templates intentionally show the common case, not every edge case.
+
+allowed_areas:
+  - execution/templates/epic-envelope.example.yaml
+  - execution/templates/epic-ledger.example.md
+  - execution/templates/checkpoint-summary.example.yaml
+
+must_not_touch:
+  - execution/templates/ticket-envelope.example.yaml
+  - execution/templates/completion-report.example.yaml
+  - contracts/
+  - skills/
+  - execution/runbooks/
+  - execution/prompts/
+  - tools/
+  - docs/
+  - AEGIS.md
+  - to-do/
+
+requirements:
+  - >
+    epic-envelope.example.yaml includes every required field from
+    contracts/epic-contract.md.
+  - >
+    epic-ledger.example.md shows at least one of every event_type from
+    PLANNER-002.
+  - >
+    checkpoint-summary.example.yaml uses the fixed shape: epic_id,
+    last_completed_ticket, tickets_remaining, commits_added,
+    validator_decisions, findings_carried_forward, next_ticket_intent,
+    proposed_action.
+
+non_goals:
+  - Do not commit a real epic ledger; the example is a template only.
+  - Do not modify existing templates.
+
+acceptance_criteria:
+  - Three files exist under execution/templates/ matching the listed
+    requirements.
+  - No field used in templates is undefined in the contracts.
+
+manual_verification_required: true
+manual_verification_steps:
+  - Confirm every field in every template traces to a contract clause.
+  - Confirm the templates can be copied into a downstream project without
+    edits to the contracts.
+
+verification_commands:
+  - git diff -- execution/templates/
+  - py -3.10 .\tools\validate_skill_library.py
+
+completion_report_required: true

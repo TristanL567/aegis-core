@@ -1,0 +1,108 @@
+# AEGIS-PLANNER epic envelope.
+# Planning artifact only. Tickets PLANNER-001..004 define the implementation
+# work and have not been executed yet. Canonical field definitions will be
+# established by PLANNER-001 in contracts/epic-contract.md.
+
+epic_id: AEGIS-PLANNER
+
+goal: >
+  Introduce the master-planner role, the epic contract, the epic ledger, and
+  the multi-master dispatch model so the framework can drive parallel epics
+  under a single human-facing planner without weakening AEGIS discipline.
+
+business_context: >
+  Today AEGIS is strictly sequential at every layer. Parallel work across
+  epics requires a planner role, an epic envelope, and a ledger so that
+  multiple master-agents can operate concurrently under one auditable
+  human-facing layer.
+
+user_or_operator_outcome: >
+  The operator authors an epic, sets an autonomy policy, and the planner
+  drives one or more master-agents to completion, stopping only at declared
+  checkpoints or hard-class errors.
+
+design_concept: >
+  Lift the existing master-loop one level up. Planner -> agent -> validator
+  -> planner mirrors master -> worker -> validator -> master. Each
+  master-agent remains internally sequential and AEGIS-conformant.
+
+architecture_boundary: >
+  Changes are confined to a new epic contract, a new master-planner role,
+  one swarm-contract clarification, a new dispatch runbook, and new
+  execution templates. Existing role bodies, ticket contract, and discipline
+  remain untouched.
+
+success_signal: >
+  An epic envelope can be defined, the planner can dispatch a master-agent
+  on its epic branch, the ledger records every planner decision, human
+  checkpoints stop dispatch, retries cap at 5, and merges to base happen
+  only after the planner-owned merge gate.
+
+tradeoffs_or_constraints:
+  - Per-master "exactly one ticket" invariant is preserved; parallelism
+    lives only at the epic layer.
+  - Epic-level validator pass is deferred to a follow-up epic.
+  - Provider-specific transport (Claude Code background agents, Codex
+    operator scripts) is documented but not implemented in this epic.
+
+branch: development_epic_planner
+base: main
+
+autonomy_policy: checkpointed
+human_checkpoint_tickets:
+  - AEGIS-PLANNER-001
+  - AEGIS-PLANNER-004
+
+epic_allowed_areas:
+  - contracts/epic-contract.md
+  - contracts/swarm-contract.md
+  - skills/roles/master-planner/
+  - execution/runbooks/multi-master-dispatch.md
+  - execution/templates/epic-envelope.example.yaml
+  - execution/templates/epic-ledger.example.md
+  - execution/templates/checkpoint-summary.example.yaml
+  - epics/AEGIS-PLANNER/
+  - AEGIS.md
+  - to-do/agentic-coding-framework-roadmap.md
+
+epic_must_not_touch:
+  - contracts/ticket-contract.md
+  - skills/roles/master/
+  - skills/roles/backend-worker/
+  - skills/roles/chart-worker/
+  - skills/roles/code-validator/
+  - skills/roles/ds-validator/
+  - skills/roles/model-interpreter-worker/
+  - skills/roles/ticket-planner-worker/
+  - skills/discipline/
+  - skills/procedures/
+  - skills/references/
+  - execution/runbooks/shared-orchestration-loop.md
+  - execution/runbooks/apply-to-project.md
+  - execution/runbooks/codex.md
+  - execution/runbooks/claude-code.md
+  - execution/runbooks/clean-commit.md
+  - execution/prompts/
+  - tools/
+  - docs/
+
+depends_on_epics: []
+
+tickets:
+  - AEGIS-PLANNER-001
+  - AEGIS-PLANNER-002
+  - AEGIS-PLANNER-003
+  - AEGIS-PLANNER-004
+
+merge_policy:
+  strategy: rebase_then_merge
+  base: main
+  requires_epic_validator: false
+  requires_human_approval: true
+
+# Follow-up epics named here so they are not lost when AEGIS-PLANNER merges.
+# These are scope markers, not commitments.
+follow_up_epics:
+  - AEGIS-PLANNER-TRANSPORT     # provider-specific dispatch
+  - AEGIS-PLANNER-VALIDATOR     # epic-level validator role
+  - AEGIS-PLANNER-TOOLING       # concurrency/budget/ledger tooling

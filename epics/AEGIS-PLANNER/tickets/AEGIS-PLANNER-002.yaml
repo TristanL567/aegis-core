@@ -1,0 +1,111 @@
+ticket_id: AEGIS-PLANNER-002
+
+goal: >
+  Define the epic ledger format, the retry budget rule, the escalation
+  routing between master-agent, planner, and human, and the abort semantics.
+
+dependencies:
+  - AEGIS-PLANNER-001
+
+business_context: >
+  Auditability and bounded failure modes are the two things that keep the
+  human in overview when N masters run in parallel. They need explicit
+  contracts, not behavioral conventions.
+
+user_or_operator_outcome: >
+  The human can read epics/<epic_id>/ledger.md and reconstruct every
+  planner decision in the epic without reading any agent transcript. A
+  crashed planner can recover state from the ledger alone.
+
+design_concept: >
+  Append-only per-epic ledger committed to the epic branch. Retries cap
+  per-ticket at 5 fixes_required cycles. blocked and needs_clarification
+  bypass the counter and route to the planner immediately. The ledger is
+  the planner's recovery source - no second state file.
+
+architecture_boundary: >
+  Ledger format and escalation rules belong in the epic contract introduced
+  by PLANNER-001. No changes to ticket contract, role bodies, or existing
+  runbooks.
+
+success_signal: >
+  An operator can describe, from the contract alone, what a ledger line
+  contains, when retries escalate, which classes of error go to the human
+  versus the planner, and how a planner reconstructs state after an
+  interruption.
+
+tradeoffs_or_constraints:
+  - Append-only is enforced by convention plus validator check; no tooling
+    in this ticket.
+  - Retry count is per-ticket; resets on ticket completion or escalation.
+  - Recovery via ledger replay assumes the last event accurately reflects
+    in-flight state; the planner writes the ledger before acting on a
+    transition.
+
+allowed_areas:
+  - contracts/epic-contract.md
+
+must_not_touch:
+  - contracts/ticket-contract.md
+  - contracts/swarm-contract.md
+  - skills/
+  - execution/
+  - tools/
+  - docs/
+  - AEGIS.md
+  - to-do/
+
+requirements:
+  - >
+    Ledger line schema: timestamp, ticket_id, event_type, decision, notes,
+    commit_sha or null.
+  - >
+    Event types: dispatched, validator_approved, fixes_required (with
+    retry counter n/5), validator_blocked, validator_needs_clarification,
+    checkpoint_hit, human_approved, human_overrode_validator,
+    epic_merged, epic_aborted.
+  - >
+    Retry rule: fixes_required cycles on the same ticket cap at 5; the
+    fifth failure escalates to the planner with the validator findings;
+    the planner may route to the human or abort the epic.
+  - >
+    blocked and needs_clarification bypass the retry counter and route
+    immediately to the planner.
+  - >
+    Critical errors (as enumerated in PLANNER-001) bypass the planner-only
+    routing and surface to the human via the planner's escalation envelope.
+  - >
+    epic_aborted semantics: the epic branch is preserved (not deleted),
+    the ledger records the abort with reason, no merge to base occurs.
+  - >
+    Recovery: the planner reconstructs in-flight state by reading the
+    last event in epics/<epic_id>/ledger.md. The planner must write the
+    ledger entry before acting on a transition so recovery is consistent.
+  - >
+    Ledger lives at epics/<epic_id>/ledger.md inside the workspace where
+    the epic runs (target project, or aegis-core when the epic targets
+    aegis-core itself). aegis-core only defines the contract.
+
+non_goals:
+  - Do not implement a ledger writer tool.
+  - Do not implement a ledger-format validator.
+  - Do not edit role bodies.
+
+acceptance_criteria:
+  - Epic contract gains a "Ledger" section with the schema and event list.
+  - Epic contract gains a "Retry and Escalation" section with the rules.
+  - Epic contract gains an "Abort" section with the preservation rule.
+  - Epic contract gains a "Recovery" section identifying the ledger as
+    the recovery source.
+  - Examples are illustrative only; canonical templates land in PLANNER-004.
+
+manual_verification_required: true
+manual_verification_steps:
+  - Confirm every event_type can occur in a real epic.
+  - Confirm retry rule handles validator status values exhaustively.
+  - Confirm recovery rule is consistent with the ledger ordering.
+
+verification_commands:
+  - git diff -- contracts/epic-contract.md
+
+completion_report_required: true

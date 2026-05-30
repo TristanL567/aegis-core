@@ -1,0 +1,133 @@
+ticket_id: AEGIS-PLANNER-001
+
+goal: >
+  Define the epic contract and the master-planner role, add the one-line
+  swarm-contract clarification that scopes "exactly one ticket" to per-master,
+  and record the AEGIS-PLANNER epic plus follow-up epics in the roadmap.
+
+dependencies: []
+
+business_context: >
+  Without a canonical epic envelope and a named planner role, parallel
+  dispatch has no contract to enforce against and no role to own it.
+
+user_or_operator_outcome: >
+  An operator can author an epic envelope and hand it to the planner with
+  the same confidence they currently hand a ticket envelope to the master.
+
+design_concept: >
+  Epic envelope is to the planner what the ticket envelope is to the master.
+  The planner inherits the master's human-approval monopoly; the master role
+  becomes per-epic, not global. The planner detects nested operation via a
+  dispatched_by envelope field and routes human-approval requests back to
+  itself rather than to the human directly.
+
+architecture_boundary: >
+  Net-new contract file, net-new role directory, single-line clarification
+  to swarm-contract, roadmap update. No edits to ticket-contract, no edits
+  to existing role bodies.
+
+success_signal: >
+  contracts/epic-contract.md defines all required fields including
+  autonomy_policy, human_checkpoint_tickets, and the workspace layout for
+  epics/<epic_id>/. The planner SKILL.md defines the planner-agent-validator
+  loop and the dispatched_by handling. swarm-contract states that
+  "exactly one ticket" is a per-master invariant.
+
+tradeoffs_or_constraints:
+  - The planner role does not implement work; it dispatches and merges.
+  - Critical-error class is enumerated in the epic contract, not the role.
+  - autonomy_policy governs the inter-ticket gate only; critical errors and
+    the merge gate are not subject to it.
+
+allowed_areas:
+  - contracts/epic-contract.md
+  - contracts/swarm-contract.md
+  - skills/roles/master-planner/SKILL.md
+  - AEGIS.md
+  - to-do/agentic-coding-framework-roadmap.md
+
+must_not_touch:
+  - contracts/ticket-contract.md
+  - skills/roles/master/
+  - skills/roles/backend-worker/
+  - skills/roles/chart-worker/
+  - skills/roles/code-validator/
+  - skills/roles/ds-validator/
+  - skills/roles/model-interpreter-worker/
+  - skills/roles/ticket-planner-worker/
+  - skills/discipline/
+  - skills/procedures/
+  - skills/references/
+  - execution/
+  - tools/
+  - docs/
+
+requirements:
+  - >
+    Epic envelope defines required fields: epic_id, goal, branch, base,
+    autonomy_policy, human_checkpoint_tickets, epic_allowed_areas,
+    epic_must_not_touch, tickets, depends_on_epics, merge_policy.
+  - >
+    Workspace layout convention stated canonically: epics/<epic_id>/
+    contains envelope.yaml, ledger.md, tickets/<ticket_id>.yaml, and
+    checkpoint-summaries/<ticket_id>.yaml.
+  - >
+    Critical-error class enumerated: scope conflict unresolved by worker,
+    must_not_touch violation at validation, validator returns blocked,
+    merge conflict against base, any unauthorized destructive git or
+    secrets action.
+  - >
+    Planner role specifies: human is the only external counterparty;
+    dispatches master-agents; receives validator results; owns merge to
+    base; owns ledger writes; enforces autonomy_policy and checkpoint list.
+  - >
+    Planner role specifies dispatched_by envelope handling: when a ticket
+    envelope carries dispatched_by=master-planner, the receiving master
+    must route human-approval requests back to the planner, not to the
+    human directly. No edits to the master role body are required for
+    this; the planner contract owns the routing behavior.
+  - >
+    autonomy_policy semantics: governs the inter-ticket gate only.
+    Critical-error escalation and the merge gate are not subject to
+    autonomy_policy.
+  - >
+    Swarm-contract gains one sentence: "Exactly-one-ticket is a per-master
+    invariant. A master-planner may operate multiple masters concurrently
+    under the epic contract."
+  - >
+    AEGIS.md bootstrap list adds contracts/epic-contract.md after
+    contracts/ticket-contract.md.
+  - >
+    Roadmap update records the AEGIS-PLANNER epic and names the three
+    follow-up epics: AEGIS-PLANNER-TRANSPORT, AEGIS-PLANNER-VALIDATOR,
+    AEGIS-PLANNER-TOOLING.
+
+non_goals:
+  - Do not define the ledger format (PLANNER-002 owns it).
+  - Do not author the dispatch runbook (PLANNER-003 owns it).
+  - Do not create templates (PLANNER-004 owns them).
+  - Do not edit master, worker, or validator role bodies.
+
+acceptance_criteria:
+  - contracts/epic-contract.md exists with all listed fields and the
+    workspace layout convention.
+  - skills/roles/master-planner/SKILL.md exists with the dispatch loop and
+    human-approval routing including dispatched_by handling.
+  - swarm-contract.md contains the per-master clarification.
+  - AEGIS.md bootstrap order references the epic contract.
+  - Roadmap records the AEGIS-PLANNER epic and the three follow-up epics.
+  - No file under must_not_touch is modified.
+
+manual_verification_required: true
+manual_verification_steps:
+  - Confirm the planner role does not duplicate master role behavior.
+  - Confirm critical-error list matches the design discussion.
+  - Confirm autonomy_policy values are explicit and finite.
+  - Confirm dispatched_by routing does not require editing the master role.
+
+verification_commands:
+  - git diff -- contracts/ skills/roles/master-planner/ AEGIS.md to-do/
+  - py -3.10 .\tools\validate_skill_library.py
+
+completion_report_required: true

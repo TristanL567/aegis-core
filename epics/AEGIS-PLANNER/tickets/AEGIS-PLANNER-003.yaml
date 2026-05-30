@@ -1,0 +1,130 @@
+ticket_id: AEGIS-PLANNER-003
+
+goal: >
+  Author the provider-agnostic multi-master dispatch runbook describing the
+  planner's automation loop, the disjointness rule between in-flight epics,
+  the workspace configuration location, the validator return-route
+  interception, and the merge-to-base gate.
+
+dependencies:
+  - AEGIS-PLANNER-001
+  - AEGIS-PLANNER-002
+
+business_context: >
+  Contracts state invariants; the runbook tells an operator how to run the
+  loop on any provider. Without it, two operators will implement parallel
+  dispatch two different ways.
+
+user_or_operator_outcome: >
+  An operator can read one runbook and run the planner against one or more
+  epics with no provider-specific knowledge required.
+
+design_concept: >
+  The runbook defines a filesystem-as-bus pattern (epics/<epic_id>/ state
+  files) and a planner state machine. Provider-specific transports are
+  named but deferred to the AEGIS-PLANNER-TRANSPORT follow-up epic.
+
+architecture_boundary: >
+  New runbook file only. No edits to existing runbooks, contracts, roles,
+  or templates.
+
+success_signal: >
+  The runbook describes the planner loop, the disjointness check, the
+  ledger writes, the checkpoint handling, the retry routing, the validator
+  return-route interception, the workspace config location, and the merge
+  gate, all without referring to a specific provider.
+
+tradeoffs_or_constraints:
+  - Filesystem-as-bus is the v1 transport; queues are explicitly out of
+    scope.
+  - Concurrency cap is operator-configurable; runbook recommends 2-3.
+  - The validator does not need to know about the planner; the planner
+    intercepts validator output by reading the standard envelope.
+
+allowed_areas:
+  - execution/runbooks/multi-master-dispatch.md
+
+must_not_touch:
+  - contracts/
+  - skills/
+  - execution/runbooks/shared-orchestration-loop.md
+  - execution/runbooks/apply-to-project.md
+  - execution/runbooks/codex.md
+  - execution/runbooks/claude-code.md
+  - execution/runbooks/clean-commit.md
+  - execution/runbooks/antigravity.md
+  - execution/runbooks/understand-anything.md
+  - execution/prompts/
+  - execution/templates/
+  - tools/
+  - docs/
+  - AEGIS.md
+  - to-do/
+
+requirements:
+  - >
+    Document the planner state machine: idle -> dispatched -> awaiting
+    validator -> routing -> merging -> idle. State transitions are
+    written to the ledger before they take effect.
+  - >
+    Document the disjointness check for adding a new in-flight epic:
+    epic_allowed_areas must not intersect any in-flight epic's
+    epic_allowed_areas; depends_on_epics edges serialize when not
+    disjoint. The planner discovers in-flight epics by reading the last
+    event of every epics/*/ledger.md and treating anything other than
+    epic_merged or epic_aborted as live.
+  - >
+    Document checkpoint handling and the checkpoint-summary handoff to
+    the human.
+  - >
+    Document the retry counter and escalation routing per PLANNER-002.
+  - >
+    Document the validator return-route interception: master-validators
+    return next_recommended_role=master; the planner intercepts and
+    routes onward. No edits to validator allowed_handoffs are required.
+  - >
+    Document the planner-recovery procedure: on resume, the planner reads
+    the last event from each in-flight epic's ledger and reconstructs
+    state from there.
+  - >
+    Document the workspace configuration location:
+    .aegis/planner-config.yaml in the workspace where epics run.
+    Fields: concurrency_cap, per_epic_token_budget,
+    per_epic_wall_clock_budget. Defaults stated; values
+    operator-configurable.
+  - >
+    Document the merge gate: planner rebases epic branch onto base, runs
+    any declared verification commands, then merges. If
+    merge_policy.requires_human_approval is true, the planner pauses for
+    human approval before the merge.
+  - >
+    Provide a worked example of two parallel epics with disjoint
+    epic_allowed_areas.
+  - >
+    Reference, do not duplicate, contracts/epic-contract.md and
+    contracts/swarm-contract.md.
+
+non_goals:
+  - Do not document Claude Code or Codex transport specifics.
+  - Do not introduce an epic-level validator.
+  - Do not modify existing runbooks.
+
+acceptance_criteria:
+  - Runbook covers all six state machine transitions.
+  - Runbook contains a worked example of two parallel epics with disjoint
+    epic_allowed_areas.
+  - Runbook documents the planner-config.yaml location and required fields.
+  - Runbook documents the validator return-route interception.
+  - Runbook documents the recovery procedure via ledger replay.
+  - Runbook references canonical sources rather than restating them.
+
+manual_verification_required: true
+manual_verification_steps:
+  - Confirm an operator could implement the loop using only the runbook
+    plus the two contracts.
+  - Confirm the worked example does not violate the disjointness rule.
+
+verification_commands:
+  - git diff -- execution/runbooks/multi-master-dispatch.md
+
+completion_report_required: true
