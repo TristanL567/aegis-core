@@ -116,6 +116,41 @@ Delivered:
 
 Tickets completed: `AEGIS-ANCHOR-001` through `AEGIS-ANCHOR-003`.
 
+### AI Coding Design Discipline
+
+Original planning location: `to-do/agentic-coding-framework-roadmap.md`.
+
+Added procedures and ticket context fields that reduce software entropy before
+implementation by making design intent, domain language, tests, and module
+boundaries explicit.
+
+Delivered:
+- `skills/procedures/design-clarification-interview/`
+- `skills/procedures/ubiquitous-language-map/`
+- `skills/procedures/test-first-change/`
+- `skills/procedures/module-boundary-review/`
+- ticket business and architecture context fields in
+  `contracts/ticket-contract.md`
+
+Tickets completed: `AEGIS-DESIGN-001` through `AEGIS-DESIGN-006`.
+
+### Understand Anything Cross-Reference
+
+Original planning location: operator-directed external tool integration.
+
+Documented Lum1104/Understand-Anything as an optional external codebase mapping
+tool, added a runbook, created a narrow codebase-map procedure, composed it with
+existing design procedures, and defined the generated graph artifact policy.
+
+Delivered:
+- `docs/cross-references/`
+- `execution/runbooks/understand-anything.md`
+- `skills/procedures/codebase-map-generation/`
+- optional map-evidence composition in design procedures and code-validator
+- `.gitignore` policy for local graph scratch artifacts
+
+Tickets completed: `AEGIS-UA-001` through `AEGIS-UA-005`.
+
 ## Active Planning
 
 Active and upcoming work is kept in `to-do/`.
