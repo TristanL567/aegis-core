@@ -26,9 +26,10 @@ Load these files in this exact order before executing AEGIS-scoped work:
 1. `AEGIS.md`
 2. `contracts/swarm-contract.md`
 3. `contracts/ticket-contract.md`
-4. `skills/roles/master/SKILL.md`
-5. `execution/runbooks/shared-orchestration-loop.md`
-6. `execution/runbooks/apply-to-project.md`
+4. `contracts/epic-contract.md`
+5. `skills/roles/master/SKILL.md`
+6. `execution/runbooks/shared-orchestration-loop.md`
+7. `execution/runbooks/apply-to-project.md`
 
 Worker and validator role prompts under `skills/roles/` are loaded per ticket
 based on ticket type. They are not part of the bootstrap load.
@@ -94,6 +95,8 @@ contracts and role files:
   `contracts/swarm-contract.md`.
 - Ticket fields, one-ticket execution, scope boundaries, and full completion
   report definitions live in `contracts/ticket-contract.md`.
+- Epic fields, multi-master dispatch boundaries, autonomy policy, critical
+  errors, and merge-gate semantics live in `contracts/epic-contract.md`.
 - Master behavior lives in `skills/roles/master/SKILL.md`.
 - The orchestration loop lives in
   `execution/runbooks/shared-orchestration-loop.md`.

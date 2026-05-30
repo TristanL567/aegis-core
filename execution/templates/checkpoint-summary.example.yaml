@@ -1,0 +1,18 @@
+# Example checkpoint summary. Canonical checkpoint behavior lives in contracts/epic-contract.md.
+epic_id: EXAMPLE-EPIC
+last_completed_ticket: EXAMPLE-EPIC-001
+tickets_remaining:
+  - EXAMPLE-EPIC-002
+  - EXAMPLE-EPIC-003
+commits_added:
+  - abc1234
+validator_decisions:
+  - ticket_id: EXAMPLE-EPIC-001
+    status: completed
+    summary: Validator approved scope, verification, and completion report.
+findings_carried_forward:
+  - Confirm whether EXAMPLE-EPIC-002 should keep the current architecture boundary.
+next_ticket_intent: >
+  Execute EXAMPLE-EPIC-002 if the human approves continuing past this
+  checkpoint.
+proposed_action: continue

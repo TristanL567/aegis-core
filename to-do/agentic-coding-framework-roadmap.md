@@ -27,36 +27,45 @@ Completed epics are no longer active planning files in `to-do/`.
 - Progressive Disclosure: `AEGIS-PD-001` through `AEGIS-PD-004`.
 - Library Expansion: `AEGIS-EXPAND-001` through `AEGIS-EXPAND-017`.
 - Conformance Anchor: `AEGIS-ANCHOR-001` through `AEGIS-ANCHOR-003`.
+- AI Coding Design Discipline: `AEGIS-DESIGN-001` through
+  `AEGIS-DESIGN-006`.
+- Understand Anything Cross-Reference: `AEGIS-UA-001` through `AEGIS-UA-005`.
 
 ## Active Backlog
 
-### AEGIS-DESIGN: AI Coding Design Discipline
+### AEGIS-PLANNER: Multi-Master Epic Planning
 
-Goal: reduce software entropy before implementation by making agents clarify
-design intent, business language, test expectations, and module boundaries
-before code changes.
+Goal: introduce an epic-level planner, epic contract, ledger, and dispatch model
+so AEGIS can coordinate multiple master-agents across disjoint epics without
+weakening one-ticket discipline inside each master.
 
-Problem: AI coding can produce plausible code while missing the business and
-architecture intent. Common failure modes are unclear design intent, weak domain
-language, missing test-first loops, and shallow module boundaries that make the
-system harder to evolve.
+Canonical planning artifacts:
+
+- `epics/AEGIS-PLANNER/envelope.yaml`
+- `epics/AEGIS-PLANNER/tickets/AEGIS-PLANNER-001.yaml`
+- `epics/AEGIS-PLANNER/tickets/AEGIS-PLANNER-002.yaml`
+- `epics/AEGIS-PLANNER/tickets/AEGIS-PLANNER-003.yaml`
+- `epics/AEGIS-PLANNER/tickets/AEGIS-PLANNER-004.yaml`
 
 Planned ticket sequence:
 
-1. `design-clarification-interview`: define when the master must ask design and
-   business-context questions before implementation.
-2. `ubiquitous-language-map`: capture project/domain terms so tickets and code
-   use the same business language.
-3. `test-first-change`: require a failing test or explicit test evidence before
-   feasible behavior changes.
-4. `module-boundary-review`: check whether a change respects meaningful module
-   ownership and avoids shallow architecture.
-5. `ticket-template-business-architecture-context`: extend future ticket
-   authoring so business intent and architecture context are explicit.
+1. `AEGIS-PLANNER-001`: define the epic contract, master-planner role, and
+   per-master exactly-one-ticket clarification.
+2. `AEGIS-PLANNER-002`: define the epic ledger, retry budget, escalation,
+   abort, and recovery semantics.
+3. `AEGIS-PLANNER-003`: add the provider-agnostic multi-master dispatch
+   runbook.
+4. `AEGIS-PLANNER-004`: add epic envelope, ledger, and checkpoint-summary
+   templates.
 
-Implementation proceeds one ticket at a time. No procedural skills, contracts,
-tools, roles, references, or execution prompts are changed until their own
-ticket is created and approved.
+Execution remains one ticket at a time. Parallelism is only an epic-layer design
+goal until the planner contract and runbook are implemented and validated.
+
+Follow-up epics to keep scoped separately:
+
+- `AEGIS-PLANNER-TRANSPORT`: provider-specific dispatch transport.
+- `AEGIS-PLANNER-VALIDATOR`: epic-level validator role.
+- `AEGIS-PLANNER-TOOLING`: concurrency, budget, and ledger tooling.
 
 ### TODO-001: Revise Worker Skill Architecture
 

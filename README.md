@@ -75,6 +75,7 @@ readability is insufficient.
 - `skills/procedures/`: triggerable procedural skills.
 - `skills/references/`: indexed reference drawers consumed by procedures.
 - `docs/`: architecture, authoring, migration, provider, and testing guidance.
+- `epics/`: active or planned epic envelopes and ticket backlogs.
 - `execution/`: runbooks, prompts, and ticket/completion templates.
 - `tools/`: validation utilities.
 - `to-do/`: active roadmap only.

@@ -5,6 +5,9 @@ Execution runtimes should treat this document as the interface between roles.
 Ticket-based execution must also follow the canonical ticket contract in
 `contracts/ticket-contract.md`.
 
+Exactly-one-ticket is a per-master invariant. A master-planner may operate
+multiple masters concurrently under the epic contract.
+
 ## Input Envelope
 
 Every invocation should provide the following input fields:
