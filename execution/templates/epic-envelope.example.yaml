@@ -1,0 +1,28 @@
+# Example epic envelope. Canonical field definitions live in contracts/epic-contract.md.
+epic_id: EXAMPLE-EPIC
+goal: >
+  Deliver a bounded multi-ticket outcome while preserving per-master
+  exactly-one-ticket execution.
+branch: example_epic_branch
+base: main
+autonomy_policy: checkpointed
+human_checkpoint_tickets:
+  - EXAMPLE-EPIC-001
+  - EXAMPLE-EPIC-004
+epic_allowed_areas:
+  - services/example/
+  - tests/example/
+epic_must_not_touch:
+  - contracts/
+  - skills/
+  - execution/runbooks/
+tickets:
+  - EXAMPLE-EPIC-001
+  - EXAMPLE-EPIC-002
+  - EXAMPLE-EPIC-003
+depends_on_epics: []
+merge_policy:
+  strategy: rebase_then_merge
+  base: main
+  requires_epic_validator: false
+  requires_human_approval: true
