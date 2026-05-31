@@ -143,6 +143,140 @@ blocking unless I explicitly override them, and return the full completion
 report.
 ```
 
+### Automated Route: Master-Planner And Master-Agent
+
+```text
+reference AEGIS-CORE. Load AEGIS.md first, then contracts/epic-contract.md,
+contracts/ticket-contract.md, contracts/swarm-contract.md, and
+execution/runbooks/multi-master-dispatch.md.
+
+Act as the AEGIS Master-Planner. Own the project, roadmap, epic sequencing,
+Master-Agent assignment, checkpoints, ledger decisions, and final integration.
+Do not implement work directly.
+
+Dispatch reusable Master-Agents in visible chats. Reuse existing Master-Agent
+chats when possible. Rename each visible Master-Agent chat to:
+
+AEGIS Master-Agent | <EPIC-ID>
+
+Each Master-Agent may work on one epic assignment at a time. Dispatch exactly
+one assigned ticket at a time unless the epic contract explicitly allows a
+bounded ticket set. Each assignment must include epic ID, ticket ID, branch,
+allowed areas, must-not-touch paths, verification commands, and whether
+commit_required is true.
+
+The Master-Agent must load AEGIS.md, the assigned ticket envelope, relevant
+contracts, and relevant runbooks. It may use AEGIS roles, procedures,
+references, workers, and validators internally.
+
+The validator validates only. It does not commit. If commit_required is true,
+the Master-Agent commits validated work to the assignment branch using:
+
+<EPIC-ID> <TICKET-ID> <type>: <concise description>
+
+After each ticket, the Master-Agent reports loaded AEGIS materials, assigned
+epic/ticket, implementation summary, validation summary, commit hash/message if
+committed, blockers, and next handoff state.
+
+The Master-Planner validates the report against the ticket envelope and AEGIS
+contracts, records the result, and dispatches the next ticket only if the
+assignment completion gate passes.
+
+If blockers, validator blocking findings, scope conflicts, checkpoint tickets,
+merge conflicts, unauthorized destructive actions, or secrets risks occur, stop
+and escalate according to contracts/epic-contract.md.
+
+Notify the human at required checkpoints, critical errors, merge gate, or epic
+completion according to the epic autonomy policy.
+```
+
+### Idea To Epic Intake
+
+Use this when you have a broad idea but not yet a clean architecture or backlog:
+
+```text
+reference AEGIS-CORE. Act as the AEGIS Master-Planner. I have an idea, not a
+ticket. Do not implement yet.
+
+First produce a concise project intake:
+- business/user outcome;
+- target repo or product area;
+- relevant constraints and risks;
+- architecture assumptions that need confirmation;
+- likely epics;
+- questions that must be answered before ticket creation.
+
+Then propose the smallest useful first epic and explain why it should come
+first. Do not create implementation tickets until the intake is accepted.
+```
+
+### Review An Epic Plan
+
+Use this before letting a generated epic/ticket backlog execute:
+
+```text
+reference AEGIS-CORE. Review this epic and ticket backlog against AEGIS
+contracts before implementation.
+
+Check:
+- every ticket has explicit allowed areas and must-not-touch paths;
+- dependencies and sequence are coherent;
+- tickets are small enough for one-ticket execution;
+- acceptance criteria and verification commands are testable;
+- architecture and business context are sufficient;
+- no future-ticket work is hidden in early tickets;
+- validator and commit expectations are clear.
+
+Return blocking findings first, then recommended edits. Do not implement.
+```
+
+### Resume A Paused Epic
+
+Use this when returning to a partially executed epic:
+
+```text
+reference AEGIS-CORE. Act as the AEGIS Master-Planner and resume this epic.
+
+Load AEGIS.md, contracts/epic-contract.md, the epic envelope, the ticket files,
+and any ledger or completion reports. Reconstruct the current state from the
+latest committed ticket, ledger entry, or pasted Master-Agent report.
+
+Report:
+- completed tickets and commits;
+- current assignment state;
+- unresolved blockers or validator findings;
+- next safe ticket;
+- whether a human checkpoint or merge gate is active.
+
+Do not dispatch new work until the reconstructed state is clear.
+```
+
+### Final Integration And Merge Readiness
+
+Use this before merging an epic branch:
+
+```text
+reference AEGIS-CORE. Act as the AEGIS Master-Planner and perform final
+integration review for this epic.
+
+Check the epic envelope, all ticket completion reports, validator decisions,
+commit messages, branch state, and declared verification commands. Confirm every
+commit matches:
+
+<EPIC-ID> <TICKET-ID> <type>: <concise description>
+
+Report:
+- tickets completed;
+- commits included;
+- validation evidence;
+- unresolved risks;
+- files or systems changed;
+- whether merge_policy is satisfied;
+- whether human approval is required before merge.
+
+Do not merge until the merge gate is satisfied.
+```
+
 ### Manual Route: Master-Planner And Master-Agent
 
 ```text
