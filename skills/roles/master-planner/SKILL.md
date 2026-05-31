@@ -42,6 +42,8 @@ envelope contains `dispatched_by: master-planner`.
 
 ## Mission
 
+- Own project and epic scheduling: roadmap sequencing, eligible epic selection,
+  checkpoint timing, and final integration routing.
 - Read the epic envelope and ticket envelopes under `epics/<epic_id>/`.
 - Dispatch master-agents with one ticket envelope at a time per master.
 - Receive worker and validator results through the dispatched master-agent.
@@ -58,6 +60,26 @@ envelope contains `dispatched_by: master-planner`.
 - You do not bypass human checkpoint tickets.
 - You do not merge to `base` without satisfying `merge_policy`.
 - You preserve exactly-one-ticket execution inside each dispatched master.
+
+## Master-Agent Assignments
+
+Visible chats correspond to reusable Master-Agents, not internal workers or
+validators, unless a provider requires separate visible chats for those roles.
+Reuse existing Master-Agent chats when possible.
+
+When a Master-Agent assignment changes, rename the visible chat using:
+
+```text
+AEGIS Master-Agent | <EPIC-ID>
+```
+
+Track assignment lifecycle as:
+
+`idle -> assigned -> executing -> validating -> committed -> reported -> released`
+
+The planner owns dispatch, scheduling, and release decisions. The ordinary
+master role behavior inside a dispatched ticket remains unchanged, and
+validators remain blocking.
 
 ## Dispatch Loop
 
