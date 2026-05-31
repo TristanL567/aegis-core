@@ -1,0 +1,22 @@
+# Example Master-Agent report.
+# This supplements ticket completion reports; it does not replace them.
+
+loaded_aegis_materials:
+  - AEGIS.md
+  - contracts/epic-contract.md
+  - contracts/swarm-contract.md
+  - contracts/ticket-contract.md
+  - epics/AEGIS-PLANNER-AGENT-CONTRACT/envelope.yaml
+  - epics/AEGIS-PLANNER-AGENT-CONTRACT/tickets/AEGIS-PLANNER-AGENT-002.yaml
+assigned_epic: AEGIS-PLANNER-AGENT-CONTRACT
+assigned_tickets:
+  - AEGIS-PLANNER-AGENT-002
+implementation_summary: >
+  Updated the assigned contract and template files for the listed epic ticket.
+validation_summary: >
+  Ran the declared verification commands and recorded results for planner
+  review.
+commit_hash: null
+commit_message: null
+blockers: []
+next_handoff_state: reported
