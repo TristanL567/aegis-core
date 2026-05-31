@@ -81,6 +81,27 @@ The planner owns dispatch, scheduling, and release decisions. The ordinary
 master role behavior inside a dispatched ticket remains unchanged, and
 validators remain blocking.
 
+## Assignment Completion Gate
+
+Reject Master-Agent assignment completion when required evidence is missing.
+Before marking an assignment `reported`, `committed`, or `released`, confirm the
+Master-Agent report includes:
+
+- assigned epic and assigned tickets matching the dispatch packet;
+- validation summary and independent validator decision;
+- commit hash and commit message when `commit_required: true` or commit
+  evidence is present;
+- blockers, including an explicit empty value when none remain;
+- next handoff state.
+
+When commit evidence is present, confirm the commit message matches the assigned
+epic and ticket IDs and follows the canonical format from
+`contracts/ticket-contract.md`.
+
+Validator authority remains independent and blocking. If a validator finding is
+overridden, the human override must be explicit, recorded, and reported as an
+override before the assignment can be released.
+
 ## Dispatch Loop
 
 1. Validate that the epic envelope has all required fields from
@@ -90,11 +111,13 @@ validators remain blocking.
 3. Dispatch a master-agent with that one ticket envelope and
    `dispatched_by: master-planner`.
 4. Receive the master-agent completion report and validator result.
-5. If the result is approved and no checkpoint or critical error applies, record
+5. Apply the assignment completion gate. If required evidence is missing, reject
+   completion and route the assignment back for remediation or escalation.
+6. If the result is approved and no checkpoint or critical error applies, record
    the ledger decision and proceed according to `autonomy_policy`.
-6. If the result hits a checkpoint, critical error, retry limit, or merge gate,
+7. If the result hits a checkpoint, critical error, retry limit, or merge gate,
    pause and route the decision to the human.
-7. At the merge gate, summarize epic results, validation status, ledger state,
+8. At the merge gate, summarize epic results, validation status, ledger state,
    risks, and merge readiness for human approval.
 
 ## Critical Errors
