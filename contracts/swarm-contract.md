@@ -48,6 +48,36 @@ Every skill should return the following fields in a structured, easy-to-parse sh
 - `findings`: review comments, blockers, or notable risks. Workers can leave this empty.
 - `next_recommended_role`: one of `master`, `worker`, `validator`, or `human`.
 
+## Master-Agent Report Extension
+
+When a reusable master-agent is dispatched by a master-planner for an epic
+assignment, it must return a Master-Agent report to the planner before release.
+This report supplements, not replaces, ticket completion reports required by
+`contracts/ticket-contract.md`.
+
+The report lets the planner validate assignment completion without reading the
+whole chat transcript. It must tie the output to the assigned epic and assigned
+tickets.
+
+Required Master-Agent report fields:
+
+- `loaded_aegis_materials`: AEGIS anchor, contracts, epic envelope, and ticket
+  envelopes loaded for the assignment.
+- `assigned_epic`: epic ID the master-agent was assigned to execute.
+- `assigned_tickets`: ticket IDs handled by the master-agent assignment.
+- `implementation_summary`: concise summary of implementation work completed,
+  or why implementation did not proceed.
+- `validation_summary`: validator decision, commands run, manual checks, and
+  remaining validation risk.
+- `commit_hash`: commit SHA produced for the assignment, or `null` when the
+  planner did not require a commit or the assignment blocked before commit.
+- `commit_message`: commit message used for the assignment, or `null` when no
+  commit was created.
+- `blockers`: blocking findings, scope conflicts, missing approvals, or an empty
+  list when none remain.
+- `next_handoff_state`: planner-facing next state such as `reported`,
+  `blocked`, or `released`.
+
 ## Handoff Rules
 
 - Only the `master` may request approval from the human.

@@ -1,0 +1,42 @@
+ticket_id: AEGIS-PLANNER-AGENT-002
+
+goal: >
+  Define the required Master-Agent output report so the planner can validate
+  assignment completion without reading the whole chat transcript.
+
+dependencies:
+  - AEGIS-PLANNER-AGENT-001
+
+allowed_areas:
+  - contracts/swarm-contract.md
+  - execution/templates/master-agent-report.example.yaml
+
+must_not_touch:
+  - skills/
+  - execution/runbooks/
+  - execution/prompts/
+  - tools/
+  - docs/
+
+requirements:
+  - Add a Master-Agent report extension to `contracts/swarm-contract.md`.
+  - Required fields must include `loaded_aegis_materials`, `assigned_epic`,
+    `assigned_tickets`, `implementation_summary`, `validation_summary`,
+    `commit_hash`, `commit_message`, `blockers`, and `next_handoff_state`.
+  - Add `execution/templates/master-agent-report.example.yaml`.
+  - State that the report supplements, not replaces, ticket completion reports.
+
+non_goals:
+  - Do not change worker or validator output envelopes.
+  - Do not add a report validation tool.
+
+acceptance_criteria:
+  - Master-Agent report fields are documented in the contract.
+  - Template contains all required report fields.
+  - The report explicitly ties output to assigned epic/tickets.
+
+verification_commands:
+  - git diff -- contracts/swarm-contract.md execution/templates/master-agent-report.example.yaml
+  - py -3.10 .\tools\validate_skill_library.py
+
+completion_report_required: true

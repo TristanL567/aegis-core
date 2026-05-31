@@ -88,6 +88,41 @@ The master-planner owns:
 - merge-gate preparation;
 - final merge request to the human.
 
+## Master-Agent Assignment
+
+The master-planner owns project direction, roadmap state, epic sequencing, and
+final integration. A master-agent is a temporary reusable execution unit assigned
+by the master-planner to perform bounded work; it does not own the epic.
+
+A master-agent may work on one epic assignment at a time. Assignment records
+identify the current epic, branch, ticket set, dispatcher, visible chat label,
+commit expectation, and finite assignment state. They do not alter ticket
+execution rules, validator authority, or merge ownership.
+
+Every master-agent assignment must define:
+
+- `master_agent_id`: stable identifier for the reusable master-agent lane.
+- `assigned_epic_id`: epic ID currently assigned to the master-agent.
+- `assigned_ticket_ids`: ticket IDs included in the assignment.
+- `assignment_branch`: branch the master-agent uses for assigned work.
+- `base`: base branch or ref for integration context.
+- `visible_chat_name`: human-readable session or chat label for the assignment.
+- `dispatched_by`: dispatcher identity, normally `master-planner`.
+- `commit_required`: boolean stating whether the master-agent must commit before
+  reporting back to the planner.
+- `assignment_state`: current assignment state using one of the values below.
+
+Allowed `assignment_state` values:
+
+- `idle`: the master-agent has no active assignment.
+- `assigned`: the assignment has been received but execution has not started.
+- `executing`: the master-agent is working on the assigned ticket set.
+- `validating`: validation or validator-response handling is in progress.
+- `committed`: required assignment commit has been created.
+- `reported`: the master-agent has returned the required report to the planner.
+- `released`: the planner has released the master-agent for reuse.
+- `blocked`: the assignment cannot proceed without planner or human decision.
+
 ## Ledger
 
 The epic ledger is the append-only planner decision log at

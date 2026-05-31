@@ -12,6 +12,43 @@ Canonical behavior lives in:
 
 Provider-specific transport is out of scope here.
 
+## Visible Master-Agent Chats
+
+Visible chats correspond to reusable Master-Agents, not internal workers or
+validators, unless a provider requires separate visible chats for those roles.
+Reuse existing Master-Agent chats when possible so the operator sees stable
+execution lanes rather than one chat per internal handoff.
+
+When a Master-Agent assignment changes, rename the visible chat using:
+
+```text
+AEGIS Master-Agent | <EPIC-ID>
+```
+
+This is provider-agnostic naming guidance only. Do not implement
+provider-specific thread or chat renaming in this runbook.
+
+## Master-Agent Assignment Lifecycle
+
+The planner owns project and epic scheduling, assignment dispatch, checkpoint
+routing, and final integration. A Master-Agent is a reusable execution lane for
+one current epic assignment; it does not own the epic.
+
+Track each Master-Agent assignment through this lifecycle:
+
+`idle -> assigned -> executing -> validating -> committed -> reported -> released`
+
+- `idle`: no active assignment.
+- `assigned`: the planner has assigned an epic/ticket packet.
+- `executing`: the Master-Agent is carrying out the assigned ticket work.
+- `validating`: validator review or validator response routing is in progress.
+- `committed`: required assignment commit exists when `commit_required: true`.
+- `reported`: the Master-Agent report has been returned to the planner.
+- `released`: the planner has released the Master-Agent for reuse.
+
+The planner does not implement worker tasks, validators remain blocking, and the
+existing master role behavior inside each dispatched ticket is unchanged.
+
 ## Planner State Machine
 
 The planner runs this loop:

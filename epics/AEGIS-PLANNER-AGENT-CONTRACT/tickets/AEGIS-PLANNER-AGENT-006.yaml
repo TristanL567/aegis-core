@@ -1,0 +1,49 @@
+ticket_id: AEGIS-PLANNER-AGENT-006
+
+goal: >
+  Update human-facing options and prompts so users can initialize the
+  Master-Planner, require architecture consideration, and bind agents to
+  AEGIS-CORE before implementation.
+
+dependencies:
+  - AEGIS-PLANNER-AGENT-001
+  - AEGIS-PLANNER-AGENT-004
+
+allowed_areas:
+  - User-Instructions/options-and-prompts.md
+
+must_not_touch:
+  - AEGIS.md
+  - README.md
+  - AGENT_PROMPT.md
+  - contracts/
+  - skills/
+  - execution/
+  - docs/
+  - tools/
+
+requirements:
+  - Add a prompt for initializing the Master-Planner.
+  - Add a prompt for asking the planner to outline the target architecture
+    before ticket creation.
+  - Add a prompt that forces an agent to consider AEGIS-CORE by loading
+    `AEGIS.md`, relevant contracts, and relevant runbooks before work.
+  - Include the manual route where the human relays Master-Agent summaries back
+    to the planner.
+  - Fix existing spelling/wording issues in the manual route section.
+
+non_goals:
+  - Do not update root README.
+  - Do not change canonical AEGIS contracts.
+
+acceptance_criteria:
+  - Human users have copy/paste prompt blocks for planner initialization,
+    architecture outline, manual Master-Agent routing, and AEGIS conformance
+    forcing.
+  - Existing options and caveats remain present.
+
+verification_commands:
+  - rg -n "Initialize the Master-Planner|Architecture Outline|Force AEGIS Consideration|Manual Route" .\User-Instructions\options-and-prompts.md
+  - py -3.10 .\tools\validate_skill_library.py
+
+completion_report_required: true

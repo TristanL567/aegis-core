@@ -1,0 +1,98 @@
+# AEGIS-PLANNER-AGENT-CONTRACT epic envelope.
+# Planning artifact only. Tickets define the implementation work and have not
+# been executed yet.
+
+epic_id: AEGIS-PLANNER-AGENT-CONTRACT
+
+goal: >
+  Tighten the planner architecture so the Master-Planner owns projects, epics,
+  sequencing, and final integration while reusable Master-Agents execute one
+  assigned epic at a time and report commit-ready evidence back to the planner.
+
+business_context: >
+  Parallel agent work only stays reviewable when ownership is explicit. The
+  human should see a small number of Master-Agent chats, each tied to a current
+  epic assignment, while the Master-Planner remains the single scheduler and
+  integration owner.
+
+user_or_operator_outcome: >
+  The operator can initialize a Master-Planner, see which Master-Agent is
+  assigned to which epic, require scoped commits on the assigned branch, and
+  receive a standard report containing loaded AEGIS materials, validation
+  evidence, commit hash, and next handoff state.
+
+design_concept: >
+  Treat Master-Agents as reusable execution lanes. They do not own epics; they
+  receive assignment packets from the Master-Planner, execute with AEGIS
+  internally, commit to the specified branch, and return control to the planner.
+
+architecture_boundary: >
+  This epic changes planner/agent contracts, runbooks, templates, and validator
+  guidance. It does not alter worker procedures, references, or provider
+  transport implementations.
+
+success_signal: >
+  A Master-Agent assignment has a canonical packet, a visible chat naming rule,
+  a required output report, a commit-message policy, and validator/planner gates
+  that block completion when assignment evidence is missing.
+
+tradeoffs_or_constraints:
+  - Planner ownership is strengthened without making the planner implement work.
+  - Provider-specific chat renaming remains runbook guidance unless a provider
+    later exposes deterministic thread tooling.
+  - Tooling enforcement is deferred; this epic establishes contracts and gates.
+
+branch: Development
+base: main
+
+autonomy_policy: checkpointed
+human_checkpoint_tickets:
+  - AEGIS-PLANNER-AGENT-001
+  - AEGIS-PLANNER-AGENT-006
+
+epic_allowed_areas:
+  - contracts/epic-contract.md
+  - contracts/swarm-contract.md
+  - contracts/ticket-contract.md
+  - skills/roles/master-planner/SKILL.md
+  - skills/roles/code-validator/SKILL.md
+  - execution/runbooks/multi-master-dispatch.md
+  - execution/runbooks/clean-commit.md
+  - execution/templates/master-agent-assignment.example.yaml
+  - execution/templates/master-agent-report.example.yaml
+  - User-Instructions/options-and-prompts.md
+  - epics/AEGIS-PLANNER-AGENT-CONTRACT/
+
+epic_must_not_touch:
+  - skills/procedures/
+  - skills/references/
+  - skills/discipline/
+  - skills/roles/backend-worker/
+  - skills/roles/chart-worker/
+  - skills/roles/ds-validator/
+  - skills/roles/model-interpreter-worker/
+  - skills/roles/ticket-planner-worker/
+  - execution/prompts/
+  - tools/
+  - docs/
+
+depends_on_epics:
+  - AEGIS-PLANNER
+
+tickets:
+  - AEGIS-PLANNER-AGENT-001
+  - AEGIS-PLANNER-AGENT-002
+  - AEGIS-PLANNER-AGENT-003
+  - AEGIS-PLANNER-AGENT-004
+  - AEGIS-PLANNER-AGENT-005
+  - AEGIS-PLANNER-AGENT-006
+
+merge_policy:
+  strategy: rebase_then_merge
+  base: main
+  requires_epic_validator: false
+  requires_human_approval: true
+
+follow_up_epics:
+  - AEGIS-PLANNER-AGENT-TOOLING
+  - AEGIS-PLANNER-THREAD-INTEGRATION

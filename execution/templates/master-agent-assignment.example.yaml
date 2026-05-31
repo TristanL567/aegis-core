@@ -1,0 +1,13 @@
+# Example Master-Agent assignment.
+# Canonical definitions live in contracts/epic-contract.md.
+
+master_agent_id: AEGIS-MASTER-AGENT-001
+assigned_epic_id: AEGIS-PLANNER-AGENT-CONTRACT
+assigned_ticket_ids:
+  - AEGIS-PLANNER-AGENT-001
+assignment_branch: Development
+base: main
+visible_chat_name: AEGIS Master-Agent | AEGIS-PLANNER-AGENT-CONTRACT
+dispatched_by: master-planner
+commit_required: false
+assignment_state: assigned

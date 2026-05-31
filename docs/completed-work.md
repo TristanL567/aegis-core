@@ -151,6 +151,25 @@ Delivered:
 
 Tickets completed: `AEGIS-UA-001` through `AEGIS-UA-005`.
 
+### Multi-Master Epic Planning
+
+Original planning location: `epics/AEGIS-PLANNER/`.
+
+Added the epic-level planner foundation: an epic contract, master-planner role,
+ledger semantics, provider-agnostic dispatch runbook, and execution templates
+for epic envelopes, ledgers, and checkpoint summaries.
+
+Delivered:
+- `contracts/epic-contract.md`
+- `skills/roles/master-planner/`
+- `execution/runbooks/multi-master-dispatch.md`
+- `execution/templates/epic-envelope.example.yaml`
+- `execution/templates/epic-ledger.example.md`
+- `execution/templates/checkpoint-summary.example.yaml`
+- tracked planning artifacts under `epics/AEGIS-PLANNER/`
+
+Tickets completed: `AEGIS-PLANNER-001` through `AEGIS-PLANNER-004`.
+
 ## Active Planning
 
 Active and upcoming work is kept in `to-do/`.

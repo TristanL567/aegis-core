@@ -57,6 +57,33 @@ When a ticket envelope is present, also validate the worker output against:
 
 For `allowed_areas` and `must_not_touch`, invoke `skills/procedures/ticket-scope-validation/SKILL.md` and use `tools/validate_ticket_scope.py` against the changed or staged path list instead of relying only on prose review. Treat scope-firewall failures, violations of the ticket envelope, or violations of operating discipline as blocking findings. Confirm changed files, verification evidence, manual verification status, and completion-report coverage against `skills/discipline/operating-discipline.md` and `contracts/ticket-contract.md`. When `completion_report_required` is true, require the report to include a complete `human_readability` block with concise evidence, abstraction evidence, a one-paragraph `diff_summary`, valid `layer_touched`, and `layer_separation_preserved: true`.
 
+## Master-Agent Assignment Evidence
+
+When reviewing a Master-Agent assignment report, treat missing required report
+evidence as blocking. The report must include:
+
+- assigned epic;
+- assigned tickets;
+- validation summary;
+- commit hash and commit message when commit evidence is required or present;
+- blockers, including an explicit empty value when none remain;
+- next handoff state.
+
+When commit evidence is present, check that the commit message matches the
+canonical assignment format:
+
+```text
+<EPIC-ID> <TICKET-ID> <type>: <concise description>
+```
+
+The epic and ticket IDs in the message must match the assigned epic and assigned
+ticket, and the `type` must be one of `feature`, `bug`, `user-story`, `docs`,
+`test`, `refactor`, or `chore`.
+
+Validator authority remains independent and blocking. A human override must be
+explicit, carried through the master, and reported as an override rather than
+treated as validator approval.
+
 ## Procedure Composition
 
 Procedures provide review evidence; they do not replace this validator role or its blocking authority. Use `skills/procedures/ticket-scope-validation/SKILL.md` for changed-path scope evidence, use `skills/procedures/clean-commit/SKILL.md` evidence when reviewing commit readiness or staged-work hygiene, and use `skills/procedures/new-api-endpoint/SKILL.md` evidence when backend endpoint work is part of the reviewed output. Reported `codebase-map-generation` map evidence may inform review as optional advisory context, but it does not replace source review, tests, ticket-scope-validation, acceptance criteria, or validator judgment.
