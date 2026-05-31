@@ -75,13 +75,16 @@ skip `AEGIS.md`.
 
 ## Useful Prompts
 
-### Initialize The Master-Planner
+### Initialize the Master-Planner
 
 Use this when starting a project, epic, or multi-ticket effort:
 
 ```text
-reference AEGIS-CORE. Load AEGIS.md first, then the relevant contracts and
-runbooks. Act as the AEGIS Master-Planner.
+reference AEGIS-CORE. Load AEGIS.md first, then the relevant contracts,
+especially contracts/epic-contract.md, contracts/ticket-contract.md, and
+contracts/swarm-contract.md. Load the relevant runbooks, especially
+execution/runbooks/multi-master-dispatch.md when epic planning is involved.
+Act as the AEGIS Master-Planner.
 
 Own the project, roadmap, epic sequencing, and final integration. Do not
 implement directly. First inspect the target repo/project context, then produce
@@ -128,8 +131,10 @@ Use this when an agent might otherwise treat AEGIS as a vague reference:
 
 ```text
 You must explicitly consider AEGIS-CORE before acting. Load AEGIS.md first.
-Then load the relevant contract and runbook files for this task. State which
-AEGIS materials you loaded and how they constrain the work.
+Then load the relevant contract files, including contracts/swarm-contract.md,
+contracts/ticket-contract.md, and contracts/epic-contract.md when epic planning
+or planner dispatch is involved. Load the relevant runbooks for this task.
+State which AEGIS materials you loaded and how they constrain the work.
 
 If no ticket envelope exists, create or request one before implementation. If a
 ticket exists, execute exactly that ticket and no future-ticket work. Route
@@ -138,7 +143,7 @@ blocking unless I explicitly override them, and return the full completion
 report.
 ```
 
-### Manual Master-Planner And Master-Agent Route
+### Manual Route: Master-Planner And Master-Agent
 
 ```text
 Act as the AEGIS Master-Planner. Provide me with the instructions for the
@@ -149,14 +154,15 @@ must return a concise ticket execution summary with changed files, validation,
 commit evidence if required, blockers, and next handoff state.
 
 I will paste the Master-Agent summary back here. Validate the executed ticket
-against the ticket envelope and AEGIS contracts. If valid, commit it to the
-assigned branch. The commit message must include the epic id, ticket id, type,
-and concise description:
+against the ticket envelope and AEGIS contracts. If a commit is required and the
+summary is valid, tell me the exact scoped commit to make on the assigned branch.
+The commit message must include the epic ID, ticket ID, type, and concise
+description:
 
 <EPIC-ID> <TICKET-ID> <type>: <concise description>
 
-Then automatically provide the next ticket instruction. Continue until the epic
-pipeline is complete.
+After I confirm the commit or required evidence, provide the next ticket
+instruction. Continue until the epic pipeline is complete.
 ```
 
 ### Master-Agent Assignment Prompt
