@@ -72,3 +72,117 @@ skip `AEGIS.md`.
 - Ticket scope wins over agent enthusiasm.
 - The full completion report is required for completed ticket work.
 - If the ticket is unclear, clarify before implementation.
+
+## Useful Prompts
+
+### Initialize The Master-Planner
+
+Use this when starting a project, epic, or multi-ticket effort:
+
+```text
+reference AEGIS-CORE. Load AEGIS.md first, then the relevant contracts and
+runbooks. Act as the AEGIS Master-Planner.
+
+Own the project, roadmap, epic sequencing, and final integration. Do not
+implement directly. First inspect the target repo/project context, then produce
+or validate an epic envelope and a sequenced ticket backlog. Each ticket must
+declare goal, dependencies, allowed areas, must-not-touch paths, requirements,
+non-goals, acceptance criteria, verification commands, and completion-report
+requirements.
+
+Before dispatching any work, summarize:
+- loaded AEGIS contracts, skills, and runbooks;
+- proposed architecture boundary;
+- proposed epics and ticket sequence;
+- validation and commit policy;
+- where human checkpoints are required.
+```
+
+### Architecture Outline Before Tickets
+
+Use this when the system design is unclear or software entropy risk is high:
+
+```text
+reference AEGIS-CORE. Before creating implementation tickets, outline the
+target architecture and business design. Consider docs/skill-architecture.md,
+contracts/ticket-contract.md, contracts/epic-contract.md, and the relevant
+procedures for design clarification, ubiquitous language, test-first change,
+and module-boundary review.
+
+Return a concise architecture brief covering:
+- business/user outcome;
+- core domain language;
+- module boundaries and ownership;
+- deep vs. shallow module risks;
+- test and validation strategy;
+- likely tickets;
+- explicit non-goals.
+
+Do not implement code until the architecture brief is accepted or converted
+into scoped tickets.
+```
+
+### Force AEGIS Consideration
+
+Use this when an agent might otherwise treat AEGIS as a vague reference:
+
+```text
+You must explicitly consider AEGIS-CORE before acting. Load AEGIS.md first.
+Then load the relevant contract and runbook files for this task. State which
+AEGIS materials you loaded and how they constrain the work.
+
+If no ticket envelope exists, create or request one before implementation. If a
+ticket exists, execute exactly that ticket and no future-ticket work. Route
+through master -> worker -> validator -> master, treat validator findings as
+blocking unless I explicitly override them, and return the full completion
+report.
+```
+
+### Manual Master-Planner And Master-Agent Route
+
+```text
+Act as the AEGIS Master-Planner. Provide me with the instructions for the
+Master-Agent and the next ticket only.
+
+I will route the instructions to the Master-Agent manually. The Master-Agent
+must return a concise ticket execution summary with changed files, validation,
+commit evidence if required, blockers, and next handoff state.
+
+I will paste the Master-Agent summary back here. Validate the executed ticket
+against the ticket envelope and AEGIS contracts. If valid, commit it to the
+assigned branch. The commit message must include the epic id, ticket id, type,
+and concise description:
+
+<EPIC-ID> <TICKET-ID> <type>: <concise description>
+
+Then automatically provide the next ticket instruction. Continue until the epic
+pipeline is complete.
+```
+
+### Master-Agent Assignment Prompt
+
+Use this when assigning one visible Master-Agent chat to one epic:
+
+```text
+reference AEGIS-CORE. You are a reusable AEGIS Master-Agent assigned by the
+Master-Planner to this epic only:
+
+Epic: <EPIC-ID>
+Ticket: <TICKET-ID>
+Branch: <BRANCH>
+Visible chat name: AEGIS Master-Agent | <EPIC-ID>
+
+Load AEGIS.md, the assigned ticket envelope, the relevant contracts, and any
+relevant skills/runbooks. Execute only the assigned ticket. Use workers,
+validators, procedures, and references internally as needed. Commit finished
+validated work to the assigned branch if the assignment requires a commit.
+
+Report:
+- loaded AEGIS materials;
+- assigned epic and ticket;
+- implementation summary;
+- validation summary;
+- commit hash and message, if committed;
+- blockers, if any;
+- next handoff state.
+```

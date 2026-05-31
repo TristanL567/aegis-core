@@ -1,0 +1,45 @@
+ticket_id: AEGIS-PLANNER-AGENT-003
+
+goal: >
+  Establish the canonical commit responsibility and commit message format for
+  Master-Agent assignments.
+
+dependencies:
+  - AEGIS-PLANNER-AGENT-001
+  - AEGIS-PLANNER-AGENT-002
+
+allowed_areas:
+  - contracts/ticket-contract.md
+  - execution/runbooks/clean-commit.md
+
+must_not_touch:
+  - skills/
+  - execution/prompts/
+  - tools/
+  - docs/
+
+requirements:
+  - State that a Master-Agent commits finished assigned work to the assignment
+    branch when `commit_required: true`.
+  - Define canonical commit format:
+    `<EPIC-ID> <TICKET-ID> <type>: <concise description>`.
+  - Define allowed types: `feature`, `bug`, `user-story`, `docs`, `test`,
+    `refactor`, and `chore`.
+  - State that commit messages must match the assigned epic and ticket IDs.
+  - State that commits must include only ticket-owned files.
+
+non_goals:
+  - Do not change git tooling.
+  - Do not alter existing clean-commit procedure content unless needed to point
+    to the new policy.
+
+acceptance_criteria:
+  - Ticket contract and clean-commit runbook both name the canonical format.
+  - Commit responsibility is tied to Master-Agent assignment.
+  - Scope-only commit requirement remains explicit.
+
+verification_commands:
+  - git diff -- contracts/ticket-contract.md execution/runbooks/clean-commit.md
+  - py -3.10 .\tools\validate_skill_library.py
+
+completion_report_required: true

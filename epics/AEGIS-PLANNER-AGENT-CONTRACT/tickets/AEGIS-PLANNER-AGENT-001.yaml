@@ -1,0 +1,48 @@
+ticket_id: AEGIS-PLANNER-AGENT-001
+
+goal: >
+  Define the Master-Agent assignment contract so a Master-Agent is a reusable
+  execution unit assigned by the Master-Planner, not the owner of an epic.
+
+dependencies: []
+
+allowed_areas:
+  - contracts/epic-contract.md
+  - execution/templates/master-agent-assignment.example.yaml
+
+must_not_touch:
+  - skills/
+  - execution/runbooks/
+  - execution/prompts/
+  - tools/
+  - docs/
+
+requirements:
+  - Add a "Master-Agent Assignment" section to `contracts/epic-contract.md`.
+  - State that the Master-Planner owns project, roadmap, epic sequencing, and
+    final integration.
+  - State that a Master-Agent is a temporary reusable execution unit assigned
+    to one epic at a time.
+  - Define assignment fields: `master_agent_id`, `assigned_epic_id`,
+    `assigned_ticket_ids`, `assignment_branch`, `base`, `visible_chat_name`,
+    `dispatched_by`, `commit_required`, and `assignment_state`.
+  - Define assignment states: `idle`, `assigned`, `executing`, `validating`,
+    `committed`, `reported`, `released`, `blocked`.
+  - Add `execution/templates/master-agent-assignment.example.yaml` with the same
+    fields.
+
+non_goals:
+  - Do not change role prompts.
+  - Do not implement thread/chat tooling.
+  - Do not alter ticket execution rules.
+
+acceptance_criteria:
+  - Contract states clearly that Master-Agents do not own epics.
+  - Assignment template contains all required assignment fields.
+  - Existing epic and ticket contract semantics remain intact.
+
+verification_commands:
+  - git diff -- contracts/epic-contract.md execution/templates/master-agent-assignment.example.yaml
+  - py -3.10 .\tools\validate_skill_library.py
+
+completion_report_required: true

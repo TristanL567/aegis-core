@@ -1,0 +1,48 @@
+ticket_id: AEGIS-PLANNER-AGENT-004
+
+goal: >
+  Update the Master-Planner role and multi-master runbook with Master-Agent
+  assignment lifecycle, visible chat policy, and chat renaming guidance.
+
+dependencies:
+  - AEGIS-PLANNER-AGENT-001
+  - AEGIS-PLANNER-AGENT-002
+
+allowed_areas:
+  - skills/roles/master-planner/SKILL.md
+  - execution/runbooks/multi-master-dispatch.md
+
+must_not_touch:
+  - contracts/
+  - skills/roles/master/
+  - skills/roles/*-worker/
+  - skills/roles/*-validator/
+  - skills/procedures/
+  - skills/references/
+  - tools/
+  - docs/
+
+requirements:
+  - State that visible chats correspond to Master-Agents, not internal workers
+    or validators, unless a provider requires otherwise.
+  - State that existing Master-Agent chats should be reused when possible.
+  - State that a Master-Agent chat should be renamed when its assignment
+    changes, using `AEGIS Master-Agent | <EPIC-ID>`.
+  - Document assignment lifecycle:
+    `idle -> assigned -> executing -> validating -> committed -> reported -> released`.
+  - Preserve planner non-implementation and validator-gate rules.
+
+non_goals:
+  - Do not implement provider-specific thread renaming.
+  - Do not change existing master role behavior.
+
+acceptance_criteria:
+  - Master-Planner role names project/epic scheduling ownership.
+  - Runbook includes visible chat and assignment lifecycle sections.
+  - Existing worker and validator role prompts are untouched.
+
+verification_commands:
+  - git diff -- skills/roles/master-planner/SKILL.md execution/runbooks/multi-master-dispatch.md
+  - py -3.10 .\tools\validate_skill_library.py
+
+completion_report_required: true

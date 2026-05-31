@@ -1,0 +1,46 @@
+ticket_id: AEGIS-PLANNER-AGENT-005
+
+goal: >
+  Add validator and planner gates that block Master-Agent assignment completion
+  when required assignment, validation, commit, or handoff evidence is missing.
+
+dependencies:
+  - AEGIS-PLANNER-AGENT-001
+  - AEGIS-PLANNER-AGENT-002
+  - AEGIS-PLANNER-AGENT-003
+
+allowed_areas:
+  - skills/roles/code-validator/SKILL.md
+  - skills/roles/master-planner/SKILL.md
+
+must_not_touch:
+  - contracts/
+  - skills/procedures/
+  - skills/references/
+  - execution/
+  - tools/
+  - docs/
+
+requirements:
+  - Code-validator must check that Master-Agent reports include assigned epic,
+    assigned tickets, validation summary, commit hash/message when required,
+    blockers, and next handoff state.
+  - Master-Planner must reject assignment completion when required evidence is
+    missing.
+  - Validator must check commit message format when commit evidence is present.
+  - Human override remains explicit and must be reported.
+
+non_goals:
+  - Do not add validator tooling.
+  - Do not create a new validator role.
+
+acceptance_criteria:
+  - Code-validator names Master-Agent report evidence as a blocking check.
+  - Master-Planner names missing report evidence as a blocking planner gate.
+  - Validator authority remains independent and blocking.
+
+verification_commands:
+  - git diff -- skills/roles/code-validator/SKILL.md skills/roles/master-planner/SKILL.md
+  - py -3.10 .\tools\validate_skill_library.py
+
+completion_report_required: true

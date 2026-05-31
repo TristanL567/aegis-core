@@ -30,42 +30,46 @@ Completed epics are no longer active planning files in `to-do/`.
 - AI Coding Design Discipline: `AEGIS-DESIGN-001` through
   `AEGIS-DESIGN-006`.
 - Understand Anything Cross-Reference: `AEGIS-UA-001` through `AEGIS-UA-005`.
+- Multi-Master Epic Planning: `AEGIS-PLANNER-001` through
+  `AEGIS-PLANNER-004`.
 
 ## Active Backlog
 
-### AEGIS-PLANNER: Multi-Master Epic Planning
+### AEGIS-PLANNER-AGENT-CONTRACT: Master-Agent Assignment Contract
 
-Goal: introduce an epic-level planner, epic contract, ledger, and dispatch model
-so AEGIS can coordinate multiple master-agents across disjoint epics without
-weakening one-ticket discipline inside each master.
+Goal: tighten the planner architecture so the Master-Planner owns projects,
+epics, sequencing, and final integration while reusable Master-Agents execute
+one assigned epic at a time and report commit-ready evidence back to the
+planner.
 
 Canonical planning artifacts:
 
-- `epics/AEGIS-PLANNER/envelope.yaml`
-- `epics/AEGIS-PLANNER/tickets/AEGIS-PLANNER-001.yaml`
-- `epics/AEGIS-PLANNER/tickets/AEGIS-PLANNER-002.yaml`
-- `epics/AEGIS-PLANNER/tickets/AEGIS-PLANNER-003.yaml`
-- `epics/AEGIS-PLANNER/tickets/AEGIS-PLANNER-004.yaml`
+- `epics/AEGIS-PLANNER-AGENT-CONTRACT/envelope.yaml`
+- `epics/AEGIS-PLANNER-AGENT-CONTRACT/tickets/AEGIS-PLANNER-AGENT-001.yaml`
+- `epics/AEGIS-PLANNER-AGENT-CONTRACT/tickets/AEGIS-PLANNER-AGENT-002.yaml`
+- `epics/AEGIS-PLANNER-AGENT-CONTRACT/tickets/AEGIS-PLANNER-AGENT-003.yaml`
+- `epics/AEGIS-PLANNER-AGENT-CONTRACT/tickets/AEGIS-PLANNER-AGENT-004.yaml`
+- `epics/AEGIS-PLANNER-AGENT-CONTRACT/tickets/AEGIS-PLANNER-AGENT-005.yaml`
+- `epics/AEGIS-PLANNER-AGENT-CONTRACT/tickets/AEGIS-PLANNER-AGENT-006.yaml`
 
 Planned ticket sequence:
 
-1. `AEGIS-PLANNER-001`: define the epic contract, master-planner role, and
-   per-master exactly-one-ticket clarification.
-2. `AEGIS-PLANNER-002`: define the epic ledger, retry budget, escalation,
-   abort, and recovery semantics.
-3. `AEGIS-PLANNER-003`: add the provider-agnostic multi-master dispatch
-   runbook.
-4. `AEGIS-PLANNER-004`: add epic envelope, ledger, and checkpoint-summary
-   templates.
+1. `AEGIS-PLANNER-AGENT-001`: define the Master-Agent assignment contract and
+   assignment template.
+2. `AEGIS-PLANNER-AGENT-002`: define the Master-Agent output report contract
+   and report template.
+3. `AEGIS-PLANNER-AGENT-003`: establish Master-Agent commit responsibility and
+   commit message format.
+4. `AEGIS-PLANNER-AGENT-004`: update planner role/runbook with assignment
+   lifecycle, visible chat policy, and chat renaming guidance.
+5. `AEGIS-PLANNER-AGENT-005`: add validator and planner gates for assignment
+   completion evidence.
+6. `AEGIS-PLANNER-AGENT-006`: update human-facing options and prompts for
+   planner initialization and AEGIS-forcing prompts.
 
-Execution remains one ticket at a time. Parallelism is only an epic-layer design
-goal until the planner contract and runbook are implemented and validated.
-
-Follow-up epics to keep scoped separately:
-
-- `AEGIS-PLANNER-TRANSPORT`: provider-specific dispatch transport.
-- `AEGIS-PLANNER-VALIDATOR`: epic-level validator role.
-- `AEGIS-PLANNER-TOOLING`: concurrency, budget, and ledger tooling.
+Execution remains one ticket at a time. This epic does not implement provider
+thread tooling; it defines the contract and gates that provider tooling can
+later automate.
 
 ### TODO-001: Revise Worker Skill Architecture
 
