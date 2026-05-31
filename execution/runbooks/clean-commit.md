@@ -90,6 +90,26 @@ Do not revert the file unless the ticket owns it and the operator explicitly int
 
 ## Commit Message
 
+When a master-agent assignment has `commit_required: true`, the master-agent
+commits finished assigned work to the assignment branch. The commit message must
+match the assigned epic and ticket IDs, and the commit must include only
+ticket-owned files.
+
+Canonical master-agent assignment commit format:
+
+```text
+<EPIC-ID> <TICKET-ID> <type>: <concise description>
+```
+
+Allowed `type` values are `feature`, `bug`, `user-story`, `docs`, `test`,
+`refactor`, and `chore`.
+
+Example:
+
+```text
+AEGIS-PLANNER-AGENT-CONTRACT AEGIS-PLANNER-AGENT-003 docs: define assignment commit policy
+```
+
 Use a message that identifies the ticket, states the goal, and summarizes acceptance criteria covered by the commit.
 
 Recommended format:

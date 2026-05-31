@@ -56,6 +56,33 @@ mechanical cleanup, formatting, or generated-file refreshes.
 - A worker must stop and report a boundary issue when the ticket cannot be completed within its declared scope.
 - A worker must not stage, commit, push, or open pull requests unless the ticket explicitly requires that action.
 
+## Master-Agent Assignment Commits
+
+When a master-agent is assigned by the master-planner and the assignment has
+`commit_required: true`, the master-agent commits finished assigned work to the
+assignment branch before reporting back to the planner.
+
+Master-agent assignment commits must use this canonical format:
+
+```text
+<EPIC-ID> <TICKET-ID> <type>: <concise description>
+```
+
+Allowed commit `type` values:
+
+- `feature`
+- `bug`
+- `user-story`
+- `docs`
+- `test`
+- `refactor`
+- `chore`
+
+The `<EPIC-ID>` and `<TICKET-ID>` in the commit message must match the assigned
+epic and ticket. A master-agent commit must include only files owned by the
+assigned ticket's `allowed_areas` and must not include unrelated dirty worktree
+state.
+
 ## Boundary Behavior
 
 When a task appears to require touching a `must_not_touch` area, the worker must:
