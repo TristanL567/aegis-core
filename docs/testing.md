@@ -1,14 +1,15 @@
-# Testing the Skill Library
+# Testing The AEGIS Libraries
 
-This repository includes a lightweight validator to confirm the basic library contract.
+This repository includes lightweight validators to confirm the basic skill and
+prompt library contracts.
 
-## Command
+## Skill Library
 
 ```powershell
 py -3.10 .\tools\validate_skill_library.py
 ```
 
-## What It Checks
+Checks include:
 
 - skill discovery under `skills/*/SKILL.md`
 - required frontmatter fields
@@ -16,6 +17,22 @@ py -3.10 .\tools\validate_skill_library.py
 - valid handoff targets
 - expected output envelope fields
 - presence of at least one `master`, `worker`, and `validator`
+
+## Prompt Library
+
+```powershell
+py -3.10 .\tools\validate_prompt_library.py
+```
+
+Checks include:
+
+- required prompt frontmatter and mandatory sections
+- target role and prompt reference resolution
+- `prompts/README.md` routing rows
+- canonical invocation single-sourcing
+- execute-stage inline kernel blocks
+- duplicate prompt IDs
+- simple forbidden behavior-ownership phrasing
 
 ## Workflow-Level Scenarios
 
