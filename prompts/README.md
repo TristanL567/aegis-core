@@ -1,0 +1,65 @@
+# Prompt Library
+
+This is the only human-facing prompt surface for AEGIS-CORE. Use this routing
+table to choose a prompt, then follow that prompt's Next step table.
+
+Canonical invocation, canonical source: `prompts/01-init/use-aegis-core.md`
+
+```text
+Reference AEGIS-CORE. Load AEGIS.md first, follow its Bootstrap Load Order,
+use ticketing, route work through master -> worker -> validator -> master, and
+pass the AEGIS.md Conformance Gate before reporting completion.
+```
+
+## I Want To
+
+| I want to... | File | Status |
+| --- | --- | --- |
+| bind an agent to AEGIS-CORE | `prompts/01-init/use-aegis-core.md` | pending: OVH-006 |
+| check whether a session is correctly bound | `prompts/01-init/verify-binding.md` | pending: OVH-006 |
+| force a strict binding acknowledgment before work | `prompts/01-init/bind-strict.md` | pending: OVH-006 |
+| apply AEGIS-CORE to a target project | `prompts/01-init/apply-to-project.md` | pending: OVH-006 |
+| start an epic planning session | `prompts/02-plan/init-master-planner.md` | pending: OVH-007 |
+| turn a broad idea into an epic | `prompts/02-plan/epic-from-idea.md` | pending: OVH-007 |
+| turn a small idea into one ticket | `prompts/02-plan/ticket-from-idea.md` | pending: OVH-007 |
+| produce a planner handoff package | `prompts/02-plan/planner-handoff.md` | pending: OVH-007 |
+| dispatch a master-agent in relay mode | `prompts/03-execute/relay/dispatch-master-agent.md` | pending: OVH-008 |
+| relay a ticket to a worker | `prompts/03-execute/relay/relay-to-worker.md` | pending: OVH-008 |
+| relay completed worker output to a validator | `prompts/03-execute/relay/relay-to-validator.md` | pending: OVH-008 |
+| relay epic evidence to the master-validator | `prompts/03-execute/relay/relay-to-master-validator.md` | pending: OVH-008 |
+| run one ticket with declared checkpoints | `prompts/03-execute/checkpointed/run-ticket-checkpointed.md` | pending: OVH-008 |
+| resume from a checkpoint summary | `prompts/03-execute/checkpointed/resume-from-checkpoint.md` | pending: OVH-008 |
+| run an epic autonomously until a gate or error | `prompts/03-execute/autonomous/run-epic-autonomous.md` | pending: OVH-008 |
+| state the autonomous supervision contract | `prompts/03-execute/autonomous/supervision-contract.md` | pending: OVH-008 |
+| resume autonomous work from the ledger | `prompts/03-execute/autonomous/resume-from-ledger.md` | pending: OVH-008 |
+| validate one completed ticket | `prompts/04-validate/validate-ticket.md` | pending: OVH-009 |
+| check a run against the Conformance Gate | `prompts/04-validate/conformance-check.md` | pending: OVH-009 |
+| authorize a human override of a validator finding | `prompts/04-validate/authorize-override.md` | pending: OVH-009 |
+| halt and correct scope drift | `prompts/04-validate/drift-correction.md` | pending: OVH-009 |
+| request a completion report | `prompts/05-finish/completion-report.md` | pending: OVH-009 |
+| prepare a ticket-bound commit | `prompts/05-finish/clean-commit.md` | pending: OVH-009 |
+| close an epic after validation | `prompts/05-finish/close-epic.md` | pending: OVH-009 |
+| ask for current ledger-format status | `prompts/06-control/status-report.md` | pending: OVH-010 |
+| halt a session while preserving state | `prompts/06-control/halt.md` | pending: OVH-010 |
+| recover context after interruption | `prompts/06-control/recover-context.md` | pending: OVH-010 |
+| configure Claude Code for AEGIS | `prompts/07-providers/claude-code-setup.md` | pending: OVH-010 |
+| configure Codex for AEGIS | `prompts/07-providers/codex-setup.md` | pending: OVH-010 |
+| configure Antigravity for AEGIS | `prompts/07-providers/antigravity-setup.md` | pending: OVH-010 |
+| create provider custom instructions | `prompts/07-providers/custom-instructions.md` | pending: OVH-010 |
+
+## Mode Picker
+
+| Mode | Human role | Agent routing | Best fit |
+| --- | --- | --- | --- |
+| relay | Human routes every handoff, maximum overview | Agents return envelopes and wait for the human to paste the next prompt | High control, audits, new workflows |
+| checkpointed | Human approves declared gates | Agents self-route between declared checkpoints | Normal epic execution with bounded autonomy |
+| autonomous | Human sees start, checkpoints on error, and end | Agents self-route until gate failure, critical error, or merge gate | Mature workflows with trusted evidence |
+
+Across all modes, supervisors never edit project files. The flow composes as:
+planner -> master-agent -> workers -> validator -> master-validator. Prompts
+invoke roles and cite contracts; role behavior stays in `skills/roles/`, and
+invariants stay in `contracts/`.
+
+## Conventions
+
+Every prompt file must follow `prompts/00-conventions.md`.
