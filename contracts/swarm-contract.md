@@ -89,6 +89,10 @@ Required Master-Agent report fields:
 ## Boundary Rules
 
 - `master` does not implement feature work directly.
+- `master` edits no project files. It coordinates scope, dispatch, validation,
+  and human approval instead of changing ticket deliverables.
+- The `worker` role is the only role that edits files inside a ticket's
+  `allowed_areas`.
 - `worker` roles do not self-approve.
 - `validator` roles do not implement new features as part of review.
 - Cross-domain work should be rerouted instead of silently absorbed by the current role.

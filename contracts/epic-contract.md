@@ -88,6 +88,19 @@ The master-planner owns:
 - merge-gate preparation;
 - final merge request to the human.
 
+## Supervision and Edit Boundaries
+
+The `master-planner` produces only epic envelopes, ticket envelopes, handoff
+packages, ledger entries, and checkpoint artifacts. It MUST NOT edit project
+files, dispatch workers directly, or implement ticket work.
+
+The `master-agent` coordinates assigned ticket execution. It MUST NOT edit
+project files. Its writable artifacts are limited to epic ledger and checkpoint
+files when the assignment explicitly requires those records. Every
+implementation step is dispatched to a worker selected from `skills/roles/` by
+ticket type, and every worker result routes through a validator before it
+returns to the master-agent.
+
 ## Master-Agent Assignment
 
 The master-planner owns project direction, roadmap state, epic sequencing, and

@@ -89,6 +89,11 @@ human-authorized override for the validator finding.
   `skills/procedures/ticket-scope-validation/SKILL.md`; use that procedure
   when the ticket scope itself needs procedural validation rather than
   duplicating it here.
+- Supervisor edit lock: verify no project-file edits are attributable to
+  `master-planner` or `master-agent`; ledger and checkpoint artifacts are
+  exempt.
+- Worker dispatch role path: verify every worker dispatch references an
+  existing role path under `skills/roles/`.
 - Canonical behavior: verify the work relied on `skills/` and `contracts/` for
   role, handoff, ticket, validation, and completion-report behavior instead of
   re-authoring those bodies downstream.

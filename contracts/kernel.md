@@ -26,9 +26,9 @@ authoritative.
 8. Commit only against an active ticket, and use `[TICKET-ID] concise
    description` with a description of 72 characters or fewer. Owner:
    `contracts/ticket-contract.md` Master-Agent Assignment Commits.
-9. Supervisors do not implement feature work directly. Owner:
-   `contracts/swarm-contract.md` Boundary Rules; expanded supervisor locks are
-   promoted by AEGIS-OVH-003.
+9. Supervisors do not edit project files; workers own ticket deliverable edits.
+   Owner: `contracts/epic-contract.md` Supervision and Edit Boundaries and
+   `contracts/swarm-contract.md` Boundary Rules.
 10. When intent, dependencies, or boundaries are unclear, block for
     clarification before implementation. Owner: `contracts/ticket-contract.md`
     Boundary Behavior and `contracts/epic-contract.md` Critical Errors.
