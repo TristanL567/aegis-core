@@ -1,0 +1,45 @@
+#!/bin/sh
+
+# AEGIS commit-msg hook template. Copy into a target repository; do not install
+# automatically from AEGIS-CORE.
+
+AEGIS_TICKET_DIR="${AEGIS_TICKET_DIR:-.aegis/tickets}"
+AEGIS_ACTIVE_TICKET_FILE="${AEGIS_ACTIVE_TICKET_FILE:-.aegis/active-ticket}"
+
+message_file="$1"
+subject="$(sed -n '1p' "$message_file" | tr -d '\r')"
+
+fail() {
+  printf '%s\n' "AEGIS commit-msg: $1" >&2
+  exit 1
+}
+
+printf '%s\n' "$subject" | grep -Eq '^\[[A-Z0-9-]+\] .{1,72}$' \
+  || fail "message must match '[TICKET-ID] concise description' with description <=72 chars"
+
+ticket_id="$(printf '%s\n' "$subject" | sed -E 's/^\[([^]]+)\].*/\1/')"
+
+active_ticket=""
+if [ -f "$AEGIS_ACTIVE_TICKET_FILE" ]; then
+  active_ticket="$(tr -d '\r\n' < "$AEGIS_ACTIVE_TICKET_FILE")"
+fi
+
+if [ -n "$active_ticket" ]; then
+  active_name="$(basename "$active_ticket")"
+  active_name="${active_name%.*}"
+  [ "$active_name" = "$ticket_id" ] || fail "message ticket '$ticket_id' does not match active ticket '$active_ticket'"
+fi
+
+if [ -n "$AEGIS_TICKET_DIR" ]; then
+  found_ticket=""
+  for ext in yaml yml md; do
+    candidate="$AEGIS_TICKET_DIR/$ticket_id.$ext"
+    if [ -f "$candidate" ]; then
+      found_ticket="$candidate"
+      break
+    fi
+  done
+  [ -n "$found_ticket" ] || fail "ticket file for '$ticket_id' not found under $AEGIS_TICKET_DIR"
+fi
+
+exit 0

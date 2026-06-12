@@ -34,6 +34,21 @@ Checks include:
 - duplicate prompt IDs
 - simple forbidden behavior-ownership phrasing
 
+## Hook Templates
+
+Hook templates live under `execution/templates/hooks/`. Test them in a scratch
+target repository, not in AEGIS-CORE itself:
+
+1. Copy `commit-msg` and `pre-commit` into the scratch repo's hook path.
+2. Create `.aegis/active-ticket` and a matching ticket file under
+   `.aegis/tickets/`.
+3. Confirm a malformed commit message is rejected.
+4. Confirm an out-of-scope staged file is rejected.
+5. Confirm a conformant ticket-owned commit is accepted.
+
+On Windows Git Bash, set `AEGIS_PYTHON` to the Python launcher that can run
+`tools/validate_ticket_scope.py`, such as `py -3.10` when available.
+
 ## Workflow-Level Scenarios
 
 Use these scenarios when validating an execution runtime built on top of this library:

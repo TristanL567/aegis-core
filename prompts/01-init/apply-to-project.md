@@ -69,9 +69,11 @@ Return whether context is sufficient. If ready, return exactly one first ticket
 envelope and selected worker and validator role paths. If not ready, return the
 missing context that blocks ticket creation.
 
-Hook install step: record whether the target project should install
-execution/templates/hooks/ when available (pending: OVH-013). Do not install
-hooks silently.
+Hook install step: ask whether the target project should install templates from
+execution/templates/hooks/. If approved, instruct the operator to copy the hooks
+or set core.hooksPath, configure .aegis/active-ticket, AEGIS_TICKET_DIR,
+AEGIS_CORE_ROOT, and AEGIS_PYTHON, then verify commit-msg and pre-commit reject
+bad commits. Do not install hooks silently.
 ```
 
 ## Expected response

@@ -1,0 +1,51 @@
+#!/bin/sh
+
+# AEGIS pre-commit hook template. Copy into a target repository; do not install
+# automatically from AEGIS-CORE.
+
+AEGIS_CORE_ROOT="${AEGIS_CORE_ROOT:-../aegis-core}"
+AEGIS_TICKET_DIR="${AEGIS_TICKET_DIR:-.aegis/tickets}"
+AEGIS_ACTIVE_TICKET_FILE="${AEGIS_ACTIVE_TICKET_FILE:-.aegis/active-ticket}"
+AEGIS_PYTHON="${AEGIS_PYTHON:-python3}"
+
+fail() {
+  printf '%s\n' "AEGIS pre-commit: $1" >&2
+  exit 1
+}
+
+[ -f "$AEGIS_ACTIVE_TICKET_FILE" ] || fail "missing active ticket file: $AEGIS_ACTIVE_TICKET_FILE"
+
+active_ticket="$(tr -d '\r\n' < "$AEGIS_ACTIVE_TICKET_FILE")"
+[ -n "$active_ticket" ] || fail "active ticket file is empty"
+
+ticket_path=""
+if [ -f "$active_ticket" ]; then
+  ticket_path="$active_ticket"
+else
+  for ext in yaml yml md; do
+    candidate="$AEGIS_TICKET_DIR/$active_ticket.$ext"
+    if [ -f "$candidate" ]; then
+      ticket_path="$candidate"
+      break
+    fi
+  done
+fi
+[ -n "$ticket_path" ] || fail "active ticket '$active_ticket' does not resolve under $AEGIS_TICKET_DIR"
+
+ticket_dir="$(dirname "$ticket_path")"
+ticket_base="$(basename "$ticket_path")"
+ticket_path="$(cd "$ticket_dir" && pwd)/$ticket_base"
+
+validator="$AEGIS_CORE_ROOT/tools/validate_ticket_scope.py"
+[ -f "$validator" ] || fail "missing validator: $validator"
+
+staged_files="$(git diff --cached --name-only --diff-filter=ACMR)"
+[ -n "$staged_files" ] || exit 0
+
+set -- "$validator" --ticket "$ticket_path"
+for path in $staged_files; do
+  set -- "$@" --changed-file "$path"
+done
+
+# shellcheck disable=SC2086
+$AEGIS_PYTHON "$@"
