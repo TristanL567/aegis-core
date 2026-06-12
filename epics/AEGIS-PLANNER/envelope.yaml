@@ -82,7 +82,7 @@ epic_must_not_touch:
   - execution/runbooks/codex.md
   - execution/runbooks/claude-code.md
   - execution/runbooks/clean-commit.md
-  - execution/prompts/
+  - prompts/
   - tools/
   - docs/
 

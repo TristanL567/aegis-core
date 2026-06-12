@@ -16,9 +16,9 @@ Use these existing materials rather than duplicating their full contents:
 - `execution/runbooks/shared-orchestration-loop.md` for the `master -> worker -> validator -> master` loop.
 - `execution/runbooks/codex.md` for Codex single-ticket execution.
 - `execution/runbooks/clean-commit.md` for scoped staging and commit preparation.
-- `execution/prompts/start-ticket-run.md` for dispatching one ticket.
-- `execution/prompts/validate-ticket.md` for validator review.
-- `execution/prompts/clean-commit.md` for clean commit preparation.
+- `prompts/03-execute/relay/dispatch-master-agent.md` for dispatching one ticket.
+- `prompts/04-validate/validate-ticket.md` for validator review.
+- `prompts/05-finish/clean-commit.md` for clean commit preparation.
 - `execution/templates/ticket-envelope.example.yaml` for ticket envelope shape.
 - `execution/templates/completion-report.example.yaml` for completion report shape.
 
@@ -83,7 +83,7 @@ Keep tickets small enough that each can pass through one worker, one validator g
 
 For each ticket:
 
-1. Start with the master using `execution/prompts/start-ticket-run.md`.
+1. Start with the master using `prompts/03-execute/relay/dispatch-master-agent.md`.
 2. Provide the full ticket envelope, including target project constraints and prior context.
 3. Dispatch only the selected worker for that ticket.
 4. Require the worker to stay inside `allowed_areas` and preserve `must_not_touch`.
@@ -94,7 +94,7 @@ The worker must not expand scope because the target project contains adjacent is
 
 ## Validate the Ticket
 
-Route the worker output to a validator using `execution/prompts/validate-ticket.md`.
+Route the worker output to a validator using `prompts/04-validate/validate-ticket.md`.
 
 The validator applies the `AEGIS.md` Conformance Gate before approval. This gate
 checks the ticket envelope, one-ticket execution, the
@@ -115,7 +115,7 @@ Validators are blocking by default. If the result is `fixes_required`, route fin
 
 ## Commit Cleanly
 
-After the validator approves the ticket, use `execution/runbooks/clean-commit.md` and `execution/prompts/clean-commit.md`.
+After the validator approves the ticket, use `execution/runbooks/clean-commit.md` and `prompts/05-finish/clean-commit.md`.
 
 Commit only the current ticket's changed files. Preserve unrelated dirty files in the target project, and do not use broad staging commands unless the ticket explicitly owns every affected path. Do not merge, push, or advance to another ticket as part of a single-ticket commit.
 

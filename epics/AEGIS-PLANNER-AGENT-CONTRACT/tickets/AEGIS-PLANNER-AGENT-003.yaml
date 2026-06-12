@@ -14,7 +14,7 @@ allowed_areas:
 
 must_not_touch:
   - skills/
-  - execution/prompts/
+  - prompts/
   - tools/
   - docs/
 
@@ -22,10 +22,8 @@ requirements:
   - State that a Master-Agent commits finished assigned work to the assignment
     branch when `commit_required: true`.
   - Define canonical commit format:
-    `<EPIC-ID> <TICKET-ID> <type>: <concise description>`.
-  - Define allowed types: `feature`, `bug`, `user-story`, `docs`, `test`,
-    `refactor`, and `chore`.
-  - State that commit messages must match the assigned epic and ticket IDs.
+    `[TICKET-ID] concise description`.
+  - State that commit messages must match the assigned ticket ID.
   - State that commits must include only ticket-owned files.
 
 non_goals:

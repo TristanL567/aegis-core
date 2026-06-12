@@ -61,7 +61,7 @@ Do not commit if required validation failed unless a human explicitly approves c
 Stage only files allowed by the current ticket. Prefer explicit file paths:
 
 ```powershell
-git add -- execution/runbooks/clean-commit.md execution/prompts/clean-commit.md
+git add -- execution/runbooks/clean-commit.md prompts/05-finish/clean-commit.md
 ```
 
 After staging, review both the staged file list and staged diff:

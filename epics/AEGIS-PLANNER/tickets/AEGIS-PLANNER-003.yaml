@@ -54,7 +54,7 @@ must_not_touch:
   - execution/runbooks/clean-commit.md
   - execution/runbooks/antigravity.md
   - execution/runbooks/understand-anything.md
-  - execution/prompts/
+  - prompts/
   - execution/templates/
   - tools/
   - docs/

@@ -10,7 +10,7 @@ dependencies:
   - AEGIS-PLANNER-AGENT-004
 
 allowed_areas:
-  - User-Instructions/options-and-prompts.md
+  - prompts/
 
 must_not_touch:
   - AEGIS.md
@@ -43,7 +43,7 @@ acceptance_criteria:
   - Existing options and caveats remain present.
 
 verification_commands:
-  - rg -n "Initialize the Master-Planner|Architecture Outline|Force AEGIS Consideration|Manual Route" .\User-Instructions\options-and-prompts.md
+  - rg -n "master-planner|architecture|AEGIS-CORE|relay" .\prompts\README.md .\prompts\02-plan\*.md .\prompts\01-init\*.md
   - py -3.10 .\tools\validate_skill_library.py
 
 completion_report_required: true

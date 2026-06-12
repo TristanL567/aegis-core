@@ -11,12 +11,10 @@ edit AEGIS-CORE itself.
 Load `AEGIS.md` first. The instruction `reference AEGIS-CORE` means following
 the bootstrap order, conformance contract, and Conformance Gate defined there.
 
-Use `execution/prompts/use-aegis-core.md` when you need a copy/paste-ready
-operator prompt for applying AEGIS-CORE to another project.
-
-Use `docs/human-usage-guide.md` when the human asks how to operate this repo,
-which optional settings exist, or what caveats matter before applying AEGIS to a
-target project.
+Use `prompts/README.md` when the human asks how to operate this repo, choose a
+workflow mode, or find a copy/paste-ready prompt. Use
+`prompts/01-init/use-aegis-core.md` when you need the canonical binding prompt
+for applying AEGIS-CORE to another project.
 
 ## How To Use This Repo
 
@@ -28,8 +26,8 @@ target project.
 5. Select worker and validator role prompts from `skills/roles/` by ticket type.
 6. Consult `skills/procedures/` and `skills/references/` when a selected role or
    ticket calls for procedural or reference knowledge.
-7. Use `execution/runbooks/` and `execution/prompts/` for provider-agnostic
-   operating guidance.
+7. Use `execution/runbooks/` for provider-agnostic operating guidance and
+   `prompts/` for human-facing prompt routing.
 8. Apply the selected AEGIS-CORE content to the target project, not to this repo.
 
 ## Optional Context And Evidence

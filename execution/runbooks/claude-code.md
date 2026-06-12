@@ -22,7 +22,7 @@ Recommended local agent stubs:
 - `worker`: points to the selected worker skill in `skills/`, such as `skills/backend-worker/SKILL.md`, `skills/chart-worker/SKILL.md`, `skills/model-interpreter-worker/SKILL.md`, or `skills/ticket-planner-worker/SKILL.md`; implements only the assigned ticket scope.
 - `validator`: points to the selected validator skill in `skills/`, usually `skills/code-validator/SKILL.md` or `skills/ds-validator/SKILL.md`; reviews only and does not implement fixes.
 
-Use `execution/prompts/claude-code-agent-setup.md` as copy/paste setup material when creating those local stubs. Do not commit generated provider-local agent files to this repository unless a separate ticket explicitly allows that path.
+Use `prompts/07-providers/claude-code-setup.md` as copy/paste setup material when creating those local stubs. Do not commit generated provider-local agent files to this repository unless a separate ticket explicitly allows that path.
 
 ## Ticket Flow
 
@@ -38,7 +38,7 @@ Use `execution/prompts/claude-code-agent-setup.md` as copy/paste setup material 
 Each Claude Code role session or subagent invocation should include:
 
 - **Canonical references**: the relevant `skills/.../SKILL.md` path and required contracts from `contracts/`.
-- **Execution references**: `execution/runbooks/shared-orchestration-loop.md`, this runbook, and the prompt files under `execution/prompts/`.
+- **Execution references**: `execution/runbooks/shared-orchestration-loop.md`, this runbook, and prompt files under `prompts/`.
 - **Ticket envelope**: objective, scope, allowed areas, must-not-touch areas, acceptance criteria, verification commands, and branch context.
 - **Prior artifacts**: master routing decision, worker output, validator findings, changed files, and verification notes needed for the current step.
 - **Output envelope instruction**: require `status`, `summary`, `artifacts`, `findings`, `next_recommended_role`, `changed_files`, and `verification`.

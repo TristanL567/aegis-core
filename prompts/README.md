@@ -63,3 +63,38 @@ invariants stay in `contracts/`.
 ## Conventions
 
 Every prompt file must follow `prompts/00-conventions.md`.
+
+## How Humans Operate AEGIS
+
+1. Bind the session with `prompts/01-init/use-aegis-core.md`.
+2. Choose relay, checkpointed, or autonomous mode from the Mode Picker.
+3. Create or verify exactly one ticket envelope before implementation.
+4. Dispatch work through master-agent -> worker -> validator.
+5. Treat validator findings as blocking unless you explicitly record an
+   override with `prompts/04-validate/authorize-override.md`.
+6. Request a completion report before commit or epic closure.
+7. Commit only ticket-owned files with the ticket-bound format from
+   `contracts/kernel.md`.
+
+## Optional Context
+
+Use graph evidence, codebase maps, or external discovery only when a ticket
+needs it and the ticket scope allows it. Generated summaries are context
+evidence, not authority; confirm claims against source files before relying on
+them.
+
+## Review Questions
+
+- Did the session execute exactly one ticket?
+- Did changed files stay inside `allowed_areas` and outside `must_not_touch`?
+- Did a validator approve the work, or did the human record an override?
+- Are verification commands, skipped checks, and manual checks named?
+- Is the diff small enough to review?
+- Did the result preserve the stated business and architecture intent?
+
+## Caveats
+
+AEGIS is not a blind spec-to-code pipeline. Do not let prompts, optional tools,
+or provider runtimes expand scope, fork role behavior, skip validation, or copy
+full contract and role bodies into target projects unless a ticket explicitly
+requires a fork.

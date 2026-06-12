@@ -45,7 +45,7 @@ must_not_touch:
   - contracts/
   - skills/
   - execution/runbooks/
-  - execution/prompts/
+  - prompts/
   - tools/
   - docs/
   - AEGIS.md

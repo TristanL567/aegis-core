@@ -109,7 +109,7 @@ instruction for external agents, then wired it into consumer entry paths.
 Delivered:
 - `AEGIS.md`
 - canonical invocation text
-- `execution/prompts/use-aegis-core.md`
+- `prompts/01-init/use-aegis-core.md`
 - Conformance Gate guidance referenced from validator and apply-to-project paths
 - consumer entry pointers from `README.md`, `AGENT_PROMPT.md`, and
   `docs/library-consumption.md`

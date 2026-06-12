@@ -60,7 +60,7 @@ epic_allowed_areas:
   - execution/runbooks/clean-commit.md
   - execution/templates/master-agent-assignment.example.yaml
   - execution/templates/master-agent-report.example.yaml
-  - User-Instructions/options-and-prompts.md
+  - prompts/
   - epics/AEGIS-PLANNER-AGENT-CONTRACT/
 
 epic_must_not_touch:
@@ -72,7 +72,7 @@ epic_must_not_touch:
   - skills/roles/ds-validator/
   - skills/roles/model-interpreter-worker/
   - skills/roles/ticket-planner-worker/
-  - execution/prompts/
+  - prompts/
   - tools/
   - docs/
 

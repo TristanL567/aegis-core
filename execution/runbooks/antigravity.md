@@ -7,7 +7,7 @@ This runbook is provider-specific guidance for Antigravity only. Canonical role 
 ## Recommended Pattern
 
 - Run exactly one assigned ticket at a time. Finish the current ticket's validator gate and completion report before starting another ticket.
-- Start each ticket with a master session using `execution/prompts/antigravity-master-session.md`.
+- Start each ticket with a master session using `prompts/07-providers/antigravity-setup.md`.
 - Preserve the loop as `master -> worker -> validator -> master`.
 - Use Antigravity workflow or session templates as wrappers around the canonical skills, not replacements for them.
 - Keep ticket state, changed files, verification evidence, and validator results visible in every handoff.

@@ -14,7 +14,7 @@ allowed_areas:
 must_not_touch:
   - skills/
   - execution/runbooks/
-  - execution/prompts/
+  - prompts/
   - tools/
   - docs/
 

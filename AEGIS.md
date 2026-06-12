@@ -16,8 +16,8 @@ use ticketing, route work through master -> worker -> validator -> master, and
 pass the AEGIS.md Conformance Gate before reporting completion.
 ```
 
-For a complete copy/paste-ready prompt, use
-`execution/prompts/use-aegis-core.md`.
+For the complete prompt library and copy/paste-ready entry prompt, use
+`prompts/README.md` and `prompts/01-init/use-aegis-core.md`.
 
 ## Kernel
 
@@ -110,6 +110,7 @@ contracts and role files:
 - Epic fields, multi-master dispatch boundaries, autonomy policy, critical
   errors, and merge-gate semantics live in `contracts/epic-contract.md`.
 - Short-form invariants live in `contracts/kernel.md`.
+- Human-facing prompt routing lives in `prompts/README.md`.
 - Master behavior lives in `skills/roles/master/SKILL.md`.
 - The orchestration loop lives in
   `execution/runbooks/shared-orchestration-loop.md`.
