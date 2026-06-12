@@ -57,16 +57,11 @@ Staging:
 Commit-message guidance:
 - Include the ticket ID.
 - Include the ticket goal.
-- Include the acceptance criteria satisfied by the commit.
-- Include validation evidence.
+- Keep the description 72 characters or fewer.
 
-Recommended commit message format:
+Required commit message format:
 
-<TICKET-ID>: <short goal>
-
-- Goal: <one sentence describing the ticket objective>
-- Acceptance: <criterion or grouped criteria satisfied>
-- Validation: <command and result>
+[TICKET-ID] concise description
 
 Post-commit checks if a commit is made:
 - Run `git status --short`.

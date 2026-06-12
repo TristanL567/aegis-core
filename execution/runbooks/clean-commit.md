@@ -92,53 +92,33 @@ Do not revert the file unless the ticket owns it and the operator explicitly int
 
 When a master-agent assignment has `commit_required: true`, the master-agent
 commits finished assigned work to the assignment branch. The commit message must
-match the assigned epic and ticket IDs, and the commit must include only
-ticket-owned files.
+match the assigned ticket ID, and the commit must include only ticket-owned
+files.
 
-Canonical master-agent assignment commit format:
+Canonical ticket-bound commit format:
 
 ```text
-<EPIC-ID> <TICKET-ID> <type>: <concise description>
+[TICKET-ID] concise description
 ```
 
-Allowed `type` values are `feature`, `bug`, `user-story`, `docs`, `test`,
-`refactor`, and `chore`.
+The description must be 72 characters or fewer.
 
 Example:
 
 ```text
-AEGIS-PLANNER-AGENT-CONTRACT AEGIS-PLANNER-AGENT-003 docs: define assignment commit policy
+[AEGIS-MERGE-006] add clean commit guidance
 ```
 
-Use a message that identifies the ticket, states the goal, and summarizes acceptance criteria covered by the commit.
-
-Recommended format:
-
-```text
-<TICKET-ID>: <short goal>
-
-- Goal: <one sentence describing the ticket objective>
-- Acceptance: <criterion or grouped criteria satisfied>
-- Validation: <command and result>
-```
-
-Example:
-
-```text
-AEGIS-MERGE-006: add clean commit guidance
-
-- Goal: document scoped ticket commit workflow for AEGIS execution.
-- Acceptance: covers branch checks, scoped staging, validation, message format, merge, push, and dirty worktree preservation.
-- Validation: py -3.10 .\tools\validate_skill_library.py passed.
-```
+Use the completion report, not the commit message, for acceptance criteria and
+validation details.
 
 Create the commit only after staged diff review passes:
 
 ```powershell
-git commit
+git commit -m "[TICKET-ID] concise description"
 ```
 
-Use an editor or `git commit -m` as appropriate for the environment, but keep the same ticket ID, goal, acceptance, and validation content.
+Use the assigned ticket ID and a concise description of the actual change.
 
 ## Post-Commit Check
 

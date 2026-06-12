@@ -70,15 +70,14 @@ evidence as blocking. The report must include:
 - next handoff state.
 
 When commit evidence is present, check that the commit message matches the
-canonical assignment format:
+canonical ticket-bound format:
 
 ```text
-<EPIC-ID> <TICKET-ID> <type>: <concise description>
+[TICKET-ID] concise description
 ```
 
-The epic and ticket IDs in the message must match the assigned epic and assigned
-ticket, and the `type` must be one of `feature`, `bug`, `user-story`, `docs`,
-`test`, `refactor`, or `chore`.
+The ticket ID in the message must match the assigned ticket, and the description
+must be 72 characters or fewer.
 
 Validator authority remains independent and blocking. A human override must be
 explicit, carried through the master, and reported as an override rather than

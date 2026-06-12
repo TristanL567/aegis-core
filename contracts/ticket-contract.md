@@ -62,26 +62,16 @@ When a master-agent is assigned by the master-planner and the assignment has
 `commit_required: true`, the master-agent commits finished assigned work to the
 assignment branch before reporting back to the planner.
 
-Master-agent assignment commits must use this canonical format:
+Ticket-bound commits must use this canonical format:
 
 ```text
-<EPIC-ID> <TICKET-ID> <type>: <concise description>
+[TICKET-ID] concise description
 ```
 
-Allowed commit `type` values:
-
-- `feature`
-- `bug`
-- `user-story`
-- `docs`
-- `test`
-- `refactor`
-- `chore`
-
-The `<EPIC-ID>` and `<TICKET-ID>` in the commit message must match the assigned
-epic and ticket. A master-agent commit must include only files owned by the
-assigned ticket's `allowed_areas` and must not include unrelated dirty worktree
-state.
+The description must be 72 characters or fewer. The `TICKET-ID` in the commit
+message must match the assigned ticket. A master-agent commit must include only
+files owned by the assigned ticket's `allowed_areas` and must not include
+unrelated dirty worktree state.
 
 ## Boundary Behavior
 
