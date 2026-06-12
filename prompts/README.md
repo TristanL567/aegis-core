@@ -15,10 +15,10 @@ pass the AEGIS.md Conformance Gate before reporting completion.
 
 | I want to... | File | Status |
 | --- | --- | --- |
-| bind an agent to AEGIS-CORE | `prompts/01-init/use-aegis-core.md` | pending: OVH-006 |
-| check whether a session is correctly bound | `prompts/01-init/verify-binding.md` | pending: OVH-006 |
-| force a strict binding acknowledgment before work | `prompts/01-init/bind-strict.md` | pending: OVH-006 |
-| apply AEGIS-CORE to a target project | `prompts/01-init/apply-to-project.md` | pending: OVH-006 |
+| bind an agent to AEGIS-CORE | `prompts/01-init/use-aegis-core.md` | ready |
+| check whether a session is correctly bound | `prompts/01-init/verify-binding.md` | ready |
+| force a strict binding acknowledgment before work | `prompts/01-init/bind-strict.md` | ready |
+| apply AEGIS-CORE to a target project | `prompts/01-init/apply-to-project.md` | ready |
 | start an epic planning session | `prompts/02-plan/init-master-planner.md` | pending: OVH-007 |
 | turn a broad idea into an epic | `prompts/02-plan/epic-from-idea.md` | pending: OVH-007 |
 | turn a small idea into one ticket | `prompts/02-plan/ticket-from-idea.md` | pending: OVH-007 |
