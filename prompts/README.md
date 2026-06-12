@@ -32,13 +32,13 @@ pass the AEGIS.md Conformance Gate before reporting completion.
 | run an epic autonomously until a gate or error | `prompts/03-execute/autonomous/run-epic-autonomous.md` | ready |
 | state the autonomous supervision contract | `prompts/03-execute/autonomous/supervision-contract.md` | ready |
 | resume autonomous work from the ledger | `prompts/03-execute/autonomous/resume-from-ledger.md` | ready |
-| validate one completed ticket | `prompts/04-validate/validate-ticket.md` | pending: OVH-009 |
-| check a run against the Conformance Gate | `prompts/04-validate/conformance-check.md` | pending: OVH-009 |
-| authorize a human override of a validator finding | `prompts/04-validate/authorize-override.md` | pending: OVH-009 |
-| halt and correct scope drift | `prompts/04-validate/drift-correction.md` | pending: OVH-009 |
-| request a completion report | `prompts/05-finish/completion-report.md` | pending: OVH-009 |
-| prepare a ticket-bound commit | `prompts/05-finish/clean-commit.md` | pending: OVH-009 |
-| close an epic after validation | `prompts/05-finish/close-epic.md` | pending: OVH-009 |
+| validate one completed ticket | `prompts/04-validate/validate-ticket.md` | ready |
+| check a run against the Conformance Gate | `prompts/04-validate/conformance-check.md` | ready |
+| authorize a human override of a validator finding | `prompts/04-validate/authorize-override.md` | ready |
+| halt and correct scope drift | `prompts/04-validate/drift-correction.md` | ready |
+| request a completion report | `prompts/05-finish/completion-report.md` | ready |
+| prepare a ticket-bound commit | `prompts/05-finish/clean-commit.md` | ready |
+| close an epic after validation | `prompts/05-finish/close-epic.md` | ready |
 | ask for current ledger-format status | `prompts/06-control/status-report.md` | pending: OVH-010 |
 | halt a session while preserving state | `prompts/06-control/halt.md` | pending: OVH-010 |
 | recover context after interruption | `prompts/06-control/recover-context.md` | pending: OVH-010 |
