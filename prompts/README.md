@@ -23,15 +23,15 @@ pass the AEGIS.md Conformance Gate before reporting completion.
 | turn a broad idea into an epic | `prompts/02-plan/epic-from-idea.md` | ready |
 | turn a small idea into one ticket | `prompts/02-plan/ticket-from-idea.md` | ready |
 | produce a planner handoff package | `prompts/02-plan/planner-handoff.md` | ready |
-| dispatch a master-agent in relay mode | `prompts/03-execute/relay/dispatch-master-agent.md` | pending: OVH-008 |
-| relay a ticket to a worker | `prompts/03-execute/relay/relay-to-worker.md` | pending: OVH-008 |
-| relay completed worker output to a validator | `prompts/03-execute/relay/relay-to-validator.md` | pending: OVH-008 |
-| relay epic evidence to the master-validator | `prompts/03-execute/relay/relay-to-master-validator.md` | pending: OVH-008 |
-| run one ticket with declared checkpoints | `prompts/03-execute/checkpointed/run-ticket-checkpointed.md` | pending: OVH-008 |
-| resume from a checkpoint summary | `prompts/03-execute/checkpointed/resume-from-checkpoint.md` | pending: OVH-008 |
-| run an epic autonomously until a gate or error | `prompts/03-execute/autonomous/run-epic-autonomous.md` | pending: OVH-008 |
-| state the autonomous supervision contract | `prompts/03-execute/autonomous/supervision-contract.md` | pending: OVH-008 |
-| resume autonomous work from the ledger | `prompts/03-execute/autonomous/resume-from-ledger.md` | pending: OVH-008 |
+| dispatch a master-agent in relay mode | `prompts/03-execute/relay/dispatch-master-agent.md` | ready |
+| relay a ticket to a worker | `prompts/03-execute/relay/relay-to-worker.md` | ready |
+| relay completed worker output to a validator | `prompts/03-execute/relay/relay-to-validator.md` | ready |
+| relay epic evidence to the master-validator | `prompts/03-execute/relay/relay-to-master-validator.md` | ready |
+| run one ticket with declared checkpoints | `prompts/03-execute/checkpointed/run-ticket-checkpointed.md` | ready |
+| resume from a checkpoint summary | `prompts/03-execute/checkpointed/resume-from-checkpoint.md` | ready |
+| run an epic autonomously until a gate or error | `prompts/03-execute/autonomous/run-epic-autonomous.md` | ready |
+| state the autonomous supervision contract | `prompts/03-execute/autonomous/supervision-contract.md` | ready |
+| resume autonomous work from the ledger | `prompts/03-execute/autonomous/resume-from-ledger.md` | ready |
 | validate one completed ticket | `prompts/04-validate/validate-ticket.md` | pending: OVH-009 |
 | check a run against the Conformance Gate | `prompts/04-validate/conformance-check.md` | pending: OVH-009 |
 | authorize a human override of a validator finding | `prompts/04-validate/authorize-override.md` | pending: OVH-009 |
