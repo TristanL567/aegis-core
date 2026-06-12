@@ -39,13 +39,13 @@ pass the AEGIS.md Conformance Gate before reporting completion.
 | request a completion report | `prompts/05-finish/completion-report.md` | ready |
 | prepare a ticket-bound commit | `prompts/05-finish/clean-commit.md` | ready |
 | close an epic after validation | `prompts/05-finish/close-epic.md` | ready |
-| ask for current ledger-format status | `prompts/06-control/status-report.md` | pending: OVH-010 |
-| halt a session while preserving state | `prompts/06-control/halt.md` | pending: OVH-010 |
-| recover context after interruption | `prompts/06-control/recover-context.md` | pending: OVH-010 |
-| configure Claude Code for AEGIS | `prompts/07-providers/claude-code-setup.md` | pending: OVH-010 |
-| configure Codex for AEGIS | `prompts/07-providers/codex-setup.md` | pending: OVH-010 |
-| configure Antigravity for AEGIS | `prompts/07-providers/antigravity-setup.md` | pending: OVH-010 |
-| create provider custom instructions | `prompts/07-providers/custom-instructions.md` | pending: OVH-010 |
+| ask for current ledger-format status | `prompts/06-control/status-report.md` | ready |
+| halt a session while preserving state | `prompts/06-control/halt.md` | ready |
+| recover context after interruption | `prompts/06-control/recover-context.md` | ready |
+| configure Claude Code for AEGIS | `prompts/07-providers/claude-code-setup.md` | ready |
+| configure Codex for AEGIS | `prompts/07-providers/codex-setup.md` | ready |
+| configure Antigravity for AEGIS | `prompts/07-providers/antigravity-setup.md` | ready |
+| create provider custom instructions | `prompts/07-providers/custom-instructions.md` | ready |
 
 ## Mode Picker
 
