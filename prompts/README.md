@@ -19,10 +19,10 @@ pass the AEGIS.md Conformance Gate before reporting completion.
 | check whether a session is correctly bound | `prompts/01-init/verify-binding.md` | ready |
 | force a strict binding acknowledgment before work | `prompts/01-init/bind-strict.md` | ready |
 | apply AEGIS-CORE to a target project | `prompts/01-init/apply-to-project.md` | ready |
-| start an epic planning session | `prompts/02-plan/init-master-planner.md` | pending: OVH-007 |
-| turn a broad idea into an epic | `prompts/02-plan/epic-from-idea.md` | pending: OVH-007 |
-| turn a small idea into one ticket | `prompts/02-plan/ticket-from-idea.md` | pending: OVH-007 |
-| produce a planner handoff package | `prompts/02-plan/planner-handoff.md` | pending: OVH-007 |
+| start an epic planning session | `prompts/02-plan/init-master-planner.md` | ready |
+| turn a broad idea into an epic | `prompts/02-plan/epic-from-idea.md` | ready |
+| turn a small idea into one ticket | `prompts/02-plan/ticket-from-idea.md` | ready |
+| produce a planner handoff package | `prompts/02-plan/planner-handoff.md` | ready |
 | dispatch a master-agent in relay mode | `prompts/03-execute/relay/dispatch-master-agent.md` | pending: OVH-008 |
 | relay a ticket to a worker | `prompts/03-execute/relay/relay-to-worker.md` | pending: OVH-008 |
 | relay completed worker output to a validator | `prompts/03-execute/relay/relay-to-validator.md` | pending: OVH-008 |
