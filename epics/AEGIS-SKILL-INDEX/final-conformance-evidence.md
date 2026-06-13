@@ -4,7 +4,7 @@ ticket_id: AEGIS-SKI-005
 epic_id: AEGIS-SKILL-INDEX
 collected_at: 2026-06-13
 collector_role: skill-library-worker
-master_validator_approval: pending
+master_validator_approval: validator_approved_after_ledger_remediation
 
 ## Validator Commands
 
@@ -62,4 +62,4 @@ The strict validator failed on these unresolved procedures:
 ## Staging And Cleanup Findings
 
 - `tools/__pycache__/validate_skill_library.cpython-310.pyc` is untracked and outside AEGIS-SKI-005 scope; do not stage it as ticket output.
-- Master-validator approval is not claimed here and remains pending validator review.
+- Master-validator approval is recorded in the epic ledger after remediation.

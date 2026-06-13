@@ -1,6 +1,11 @@
 .idea/
 *.iml
 
+# Python bytecode artifacts
+__pycache__/
+*.pyc
+*.py[cod]
+
 # Understand Anything local scratch artifacts
 .understand-anything/intermediate/
 .understand-anything/diff-overlay.json
