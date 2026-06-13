@@ -1,6 +1,8 @@
 # Clean Commit Runbook
 
-Use this runbook after one ticket has completed its worker step and validator gate. It describes how to prepare a clean, scoped commit for exactly one ticket at a time.
+Use this runbook after one ticket has completed its worker step and validator
+gate. It describes how to prepare a clean, scoped, traceable commit for exactly
+one ticket at a time.
 
 This runbook is operator guidance only. Canonical role behavior remains in `skills/`, and canonical ticket and swarm rules remain in `contracts/`.
 
@@ -94,6 +96,11 @@ When a master-agent assignment has `commit_required: true`, the master-agent
 commits finished assigned work to the assignment branch. The commit message must
 match the assigned ticket ID, and the commit must include only ticket-owned
 files.
+
+Prepare one clean commit per ticket unless the master or human operator carries
+different commit guidance. The hook templates can check commit subject format,
+active-ticket match, and staged-file scope, but they do not enforce
+one-commit-per-ticket history.
 
 Canonical ticket-bound commit format:
 

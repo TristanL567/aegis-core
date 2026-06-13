@@ -24,8 +24,11 @@ authoritative.
 7. Return the full completion report for completed tickets. Owner:
    `contracts/ticket-contract.md` Completion Report.
 8. Commit only against an active ticket, and use `[TICKET-ID] concise
-   description` with a description of 72 characters or fewer. Owner:
-   `contracts/ticket-contract.md` Master-Agent Assignment Commits.
+   description` with a description of 72 characters or fewer so each
+   ticket-bound commit is traceable to its ticket. Current hooks check commit
+   message format, active-ticket match, and staged-file scope; they do not
+   enforce one-commit-per-ticket history. Owner: `contracts/ticket-contract.md`
+   Master-Agent Assignment Commits.
 9. Supervisors do not edit project files; workers own ticket deliverable edits.
    Owner: `contracts/epic-contract.md` Supervision and Edit Boundaries and
    `contracts/swarm-contract.md` Boundary Rules.

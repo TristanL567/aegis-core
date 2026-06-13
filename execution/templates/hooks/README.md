@@ -53,3 +53,10 @@ the ticket envelope. When it contains an ID, the hooks resolve it under
 - `pre-commit` rejects staged files outside the active ticket's `allowed_areas`
   or inside `must_not_touch` by wiring through
   `tools/validate_ticket_scope.py`.
+
+## Traceability Limit
+
+The hooks help make commits traceable by checking commit subject format,
+active-ticket match, and staged-file scope. They do not enforce
+one-commit-per-ticket history. Keeping one clean commit per ticket remains an
+operator, master-agent, and review responsibility.

@@ -62,7 +62,11 @@ When a master-agent is assigned by the master-planner and the assignment has
 `commit_required: true`, the master-agent commits finished assigned work to the
 assignment branch before reporting back to the planner.
 
-Ticket-bound commits must use this canonical format:
+Ticket-bound commits must be traceable to the assigned ticket. Use one clean
+commit per ticket unless the master or human operator explicitly carries
+different commit guidance for the assignment.
+
+Ticket-bound commit subjects must use this canonical format:
 
 ```text
 [TICKET-ID] concise description
@@ -72,6 +76,10 @@ The description must be 72 characters or fewer. The `TICKET-ID` in the commit
 message must match the assigned ticket. A master-agent commit must include only
 files owned by the assigned ticket's `allowed_areas` and must not include
 unrelated dirty worktree state.
+
+The hook templates can enforce commit subject format, active-ticket match, and
+staged-file scope. They do not enforce one-commit-per-ticket history; that
+expectation remains an operator, master-agent, and review responsibility.
 
 ## Boundary Behavior
 
