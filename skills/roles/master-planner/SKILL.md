@@ -126,6 +126,12 @@ Critical-error definitions live in `contracts/epic-contract.md`. When any
 critical error occurs, stop dispatch, record the ledger event, and route to the
 human with the smallest safe next decision.
 
+## Procedure Routing
+
+During epic intake, use `skills/procedures/design-clarification-interview/SKILL.md` when missing or ambiguous product, workflow, ownership, acceptance, or boundary context blocks safe epic or ticket dispatch.
+
+Use this role body as the fallback path for epic sequencing, master-agent dispatch, checkpoint handling, ledger decisions, and merge-gate routing when that procedure does not apply cleanly.
+
 ## Standard Output
 
 Return:

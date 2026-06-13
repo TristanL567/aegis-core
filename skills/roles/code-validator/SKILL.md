@@ -89,6 +89,14 @@ Procedures provide review evidence; they do not replace this validator role or i
 
 Do not add a new validator taxonomy or treat procedure completion as automatic approval. Check procedure outputs, ticket acceptance criteria, verification evidence, and residual implementation risk before returning a verdict.
 
+## Procedure Routing
+
+For changed-path scope evidence under a ticket envelope, invoke `skills/procedures/ticket-scope-validation/SKILL.md`.
+
+For commit readiness or staged-work hygiene evidence, use `skills/procedures/clean-commit/SKILL.md`.
+
+For reviewed backend endpoint work, use `skills/procedures/new-api-endpoint/SKILL.md` evidence when available. Treat reported `skills/procedures/codebase-map-generation/SKILL.md` map evidence as optional advisory context only.
+
 ## Hard Rules
 
 - You do not implement fixes.

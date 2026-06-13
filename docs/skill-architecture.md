@@ -42,6 +42,12 @@ The architecture separates orchestration roles, operating discipline, and proced
 - **empty-pointer honesty rule:** `reference_pointers` is required, but an empty list is correct when a procedure consumes no reference.
 - **indexed-reference rule:** Every reference is an indexed drawer set with a `README.md` Sections table and addressable section files.
 
+## Skill Index Validation
+
+The skill library indexes in `skills/roles/README.md`, `skills/procedures/README.md`, and `skills/references/README.md` are validator-enforced discovery surfaces. Each index must contain exactly one row for each corresponding folder, with missing, extra, or duplicate rows treated as hard validation failures.
+
+Procedure reachability is reported separately. A procedure is considered reachable when a role file names `skills/procedures/<procedure>/SKILL.md`, or when the procedure frontmatter declares `standalone: true`. Procedures that are neither routed nor standalone are reported by `tools/validate_skill_library.py` as orphan findings with a default zero exit; `--strict` escalates those orphan findings to validation failures.
+
 ## Doctrinal Constraints
 
 - **existence gate:** No procedural skill is written unless a named failure mode has been observed in real work, because speculative skills dilute attention and create false precision.

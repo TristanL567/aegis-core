@@ -1,4 +1,5 @@
 ---
+standalone: true
 trigger:
   - "Implementation is requested before product, business, design, architecture, or user-workflow intent is clear enough to preserve the human's design concept."
   - "A ticket, request, mockup, issue, or discussion names a desired change but leaves user outcome, workflow, domain meaning, constraints, or architectural fit underspecified."

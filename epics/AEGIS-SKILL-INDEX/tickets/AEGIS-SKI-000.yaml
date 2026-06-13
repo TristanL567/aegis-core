@@ -1,0 +1,87 @@
+ticket_id: AEGIS-SKI-000
+goal: >
+  Add a dedicated skill-library-worker role so AEGIS has an explicit worker for
+  bounded skill-library metadata, manifest, and routing-maintenance tickets.
+dependencies: []
+business_context: >
+  AEGIS-SKI-001 blocked because the selected ticket-planner-worker is
+  planning-only and no current worker role clearly owns edits to
+  skills/procedures/ frontmatter or skill-library indexes. The skill-index epic
+  needs a narrow worker role before procedure metadata or skill index work can
+  proceed safely.
+user_or_operator_outcome: >
+  The master-agent can dispatch skill-library maintenance tickets to an
+  explicit worker role instead of overloading a planning or domain worker role.
+design_concept: >
+  Create a worker role that maintains skill-library structure without owning
+  canonical contracts or broad behavior changes. It may edit skill metadata,
+  category indexes, and procedure-routing sections only when the active ticket
+  grants exact allowed areas and preserves role/procedure semantics.
+architecture_boundary: >
+  Add one new role file at skills/roles/skill-library-worker/SKILL.md. Do not
+  edit existing role, procedure, reference, discipline, contract, prompt,
+  runbook, template, or validator files in this ticket.
+success_signal: >
+  The new role validates under validate_skill_library.py and can be selected as
+  the worker role for AEGIS-SKI-001 through AEGIS-SKI-003.
+tradeoffs_or_constraints:
+  - >
+    Keep the role narrow: skill-library maintenance, not arbitrary repository
+    editing.
+  - Do not copy external role text verbatim.
+  - Use the external skill-cleaner project only as optional design research for
+    audit concepts such as skill roots, duplicate skills, unused skills,
+    prompt-budget pressure, and compact descriptions.
+  - If external integration is desired beyond design inspiration, create a
+    follow-up ticket with explicit licensing and vendoring boundaries.
+allowed_areas:
+  - skills/roles/skill-library-worker/SKILL.md
+must_not_touch:
+  - skills/roles/backend-worker/SKILL.md
+  - skills/roles/chart-worker/SKILL.md
+  - skills/roles/code-validator/SKILL.md
+  - skills/roles/ds-validator/SKILL.md
+  - skills/roles/master/SKILL.md
+  - skills/roles/master-planner/SKILL.md
+  - skills/roles/master-validator/SKILL.md
+  - skills/roles/model-interpreter-worker/SKILL.md
+  - skills/roles/ticket-planner-worker/SKILL.md
+  - skills/procedures/
+  - skills/references/
+  - skills/discipline/
+  - contracts/
+  - prompts/
+  - execution/
+  - tools/
+requirements:
+  - Create a role SKILL.md with the standard role frontmatter required by
+    tools/validate_skill_library.py.
+  - Set role to `worker`.
+  - Describe allowed work as bounded skill-library metadata, index, routing,
+    and validator-support maintenance when the ticket explicitly permits the
+    target paths.
+  - State that the worker must not redefine canonical contracts, weaken role
+    behavior, edit skill bodies unless the ticket allows exact paths, or import
+    external skill behavior.
+  - Include provider notes for codex, claude_code, and antigravity.
+  - Return the standard role envelope and completion-report fields expected of
+    worker roles.
+non_goals:
+  - Do not edit any existing skill file.
+  - Do not add skill indexes.
+  - Do not modify validate_skill_library.py.
+  - Do not vendor, import, or execute the external skill-cleaner code.
+acceptance_criteria:
+  - skills/roles/skill-library-worker/SKILL.md exists.
+  - Skill library validation passes.
+  - The role's scope is narrow enough to prevent arbitrary skill behavior
+    changes while allowing SKI-001 through SKI-003 style maintenance.
+manual_verification_required: true
+manual_verification_steps:
+  - Confirm the role does not permit broad behavior rewrites or external code
+    import.
+  - Confirm the role can safely own the SKI-001 frontmatter metadata edit.
+verification_commands:
+  - git diff -- skills/roles/skill-library-worker/SKILL.md
+  - py -3.10 .\tools\validate_skill_library.py
+completion_report_required: true

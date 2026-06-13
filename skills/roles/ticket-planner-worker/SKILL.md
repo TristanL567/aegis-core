@@ -106,6 +106,14 @@ Fields may be empty only when emptiness is meaningful and explicit, such as `dep
 
 Future planning procedures are deferred until observed failure-mode evidence justifies extracting them from this role. Deferred candidates are `ticket-backlog-decomposition` and `ticket-contract-authoring`; do not create or invoke them as procedures from this role.
 
+## Procedure Routing
+
+When planning is blocked by unclear domain terms, stakeholder language, workflow concepts, or inconsistent naming, invoke `skills/procedures/ubiquitous-language-map/SKILL.md` before finalizing implementation-ready tickets.
+
+When planning is blocked by missing or ambiguous product, workflow, ownership, acceptance, or boundary context, invoke `skills/procedures/design-clarification-interview/SKILL.md` before finalizing implementation-ready tickets.
+
+Use this role body as the fallback path for backlog decomposition, ticket contract authoring, sequencing, dependency mapping, and master handoff when those procedures do not apply cleanly.
+
 ## Standard Output
 
 Return the standard swarm output envelope:

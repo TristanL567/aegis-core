@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import argparse
+from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 import sys
@@ -44,6 +46,11 @@ ALLOWED_HANDOFFS = {"master", "worker", "validator", "human"}
 PROCEDURAL_CLOSET_LINE_BUDGET = 200
 REFERENCE_INDEX_LINE_BUDGET = 120
 REFERENCE_SECTION_LINE_BUDGET = 150
+INDEX_READMES = {
+    "roles": ("roles/README.md", "role"),
+    "procedures": ("procedures/README.md", "procedure"),
+    "references": ("references/README.md", "reference"),
+}
 
 
 @dataclass
@@ -52,6 +59,14 @@ class SkillRecord:
     name: str
     role: str
     handoffs: list[str]
+
+
+@dataclass
+class ProcedureRecord:
+    path: Path
+    name: str
+    standalone: bool
+    routed: bool
 
 
 def extract_frontmatter(path: Path) -> dict:
@@ -107,7 +122,7 @@ def validate_skill(path: Path) -> SkillRecord:
     )
 
 
-def validate_procedural_skill(path: Path) -> None:
+def validate_procedural_skill(path: Path, role_paths: list[Path]) -> ProcedureRecord:
     lines = line_count(path)
     if lines > PROCEDURAL_CLOSET_LINE_BUDGET:
         raise ValueError(
@@ -155,6 +170,75 @@ def validate_procedural_skill(path: Path) -> None:
                 "unresolved reference pointer: "
                 f"'{ref}/{section}' does not resolve to sections/{section}.md"
             )
+
+    procedure_name = path.parent.name
+    route = f"skills/procedures/{procedure_name}/SKILL.md"
+    routed = any(route in role_path.read_text(encoding="utf-8") for role_path in role_paths)
+    standalone = data.get("standalone") is True
+    return ProcedureRecord(
+        path=path,
+        name=procedure_name,
+        standalone=standalone,
+        routed=routed,
+    )
+
+
+def extract_index_table_ids(readme_path: Path, id_column: str) -> list[str]:
+    lines = readme_path.read_text(encoding="utf-8").splitlines()
+    for index, line in enumerate(lines):
+        stripped = line.strip()
+        if not stripped.startswith("|"):
+            continue
+
+        cells = [cell.strip() for cell in stripped.strip("|").split("|")]
+        if id_column not in cells:
+            continue
+
+        id_index = cells.index(id_column)
+        table_ids: list[str] = []
+        for table_line in lines[index + 2 :]:
+            table_stripped = table_line.strip()
+            if not table_stripped:
+                if table_ids:
+                    break
+                continue
+            if not table_stripped.startswith("|"):
+                if table_ids:
+                    break
+                continue
+
+            row_cells = [cell.strip() for cell in table_stripped.strip("|").split("|")]
+            if len(row_cells) <= id_index:
+                continue
+            table_ids.append(row_cells[id_index])
+
+        if table_ids:
+            return table_ids
+        raise ValueError(f"index table has no {id_column} ids")
+
+    raise ValueError(f"missing index table with {id_column} column")
+
+
+def validate_index(readme_path: Path, folder_dir: Path, id_column: str) -> None:
+    if not readme_path.is_file():
+        raise ValueError("missing index README")
+
+    table_ids = extract_index_table_ids(readme_path, id_column)
+    folder_ids = sorted(path.name for path in folder_dir.iterdir() if path.is_dir())
+    id_counts = Counter(table_ids)
+
+    duplicates = sorted(id_ for id_, count in id_counts.items() if count > 1)
+    missing = sorted(set(folder_ids) - set(table_ids))
+    extra = sorted(set(table_ids) - set(folder_ids))
+    findings = []
+    if missing:
+        findings.append(f"missing rows: {missing}")
+    if extra:
+        findings.append(f"extra rows: {extra}")
+    if duplicates:
+        findings.append(f"duplicate rows: {duplicates}")
+    if findings:
+        raise ValueError("; ".join(findings))
 
 
 def extract_sections_table_ids(readme_path: Path) -> list[str]:
@@ -217,7 +301,18 @@ def validate_reference(readme_path: Path) -> None:
                 )
 
 
-def main() -> int:
+def parse_args(argv: list[str]) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Validate the AEGIS skill library.")
+    parser.add_argument(
+        "--strict",
+        action="store_true",
+        help="Treat orphan procedures as validation failures.",
+    )
+    return parser.parse_args(argv)
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = parse_args(sys.argv[1:] if argv is None else argv)
     skill_paths = sorted((SKILLS_DIR / "roles").glob("*/SKILL.md"))
     if not skill_paths:
         print("No skills found.")
@@ -226,7 +321,9 @@ def main() -> int:
     reference_readme_paths = sorted((SKILLS_DIR / "references").glob("*/README.md"))
 
     records: list[SkillRecord] = []
+    procedure_records: list[ProcedureRecord] = []
     errors: list[str] = []
+    orphan_findings: list[str] = []
 
     for path in skill_paths:
         try:
@@ -236,7 +333,7 @@ def main() -> int:
 
     for path in procedural_skill_paths:
         try:
-            validate_procedural_skill(path)
+            procedure_records.append(validate_procedural_skill(path, skill_paths))
         except Exception as exc:  # noqa: BLE001
             errors.append(f"{path.relative_to(ROOT)}: {exc}")
 
@@ -245,6 +342,25 @@ def main() -> int:
             validate_reference(path)
         except Exception as exc:  # noqa: BLE001
             errors.append(f"{path.relative_to(ROOT)}: {exc}")
+
+    for index_name, (readme_relative_path, id_column) in INDEX_READMES.items():
+        try:
+            validate_index(
+                SKILLS_DIR / readme_relative_path,
+                SKILLS_DIR / index_name,
+                id_column,
+            )
+        except Exception as exc:  # noqa: BLE001
+            errors.append(f"skills/{readme_relative_path}: {exc}")
+
+    for procedure in procedure_records:
+        if not procedure.routed and not procedure.standalone:
+            orphan_findings.append(
+                f"{procedure.path.relative_to(ROOT)} is neither routed by a role nor standalone"
+            )
+
+    if args.strict:
+        errors.extend(orphan_findings)
 
     roles_present = {record.role for record in records}
     missing_roles = ALLOWED_ROLES - roles_present
@@ -258,6 +374,11 @@ def main() -> int:
         return 1
 
     print("Skill library validation passed.\n")
+    if orphan_findings:
+        print("Orphan procedure findings:")
+        for finding in orphan_findings:
+            print(f"- {finding}")
+        print()
     for record in records:
         rel_path = record.path.relative_to(ROOT)
         handoffs = ", ".join(record.handoffs)

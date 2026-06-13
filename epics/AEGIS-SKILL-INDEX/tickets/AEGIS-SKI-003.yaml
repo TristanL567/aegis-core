@@ -1,0 +1,110 @@
+ticket_id: AEGIS-SKI-003
+goal: >
+  Create the canonical skill manifest and category indexes under skills/.
+dependencies:
+  - AEGIS-SKI-000 completed
+  - AEGIS-SKI-001 completed
+  - AEGIS-SKI-002 completed
+business_context: >
+  No skill manifest exists today. Discovery depends on reading role files or
+  knowing the folder layout. This ticket gives agents and humans a canonical
+  map of roles, procedures, and references.
+user_or_operator_outcome: >
+  An agent can confirm that a skill exists and whether to open it from a
+  category table before loading the skill body.
+design_concept: >
+  `skills/README.md` is the canonical agent-facing skill manifest. Category
+  README files contain one row per skill folder. References are described as
+  knowledge drawers, not triggerable skills. Tables are derived from
+  frontmatter and role-routing references so SKI-004 can verify them.
+architecture_boundary: >
+  New README files only. Do not edit role, procedure, reference, discipline,
+  contract, prompt, runbook, template, or tool bodies.
+success_signal: >
+  Four README files exist and every role, procedure, and reference folder has
+  exactly one row in its category index.
+tradeoffs_or_constraints:
+  - Do not create a parallel README_AGENTS.md manifest. If a future provider
+    needs that filename, it should point to skills/README.md rather than fork
+    the manifest.
+  - Trigger summaries should be short distillations, not copied trigger blocks.
+  - Consuming skills for references should be computed from procedure reference
+    pointers and direct role references where present.
+allowed_areas:
+  - skills/README.md
+  - skills/procedures/README.md
+  - skills/references/README.md
+  - skills/roles/README.md
+must_not_touch:
+  - skills/procedures/accessibility-audit/
+  - skills/procedures/backtest-validation/
+  - skills/procedures/chart-artifact-generation/
+  - skills/procedures/clean-commit/
+  - skills/procedures/cloud-iam-change-review/
+  - skills/procedures/codebase-map-generation/
+  - skills/procedures/deployment-failure-triage/
+  - skills/procedures/design-clarification-interview/
+  - skills/procedures/frontend-component-implementation/
+  - skills/procedures/investment-thesis-evidence-check/
+  - skills/procedures/model-calibration-review/
+  - skills/procedures/model-output-interpretation/
+  - skills/procedures/module-boundary-review/
+  - skills/procedures/new-api-endpoint/
+  - skills/procedures/portfolio-rebalancing-review/
+  - skills/procedures/risk-metric-reconciliation/
+  - skills/procedures/test-first-change/
+  - skills/procedures/ticket-scope-validation/
+  - skills/procedures/training-run-diagnostics/
+  - skills/procedures/ubiquitous-language-map/
+  - skills/roles/backend-worker/
+  - skills/roles/chart-worker/
+  - skills/roles/code-validator/
+  - skills/roles/ds-validator/
+  - skills/roles/master/
+  - skills/roles/master-planner/
+  - skills/roles/master-validator/
+  - skills/roles/model-interpreter-worker/
+  - skills/roles/ticket-planner-worker/
+  - skills/references/backend-api-patterns-reference/
+  - skills/references/charting-artifact-reference/
+  - skills/references/cloud-operations/
+  - skills/references/frontend-accessibility/
+  - skills/references/investment-management/
+  - skills/references/language-idioms/
+  - skills/references/ml-evaluation/
+  - skills/references/model-interpretation-reference/
+  - skills/references/quant-backtesting/
+  - skills/references/sql-dialects/
+  - contracts/
+  - prompts/
+  - execution/
+  - tools/
+requirements:
+  - Dispatch this ticket to skills/roles/skill-library-worker/SKILL.md.
+  - skills/README.md covers the four categories, the role-mediated selection
+    model, and the references-are-drawers rule.
+  - skills/roles/README.md has one row per role with columns role, type,
+    handoffs, and selected when.
+  - skills/procedures/README.md has one row per procedure with columns
+    procedure, trigger summary, composing roles, and standalone.
+  - skills/references/README.md has one row per reference with columns
+    reference, scope, sections, and consuming skills.
+  - Mention skills/discipline/ as always-on operating discipline in
+    skills/README.md, but do not create a category index for it.
+non_goals:
+  - Do not edit any skill body.
+  - Do not change validator behavior.
+  - Do not add provider-specific runtime instructions.
+acceptance_criteria:
+  - Four README files exist.
+  - Role index row count matches role folder count.
+  - Procedure index row count matches procedure folder count.
+  - Reference index row count matches reference folder count.
+manual_verification_required: true
+manual_verification_steps:
+  - Cross-check the three category README row counts against the corresponding
+    folder counts.
+verification_commands:
+  - git diff -- skills/README.md skills/roles/README.md skills/procedures/README.md skills/references/README.md
+  - py -3.10 .\tools\validate_skill_library.py
+completion_report_required: true

@@ -1,0 +1,77 @@
+ticket_id: AEGIS-SKI-001
+goal: >
+  Add optional standalone procedure metadata and record the procedure
+  reachability baseline without changing procedure bodies.
+dependencies:
+  - AEGIS-SKI-000 completed
+business_context: >
+  Many procedure skills are not currently named by a role. Some are
+  intentionally situational and should remain standalone; others should be
+  routed by future role-wiring work. The validator needs a way to distinguish
+  intentional standalone procedures from unresolved orphans.
+  This ticket previously blocked when dispatched to ticket-planner-worker; it
+  must be retried only after skill-library-worker exists.
+user_or_operator_outcome: >
+  A human or agent can see whether a procedure is routed, intentionally
+  standalone, or unresolved before relying on it.
+design_concept: >
+  `standalone: true` is an explicit frontmatter assertion, not a default. It is
+  metadata only and must not rewrite trigger text, procedure steps, references,
+  or output contracts.
+architecture_boundary: >
+  Frontmatter-only edits to procedure SKILL.md files under skills/procedures/.
+  No procedure body, role file, reference file, discipline file, tool, contract,
+  prompt, runbook, or template changes.
+success_signal: >
+  The completion report lists every procedure as routed, standalone, or
+  unresolved, and each standalone assertion is justified.
+tradeoffs_or_constraints:
+  - Add the metadata only when the procedure is genuinely role-independent.
+  - When in doubt, leave the procedure unresolved and report it.
+  - Candidate standalone procedures to evaluate include codebase-map-generation,
+    deployment-failure-triage, design-clarification-interview, and
+    ubiquitous-language-map.
+  - Candidate role-routed procedures to leave unresolved unless clearly owned
+    include accessibility-audit, backtest-validation,
+    cloud-iam-change-review, frontend-component-implementation,
+    investment-thesis-evidence-check, model-calibration-review,
+    module-boundary-review, portfolio-rebalancing-review,
+    risk-metric-reconciliation, test-first-change, and
+    training-run-diagnostics.
+allowed_areas:
+  - skills/procedures/
+must_not_touch:
+  - skills/roles/
+  - skills/references/
+  - skills/discipline/
+  - tools/
+  - contracts/
+  - prompts/
+  - execution/
+requirements:
+  - Dispatch this ticket to skills/roles/skill-library-worker/SKILL.md, not to
+    ticket-planner-worker.
+  - >
+    Add `standalone: true` only to procedure frontmatter, and only when
+    justified.
+  - Do not modify any other frontmatter key unless needed to preserve YAML
+    validity.
+  - Do not modify any procedure body content.
+  - Completion report includes a table with columns procedure, routed_by_role,
+    standalone, and status.
+non_goals:
+  - Do not wire procedures into roles.
+  - Do not create skill indexes.
+  - Do not edit validate_skill_library.py.
+acceptance_criteria:
+  - Every standalone assertion is justified in the completion report.
+  - Every procedure is classified as routed, standalone, or unresolved.
+  - No non-frontmatter procedure changes appear in the diff.
+manual_verification_required: true
+manual_verification_steps:
+  - Review each standalone metadata addition against the procedure trigger and
+    scope boundary.
+verification_commands:
+  - git diff -- skills/procedures/
+  - py -3.10 .\tools\validate_skill_library.py
+completion_report_required: true

@@ -1,4 +1,5 @@
 ---
+standalone: true
 trigger:
   - "A new or unfamiliar target project needs graph or context evidence before ticket planning, onboarding, or first implementation."
   - "An architecture-impacting ticket, module-boundary uncertainty, domain or business flow discovery, or diff impact review needs broader system context than local code reading provides."

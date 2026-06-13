@@ -1,4 +1,5 @@
 ---
+standalone: true
 trigger:
   - "Planning, implementation, or review depends on project or domain vocabulary that is ambiguous, inconsistent, overloaded, or not shared between the user, code, docs, tests, schemas, routes, or UI."
   - "A ticket or request uses business terms that do not clearly match code identifiers, data fields, API names, documentation, or user-facing labels."

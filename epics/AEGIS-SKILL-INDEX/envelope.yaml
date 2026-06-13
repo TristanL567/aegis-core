@@ -1,0 +1,118 @@
+epic_id: AEGIS-SKILL-INDEX
+goal: >
+  Add a canonical skill-library manifest under skills/, category indexes for
+  roles, procedures, and references, standardized procedure-routing sections
+  for role files that lack them, and validator checks for index completeness
+  and procedure reachability. Preserve existing skill behavior.
+business_context: >
+  AEGIS-OVERHAUL made prompts discoverable and mechanically closed, but the
+  skills library still requires agents to know where to look. A current audit
+  found that many procedure skills are not named by any role, and no category
+  README exists for roles, procedures, or references.
+user_or_operator_outcome: >
+  An agent can confirm that a role, procedure, or reference exists from a
+  manifest before opening it; a human can inspect all skill categories without
+  scanning every skill file; CI catches new skill folders that lack index rows.
+design_concept: >
+  skills/README.md is the canonical agent-facing manifest. The category README
+  files are generated from existing frontmatter and role routing references so
+  they can be mechanically checked. References are knowledge drawers, not
+  triggerable skills. Procedures are composed by roles or explicitly marked as
+  standalone metadata when no fixed owning role is intended.
+architecture_boundary: >
+  Additive skill-library discovery work only. Writable areas are skill index
+  READMEs, procedure frontmatter metadata, append-only procedure-routing
+  sections in role files that lack the section, the skill-library validator,
+  optional skill architecture docs, and this epic workspace. Do not alter
+  contracts, prompts, execution runbooks, templates, reference bodies,
+  procedure bodies, discipline content, or existing role behavior.
+success_signal: >
+  skills/README.md and category README files exist and are complete; every role
+  file has an explicit Procedure Routing section; validate_skill_library.py
+  verifies index completeness and reports procedure reachability; default
+  validation passes; strict reachability behavior is proven in scratch tests.
+branch: development-skills
+base: main
+operating_mode: relay
+autonomy_policy: manual
+human_checkpoint_tickets:
+  - AEGIS-SKI-000
+  - AEGIS-SKI-001
+  - AEGIS-SKI-002
+  - AEGIS-SKI-003
+  - AEGIS-SKI-004
+  - AEGIS-SKI-005
+epic_allowed_areas:
+  - skills/README.md
+  - skills/procedures/README.md
+  - skills/references/README.md
+  - skills/roles/README.md
+  - skills/roles/master/SKILL.md
+  - skills/roles/master-planner/SKILL.md
+  - skills/roles/ticket-planner-worker/SKILL.md
+  - skills/roles/code-validator/SKILL.md
+  - skills/roles/ds-validator/SKILL.md
+  - skills/roles/master-validator/SKILL.md
+  - skills/roles/skill-library-worker/SKILL.md
+  - skills/procedures/
+  - tools/validate_skill_library.py
+  - docs/skill-architecture.md
+  - epics/AEGIS-SKILL-INDEX/
+epic_must_not_touch:
+  - skills/discipline/
+  - skills/references/backend-api-patterns-reference/
+  - skills/references/charting-artifact-reference/
+  - skills/references/cloud-operations/
+  - skills/references/frontend-accessibility/
+  - skills/references/investment-management/
+  - skills/references/language-idioms/
+  - skills/references/ml-evaluation/
+  - skills/references/model-interpretation-reference/
+  - skills/references/quant-backtesting/
+  - skills/references/sql-dialects/
+  - contracts/
+  - prompts/
+  - execution/
+  - AEGIS.md
+  - AGENT_PROMPT.md
+  - .git/
+tickets:
+  - AEGIS-SKI-000
+  - AEGIS-SKI-001
+  - AEGIS-SKI-002
+  - AEGIS-SKI-003
+  - AEGIS-SKI-004
+  - AEGIS-SKI-005
+depends_on_epics:
+  - AEGIS-OVERHAUL
+merge_policy:
+  strategy: rebase_then_merge
+  base: main
+  requires_epic_validator: true
+  requires_human_approval: true
+
+planning_notes:
+  - >
+    This intersects directly with the prior skill-index recommendation:
+    top-level skill manifest, category READMEs, role-mediated procedure
+    selection, references-as-drawers language, and validator enforcement.
+  - >
+    The attached branch name was normalized to the prior operator choice
+    development-skills.
+  - >
+    The attached autonomy policy was normalized to manual; every ticket is
+    therefore a human checkpoint.
+  - >
+    The attached plan only added Procedure Routing sections to three roles.
+    This version expands SKI-002 to all role files that currently lack that
+    heading so the routing convention is uniform.
+  - >
+    The final strict-mode verification is recorded as behavior evidence; it is
+    not required to exit 0 while unresolved orphan findings remain.
+  - >
+    AEGIS-SKI-000 was added after the first SKI-001 relay blocked because no
+    existing worker role safely owned skill-library metadata edits.
+  - >
+    The external skill-cleaner project is optional research input for inventory
+    and audit concepts only; do not vendor or import external behavior unless a
+    future ticket explicitly allows that integration.

@@ -1,4 +1,5 @@
 ---
+standalone: true
 trigger:
   - "A task asks to triage a deployment, service startup, cloud run, container, CI/CD, or production-like runtime failure."
   - "A service failed to deploy, start, pass health checks, or behave correctly after rollout, and a config or runtime change is being considered before evidence is read."

@@ -74,6 +74,10 @@ residual risk, and decision in the epic ledger.
 You MUST NOT edit any file, implement fixes, rewrite prompts, or change ledger
 records. Findings only.
 
+## Procedure Routing
+
+No direct procedure composition: epic validation aggregates ticket-level evidence, ledger state, and the AEGIS Conformance Gate rather than invoking a standalone procedure.
+
 ## Output Envelope
 
 Return:

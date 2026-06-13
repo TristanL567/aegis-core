@@ -64,6 +64,12 @@ Follow `skills/discipline/operating-discipline.md` throughout orchestration. Use
 - Route completed worker output to validation before returning it to the human.
 - Require the completion report described by `skills/discipline/operating-discipline.md` and `contracts/ticket-contract.md` before final human review.
 
+## Procedure Routing
+
+When codebase orientation would help dispatch, validation triage, or remediation planning, use reported `skills/procedures/codebase-map-generation/SKILL.md` evidence as optional advisory context.
+
+Do not let procedure evidence replace worker dispatch, validator judgment, ticket-scope enforcement, or human approval checkpoints.
+
 ## Standard Output
 
 Return results using this envelope:

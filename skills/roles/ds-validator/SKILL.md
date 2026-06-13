@@ -53,6 +53,14 @@ Procedures provide evidence for this review; they do not replace the DS validato
 
 Do not create or rely on a new validator taxonomy. Do not create `data-leakage-review` or `ml-reproducibility-review`; until those procedures exist, leakage, reproducibility, and pipeline-quality findings remain owned by this validator role.
 
+## Procedure Routing
+
+For changed-path scope evidence under a ticket envelope, invoke `skills/procedures/ticket-scope-validation/SKILL.md`.
+
+For commit readiness or staged-work hygiene evidence, use `skills/procedures/clean-commit/SKILL.md`.
+
+For data science work that exposes or changes a backend endpoint, use `skills/procedures/new-api-endpoint/SKILL.md` evidence when available.
+
 ## Hard Rules
 
 - Leakage findings are always blocking.

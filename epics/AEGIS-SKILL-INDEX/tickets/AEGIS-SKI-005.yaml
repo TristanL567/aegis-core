@@ -1,0 +1,85 @@
+ticket_id: AEGIS-SKI-005
+goal: >
+  Run final conformance for the skill-index epic and produce master-validator
+  evidence, including the residual orphan policy and follow-up wiring backlog.
+dependencies:
+  - AEGIS-SKI-001 completed
+  - AEGIS-SKI-002 completed
+  - AEGIS-SKI-003 completed
+  - AEGIS-SKI-004 completed
+business_context: >
+  The epic's promise is discoverability with mechanical enforcement. A final
+  audit confirms the indexes are complete and that unresolved procedure routing
+  is explicit rather than silent.
+user_or_operator_outcome: >
+  The human can merge development-skills knowing that skill manifests exist,
+  index completeness is enforced, role routing is explicit, and any remaining
+  procedure orphans are documented for a follow-up wiring epic.
+design_concept: >
+  Evidence and at most trivial README typo or link fixes. Any substantive
+  defect becomes a finding and a follow-up ticket, not an implementation change
+  inside the final conformance ticket.
+architecture_boundary: >
+  Read-mostly. Write access only for single-line typo or link fixes in the new
+  skill README files or optional skill architecture doc.
+success_signal: >
+  Default skill validation passes; prompt validation still passes; strict
+  reachability behavior is recorded accurately; master-validator envelope is
+  returned and the epic ledger records approval or any human override.
+tradeoffs_or_constraints:
+  - Fix-here threshold is single-line and semantics-free.
+  - If `--strict` exits 1 because residual orphan findings are intentional,
+    record that result rather than treating it as a failed final gate.
+allowed_areas:
+  - skills/README.md
+  - skills/procedures/README.md
+  - skills/references/README.md
+  - skills/roles/README.md
+  - docs/skill-architecture.md
+  - epics/AEGIS-SKILL-INDEX/
+must_not_touch:
+  - skills/procedures/
+  - skills/references/backend-api-patterns-reference/
+  - skills/references/charting-artifact-reference/
+  - skills/references/cloud-operations/
+  - skills/references/frontend-accessibility/
+  - skills/references/investment-management/
+  - skills/references/language-idioms/
+  - skills/references/ml-evaluation/
+  - skills/references/model-interpretation-reference/
+  - skills/references/quant-backtesting/
+  - skills/references/sql-dialects/
+  - skills/roles/
+  - skills/discipline/
+  - tools/
+  - contracts/
+  - prompts/
+  - execution/
+requirements:
+  - Run default skill validation and record output.
+  - Run strict skill validation and record whether it passes or fails because
+    of intentional residual orphan findings.
+  - Run prompt validation and require it to pass.
+  - Confirm every role file has a Procedure Routing section.
+  - Confirm category index row counts match folder counts.
+  - Attach the residual orphan list as a finding and recommend a follow-up
+    AEGIS-SKILL-WIRING epic if any unresolved procedures remain.
+  - Route the epic through skills/roles/master-validator/ before declaring it
+    complete.
+non_goals:
+  - No substantive content, routing, or validator changes.
+acceptance_criteria:
+  - Default validators pass.
+  - Strict-mode result is recorded and interpreted according to the residual
+    orphan policy.
+  - Master-validator approval or human-authorized override is recorded in the
+    epic ledger.
+manual_verification_required: true
+manual_verification_steps:
+  - Human reads skills/README.md cold and locates one named procedure and one
+    reference using only the indexes.
+verification_commands:
+  - py -3.10 .\tools\validate_skill_library.py
+  - py -3.10 .\tools\validate_skill_library.py --strict
+  - py -3.10 .\tools\validate_prompt_library.py
+completion_report_required: true

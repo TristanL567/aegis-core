@@ -1,0 +1,85 @@
+ticket_id: AEGIS-SKI-002
+goal: >
+  Add explicit Procedure Routing sections to role files that currently lack
+  one, without changing role behavior.
+dependencies:
+  - AEGIS-SKI-000 completed
+business_context: >
+  Procedure discovery is currently uneven. Some roles have a dedicated
+  Procedure Routing section, while validators and planner roles mention
+  procedures inconsistently or not at all. A uniform section makes procedure
+  reachability clear to agents and mechanically scannable by validators.
+user_or_operator_outcome: >
+  Agents can inspect any role file and find the same routing convention for
+  role-composed procedures, including an explicit statement when no procedure
+  applies.
+design_concept: >
+  Mirror the existing section shape in backend-worker, chart-worker, and
+  model-interpreter-worker: name the procedure path, state when it applies, and
+  state the fallback when no procedure applies. If a role composes no
+  procedures, say that explicitly.
+architecture_boundary: >
+  Append-only role body edits for role files missing the Procedure Routing
+  heading. Do not alter frontmatter, output envelopes, handoff rules, existing
+  mission text, or existing role behavior.
+success_signal: >
+  Every role under skills/roles/ has a `## Procedure Routing` section and the
+  skill validator still passes.
+tradeoffs_or_constraints:
+  - Do not invent routing just to reduce orphan counts.
+  - Cite procedure paths as `skills/procedures/<name>/SKILL.md`.
+  - >
+    Candidate routings to evaluate, not blindly apply:
+    ticket-planner-worker -> design-clarification-interview and
+    ubiquitous-language-map; master-planner -> design-clarification-interview
+    during epic intake; master -> codebase-map-generation as optional advisory
+    context; code-validator and ds-validator -> procedures already named in
+    their bodies; master-validator -> explicit none unless epic validation has
+    a genuine procedure dependency.
+allowed_areas:
+  - skills/roles/master/SKILL.md
+  - skills/roles/master-planner/SKILL.md
+  - skills/roles/ticket-planner-worker/SKILL.md
+  - skills/roles/code-validator/SKILL.md
+  - skills/roles/ds-validator/SKILL.md
+  - skills/roles/master-validator/SKILL.md
+  - skills/roles/skill-library-worker/SKILL.md
+must_not_touch:
+  - skills/roles/backend-worker/SKILL.md
+  - skills/roles/chart-worker/SKILL.md
+  - skills/roles/model-interpreter-worker/SKILL.md
+  - skills/procedures/
+  - skills/references/
+  - skills/discipline/
+  - tools/
+  - contracts/
+  - prompts/
+  - execution/
+requirements:
+  - Dispatch this ticket to skills/roles/skill-library-worker/SKILL.md.
+  - Add a `## Procedure Routing` section to each allowed role file that lacks
+    one.
+  - >
+    Continuation after the initial blocked report is limited to adding the
+    missing Procedure Routing section to
+    skills/roles/skill-library-worker/SKILL.md.
+  - Preserve the existing meaning of every role.
+  - A role with no direct procedure composition must state that explicitly with
+    a one-line rationale.
+  - Run the skill validator after edits.
+non_goals:
+  - Do not edit any procedure, reference, discipline, contract, prompt, or tool.
+  - Do not create index README files.
+  - Do not make unresolved procedures appear routed unless the role genuinely
+    composes them.
+acceptance_criteria:
+  - All role files have a Procedure Routing section.
+  - The skill validator passes.
+  - Newly routed procedures are listed in the completion report.
+manual_verification_required: true
+manual_verification_steps:
+  - Confirm each newly routed procedure trigger fits the role scope.
+verification_commands:
+  - git diff -- skills/roles/
+  - py -3.10 .\tools\validate_skill_library.py
+completion_report_required: true

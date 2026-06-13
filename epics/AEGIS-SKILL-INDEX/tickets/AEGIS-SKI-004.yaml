@@ -1,0 +1,73 @@
+ticket_id: AEGIS-SKI-004
+goal: >
+  Extend validate_skill_library.py with index-completeness and procedure
+  reachability checks.
+dependencies:
+  - AEGIS-SKI-001 completed
+  - AEGIS-SKI-002 completed
+  - AEGIS-SKI-003 completed
+business_context: >
+  Skill indexes and routing tables only remain useful if they are mechanically
+  enforced. This mirrors the prompt-library closure checks added during
+  AEGIS-OVERHAUL.
+user_or_operator_outcome: >
+  A new skill folder without an index row fails validation, and an unrouted
+  non-standalone procedure is surfaced as a finding or strict-mode failure.
+design_concept: >
+  Reuse the existing YAML frontmatter parser and README-table parsing style.
+  Index completeness is a hard invariant. Procedure reachability is reported by
+  default and becomes a failure under `--strict`, allowing the current library
+  to document residual orphans before a future wiring epic.
+architecture_boundary: >
+  Edit tools/validate_skill_library.py only, with an optional docs note in
+  docs/skill-architecture.md. Do not modify skills, contracts, prompts,
+  execution files, or other validators.
+success_signal: >
+  Default validation exits 0 on the end state and prints residual orphan
+  findings when present. Index row mismatches fail. `--strict` fails when an
+  unresolved orphan remains and passes only when all procedures are routed or
+  standalone.
+tradeoffs_or_constraints:
+  - Keep the tool stdlib plus the existing yaml dependency.
+  - Do not auto-generate README tables in this ticket.
+  - Preserve all existing validation checks and output usefulness.
+allowed_areas:
+  - tools/validate_skill_library.py
+  - docs/skill-architecture.md
+must_not_touch:
+  - skills/
+  - contracts/
+  - prompts/
+  - execution/
+  - tools/validate_prompt_library.py
+  - tools/validate_ticket_scope.py
+requirements:
+  - For each procedure, compute routed when any skills/roles/*/SKILL.md names
+    `skills/procedures/<procedure>/SKILL.md`.
+  - >
+    Compute standalone from procedure frontmatter `standalone: true`.
+  - Report procedures that are neither routed nor standalone as orphan
+    findings with exit 0 by default.
+  - Add `--strict` so orphan findings become exit 1.
+  - Parse skills/roles/README.md, skills/procedures/README.md, and
+    skills/references/README.md and assert exactly one row per folder, with no
+    missing, extra, or duplicate rows.
+  - Prove each new check with temporary seeded failures in a scratch copy, then
+    remove the seeded failures.
+non_goals:
+  - Do not wire orphan procedures.
+  - Do not generate README files.
+  - Do not change prompt validation.
+acceptance_criteria:
+  - Default skill validation exits 0 on the end state.
+  - Index row missing, extra, and duplicate cases are detected in scratch tests.
+  - >
+    `--strict` detects unresolved orphan procedures in scratch tests.
+manual_verification_required: true
+manual_verification_steps:
+  - Confirm default and strict-mode behavior matches the residual orphan policy
+    selected by the human.
+verification_commands:
+  - py -3.10 .\tools\validate_skill_library.py
+  - py -3.10 .\tools\validate_skill_library.py --strict
+completion_report_required: true
