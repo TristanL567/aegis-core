@@ -1,0 +1,57 @@
+ticket_id: AEGIS-VH-004
+goal: >
+  Clarify commit traceability expectations and document the current hook
+  enforcement limit around one-commit-per-ticket history.
+dependencies:
+  - AEGIS-VH-001 completed
+business_context: >
+  The commit hook enforces message format and active-ticket identity, but it
+  cannot prove that a multi-ticket epic was committed one ticket at a time.
+  AEGIS-SKILL-INDEX landed as one valid ticket-formatted commit, which exposed
+  the gap between convention and mechanical enforcement.
+user_or_operator_outcome: >
+  Agents and operators understand whether per-ticket commit history is required
+  or merely preferred, and validators know how to report collapsed multi-ticket
+  commits.
+design_concept: >
+  Document the policy decision without inventing fragile git history analysis.
+  If strict one-commit-per-ticket enforcement is desired later, plan a separate
+  hook/tooling epic.
+architecture_boundary: >
+  Documentation and contract wording only. Do not alter hook executable
+  behavior in this ticket.
+success_signal: >
+  The kernel/ticket contract/runbook text states the traceability expectation
+  and the hook README states what is and is not mechanically enforced.
+tradeoffs_or_constraints:
+  - Do not overpromise hook enforcement.
+  - Preserve the existing `[TICKET-ID] concise description` format.
+allowed_areas:
+  - contracts/kernel.md
+  - contracts/ticket-contract.md
+  - execution/runbooks/clean-commit.md
+  - execution/templates/hooks/README.md
+must_not_touch:
+  - execution/templates/hooks/commit-msg
+  - execution/templates/hooks/pre-commit
+  - tools/
+  - prompts/
+  - skills/
+requirements:
+  - Clarify whether one commit per ticket is required, preferred, or
+    validator-enforced by evidence.
+  - State that current hooks enforce message format, active ticket identity,
+    and staged path scope, not full historical one-ticket-per-commit proof.
+  - Preserve the canonical commit message format.
+non_goals:
+  - Do not implement new git hooks.
+  - Do not rewrite history.
+acceptance_criteria:
+  - Commit traceability wording is internally consistent across kernel,
+    ticket contract, clean-commit runbook, and hook README.
+manual_verification_required: true
+manual_verification_steps:
+  - Human confirms the selected policy matches desired AEGIS practice.
+verification_commands:
+  - git diff -- contracts/kernel.md contracts/ticket-contract.md execution/runbooks/clean-commit.md execution/templates/hooks/README.md
+completion_report_required: true

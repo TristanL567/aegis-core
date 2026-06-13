@@ -1,0 +1,54 @@
+ticket_id: AEGIS-VH-003
+goal: >
+  Clean stale final-evidence wording from AEGIS-SKILL-INDEX and add generated
+  Python bytecode ignores.
+dependencies:
+  - AEGIS-VH-001 completed
+business_context: >
+  Final evidence should not contradict the canonical ledger, and validation
+  runs should not leave generated Python bytecode as easy-to-stage noise.
+user_or_operator_outcome: >
+  Operators see consistent final evidence and do not accidentally stage
+  `__pycache__` or `.pyc` files during validation-driven work.
+design_concept: >
+  Minimal hygiene: update stale evidence text to match the ledger approval and
+  ignore Python bytecode artifacts. Do not rewrite the historical evidence
+  beyond the stale approval fields.
+architecture_boundary: >
+  Edit only `.gitignore` and the AEGIS-SKILL-INDEX final evidence file.
+success_signal: >
+  No tracked text claims SKI master-validator approval is pending, and
+  generated Python bytecode is ignored by git.
+tradeoffs_or_constraints:
+  - Do not delete local untracked files unless explicitly authorized.
+  - Keep evidence wording concise and factual.
+allowed_areas:
+  - .gitignore
+  - epics/AEGIS-SKILL-INDEX/final-conformance-evidence.md
+must_not_touch:
+  - tools/
+  - contracts/
+  - prompts/
+  - skills/
+  - execution/
+requirements:
+  - >
+    Change stale `master_validator_approval: pending` wording to reflect ledger
+    approval after remediation.
+  - Remove or update text saying master-validator approval remains pending.
+  - Add `__pycache__/` and `*.pyc` ignore patterns.
+non_goals:
+  - Do not alter validator results or orphan findings.
+  - Do not remove local generated files without human approval.
+acceptance_criteria:
+  - >
+    `git grep -n "master_validator_approval: pending"` returns no matches.
+  - >
+    `.gitignore` ignores Python bytecode artifacts.
+manual_verification_required: false
+manual_verification_steps: []
+verification_commands:
+  - >
+    if (git grep -n "master_validator_approval: pending" -- .) { exit 1 }
+  - git status --short --ignored -- tools/__pycache__
+completion_report_required: true

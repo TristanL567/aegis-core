@@ -1,0 +1,52 @@
+ticket_id: AEGIS-VH-002
+goal: >
+  Repair invalid YAML syntax in three historical AEGIS-PLANNER-AGENT-CONTRACT
+  ticket envelopes without changing their ticket meaning.
+dependencies:
+  - AEGIS-VH-001 completed
+business_context: >
+  Full-repo YAML validation currently fails on historical ticket envelopes.
+  This makes repository-wide envelope checks noisy and weakens confidence in
+  generated or archived ticket plans.
+user_or_operator_outcome: >
+  Operators can parse every tracked epic and template YAML file without
+  hand-maintained exception lists.
+design_concept: >
+  Syntax-only repairs: convert problematic plain list items to folded scalars
+  or quoted strings where backticks, colons, or continuation formatting breaks
+  YAML parsing. Preserve the natural-language content.
+architecture_boundary: >
+  Edit only the three failing historical ticket files. Do not update contracts,
+  roles, tools, prompts, runbooks, or ticket semantics.
+success_signal: >
+  A recursive YAML parse check over epics/**/*.yaml and
+  execution/templates/**/*.yaml passes.
+tradeoffs_or_constraints:
+  - Keep content meaning unchanged.
+  - Prefer folded scalars for long list items with inline punctuation.
+allowed_areas:
+  - epics/AEGIS-PLANNER-AGENT-CONTRACT/tickets/AEGIS-PLANNER-AGENT-001.yaml
+  - epics/AEGIS-PLANNER-AGENT-CONTRACT/tickets/AEGIS-PLANNER-AGENT-003.yaml
+  - epics/AEGIS-PLANNER-AGENT-CONTRACT/tickets/AEGIS-PLANNER-AGENT-004.yaml
+must_not_touch:
+  - contracts/
+  - prompts/
+  - skills/
+  - tools/
+  - execution/
+requirements:
+  - Fix YAML parsing failures caused by unquoted backtick or colon text.
+  - Preserve ticket IDs, goals, dependencies, allowed areas, protected areas,
+    requirements, non-goals, acceptance criteria, verification commands, and
+    completion-report settings.
+  - Run a recursive YAML parse check for epic and template YAML files.
+non_goals:
+  - Do not change ticket scope or rewrite historical plans.
+acceptance_criteria:
+  - The three target files parse as YAML mappings.
+  - All tracked epics/**/*.yaml and execution/templates/**/*.yaml parse.
+manual_verification_required: false
+manual_verification_steps: []
+verification_commands:
+  - py -3.10 -c "from pathlib import Path; import yaml; [yaml.safe_load(p.read_text(encoding='utf-8')) for p in list(Path('epics').glob('**/*.yaml')) + list(Path('execution/templates').glob('**/*.yaml'))]; print('yaml ok')"
+completion_report_required: true

@@ -1,0 +1,69 @@
+ticket_id: AEGIS-VH-005
+goal: >
+  Run final validation hardening conformance and produce master-validator
+  evidence.
+dependencies:
+  - AEGIS-VH-001 completed
+  - AEGIS-VH-002 completed
+  - AEGIS-VH-003 completed
+  - AEGIS-VH-004 completed
+business_context: >
+  This epic changes validation tooling and policy wording, so the end state
+  needs a focused audit before merge.
+user_or_operator_outcome: >
+  The human can merge knowing the concrete repo validation failures are fixed
+  or explicitly documented as expected backlogs.
+design_concept: >
+  Evidence-only final gate with trivial typo/link fixes if needed.
+architecture_boundary: >
+  Read-mostly. Write only final evidence and ledger entries under this epic
+  workspace, plus single-line typo fixes in files already changed by this epic.
+success_signal: >
+  Prompt and non-strict skill validators pass; strict skill validation fails
+  only on documented AEGIS-SKILL-WIRING orphans; ticket scope validator works
+  with plain YAML; all tracked YAML parses; canonical legacy references remain
+  clean outside historical evidence; master-validator envelope is recorded.
+tradeoffs_or_constraints:
+  - Do not solve AEGIS-SKILL-WIRING here.
+  - Do not remove historical evidence just to satisfy greps.
+allowed_areas:
+  - epics/AEGIS-VALIDATION-HARDENING/
+  - tools/validate_ticket_scope.py
+  - docs/testing.md
+  - docs/skill-architecture.md
+  - README.md
+  - .gitignore
+  - skills/procedures/ticket-scope-validation/SKILL.md
+  - skills/procedures/clean-commit/SKILL.md
+  - execution/templates/hooks/README.md
+  - execution/runbooks/clean-commit.md
+  - contracts/kernel.md
+  - contracts/ticket-contract.md
+must_not_touch:
+  - prompts/
+  - skills/roles/
+  - skills/references/
+  - skills/discipline/
+  - tools/validate_prompt_library.py
+  - tools/validate_skill_library.py
+requirements:
+  - Run prompt validation.
+  - Run default and strict skill validation and record expected strict result.
+  - Run ticket-scope validation against at least one plain YAML ticket.
+  - Run recursive YAML parse validation for epics and execution templates.
+  - Run canonical legacy reference scan excluding historical evidence areas.
+  - Route evidence through master-validator before declaring complete.
+non_goals:
+  - No substantive implementation changes.
+acceptance_criteria:
+  - All fixed defects have direct verification evidence.
+  - Remaining failures are explicitly documented expected backlogs.
+manual_verification_required: true
+manual_verification_steps:
+  - Human reviews final evidence and approves merge readiness.
+verification_commands:
+  - py -3.10 .\tools\validate_prompt_library.py
+  - py -3.10 .\tools\validate_skill_library.py
+  - py -3.10 .\tools\validate_skill_library.py --strict
+  - py -3.10 .\tools\validate_ticket_scope.py --ticket .\epics\AEGIS-SKILL-INDEX\tickets\AEGIS-SKI-004.yaml --changed-file tools/validate_skill_library.py
+completion_report_required: true

@@ -1,0 +1,85 @@
+ticket_id: AEGIS-VH-001
+goal: >
+  Make tools/validate_ticket_scope.py support both canonical plain YAML ticket
+  envelopes and existing markdown YAML-frontmatter ticket envelopes, then update
+  related scope-validation docs.
+dependencies: []
+business_context: >
+  The AEGIS pre-commit hook resolves `.yaml`, `.yml`, and `.md` ticket files,
+  and current epic tickets are plain YAML files. The scope validator currently
+  rejects plain YAML because it only accepts markdown frontmatter, causing
+  validators to fall back to manual scope judgment.
+user_or_operator_outcome: >
+  A validator can run the deterministic scope firewall against the repo's own
+  ticket envelopes and against markdown-frontmatter tickets without special
+  casing or manual fallback.
+design_concept: >
+  Preserve the existing command-line interface while broadening ticket parsing:
+  if the ticket starts with YAML frontmatter, parse the frontmatter; otherwise
+  parse the full file as YAML. Keep path matching behavior unchanged unless a
+  failing test proves a bug.
+architecture_boundary: >
+  Tool and documentation update only. Do not change ticket contracts, prompt
+  routing, hook semantics beyond documentation, or skill behavior unrelated to
+  scope-validation instructions.
+success_signal: >
+  validate_ticket_scope.py accepts a real plain YAML ticket envelope and a
+  scratch markdown-frontmatter envelope; rejects out-of-scope paths; existing
+  validators still pass; docs no longer claim the validator is pending or
+  markdown-only.
+tradeoffs_or_constraints:
+  - Keep stdlib plus existing yaml dependency.
+  - Do not add a new ticket envelope format.
+  - Do not change `allowed_areas` or `must_not_touch` semantics.
+allowed_areas:
+  - tools/validate_ticket_scope.py
+  - skills/procedures/ticket-scope-validation/SKILL.md
+  - skills/procedures/clean-commit/SKILL.md
+  - execution/templates/hooks/README.md
+  - docs/testing.md
+  - README.md
+must_not_touch:
+  - contracts/
+  - prompts/
+  - skills/roles/
+  - skills/references/
+  - skills/discipline/
+  - tools/validate_prompt_library.py
+  - tools/validate_skill_library.py
+  - execution/templates/hooks/commit-msg
+  - execution/templates/hooks/pre-commit
+requirements:
+  - Parse ticket data from markdown YAML frontmatter when the file starts with
+    `---`.
+  - Parse ticket data from the full file when the ticket is plain `.yaml` or
+    `.yml`.
+  - Preserve the existing `--ticket`, `--changed-file`, and `--staged` CLI.
+  - Update help text and docs so they describe YAML envelopes accurately.
+  - Remove stale clean-commit procedure text claiming validate_ticket_scope.py
+    is pending or unavailable.
+  - Add verification evidence for a real plain YAML ticket, a scratch markdown
+    frontmatter ticket, an allowed path, and a rejected path.
+non_goals:
+  - Do not change hook installation behavior.
+  - Do not alter commit-message validation.
+  - Do not repair historical ticket YAML; AEGIS-VH-002 owns that.
+acceptance_criteria:
+  - >
+    `py -3.10 .\tools\validate_ticket_scope.py --ticket
+    .\epics\AEGIS-SKILL-INDEX\tickets\AEGIS-SKI-004.yaml --changed-file
+    tools/validate_skill_library.py` exits 0.
+  - The same plain YAML ticket rejects a known out-of-scope changed file.
+  - A scratch markdown-frontmatter ticket still validates.
+  - Default prompt and skill validators pass.
+manual_verification_required: true
+manual_verification_steps:
+  - Review docs/procedure wording to confirm it no longer says the scope
+    validator is pending or markdown-only.
+verification_commands:
+  - >
+    py -3.10 .\tools\validate_ticket_scope.py --ticket
+    .\epics\AEGIS-SKILL-INDEX\tickets\AEGIS-SKI-004.yaml --changed-file
+    tools/validate_skill_library.py
+  - py -3.10 .\tools\validate_prompt_library.py
+  - py -3.10 .\tools\validate_skill_library.py
+completion_report_required: true
