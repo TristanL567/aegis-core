@@ -14,13 +14,13 @@ failure_modes_addressed:
   - "Validators rely only on prose judgment for scope checks even when the ticket envelope can be checked mechanically."
   - "Completion reports claim scope compliance without executable evidence from a deterministic scope firewall."
 attention_signals:
-  - "The ticket path and YAML frontmatter containing allowed_areas and must_not_touch."
+  - "The ticket path and ticket YAML containing allowed_areas and must_not_touch, either as a plain YAML envelope or markdown YAML frontmatter."
   - "Changed file paths from git diff --name-only, git diff --cached --name-only, or an explicit changed-file list."
   - "Directory entries ending in / that must be treated as path prefixes."
   - "Protected paths that also appear inside allowed areas; must_not_touch takes priority."
   - "Completion-report language that says scope was preserved but does not name a validator command or result."
 procedure:
-  - "Read the ticket envelope and identify allowed_areas and must_not_touch exactly as declared in YAML frontmatter."
+  - "Read the ticket envelope and identify allowed_areas and must_not_touch exactly as declared in plain YAML or markdown YAML frontmatter."
   - "Enumerate changed paths from explicit evidence or from staged files when validating commit readiness."
   - "Run tools/validate_ticket_scope.py with --ticket and either repeated --changed-file values or --staged."
   - "Treat a nonzero exit as a blocking scope violation and report each violating path with the tool's reason."
@@ -50,18 +50,18 @@ output_contract:
 
 # Ticket Scope Validation
 
-Use this procedure when a ticket-owned change needs executable scope evidence. The scope firewall is `tools/validate_ticket_scope.py`; it reads YAML frontmatter from a ticket markdown file and checks changed paths against `allowed_areas` and `must_not_touch`.
+Use this procedure when a ticket-owned change needs executable scope evidence. The scope firewall is `tools/validate_ticket_scope.py`; it reads either a canonical plain YAML ticket envelope or a markdown ticket with YAML frontmatter, then checks changed paths against `allowed_areas` and `must_not_touch`.
 
 Run it with explicit paths:
 
 ```powershell
-py -3.10 .\tools\validate_ticket_scope.py --ticket .\to-do\tickets\TICKET.md --changed-file tools/example.py
+py -3.10 .\tools\validate_ticket_scope.py --ticket .\epics\EXAMPLE\tickets\TICKET.yaml --changed-file tools/example.py
 ```
 
 Run it against staged paths:
 
 ```powershell
-py -3.10 .\tools\validate_ticket_scope.py --ticket .\to-do\tickets\TICKET.md --staged
+py -3.10 .\tools\validate_ticket_scope.py --ticket .\epics\EXAMPLE\tickets\TICKET.yaml --staged
 ```
 
 Exit 0 means every checked path is inside or equal to an allowed area and not inside or equal to a protected path. A nonzero exit means at least one checked path violates the ticket envelope. `must_not_touch` has priority over `allowed_areas`, so a protected path is rejected even if it also matches an allowed area.

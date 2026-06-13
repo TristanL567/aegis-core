@@ -23,8 +23,9 @@ git config core.hooksPath .aegis/hooks
 
 Each hook has configuration variables at the top:
 
-- `AEGIS_TICKET_DIR`: target repository directory containing ticket envelopes.
-  Default: `.aegis/tickets`.
+- `AEGIS_TICKET_DIR`: target repository directory containing plain YAML ticket
+  envelopes or markdown ticket envelopes with YAML frontmatter. Default:
+  `.aegis/tickets`.
 - `AEGIS_ACTIVE_TICKET_FILE`: file containing the active ticket ID or ticket
   path. Default: `.aegis/active-ticket`.
 - `AEGIS_CORE_ROOT`: path to the AEGIS-CORE checkout used by `pre-commit`.

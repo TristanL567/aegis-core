@@ -27,7 +27,7 @@ procedure:
   - "Check the commit message or proposed message for the ticket ID, a concise statement of the actual change, and no broad or speculative claims."
   - "Check validation evidence for each required command, including pass/fail status, skipped-command rationale, and remaining risk."
   - "Run or review git diff --stat and compare the changed-file summary against the ticket envelope before declaring commit readiness."
-  - "If validate_ticket_scope.py is referenced, state that it is pending because the script does not exist until AEGIS-SKILL-007; do not implement it in this procedure."
+  - "When validate_ticket_scope.py is available, run or review it against staged files as mechanical evidence that staged paths fit the ticket envelope."
   - "Produce a human-readable summary that names the staged files, unstaged or unrelated files left alone, validation evidence, and any commit blockers."
 scope_boundary:
   - "Covers commit-readiness hygiene for one ticket: ticket ID presence, staged-file scope, dirty-worktree awareness, commit message quality, validation evidence, and human-readable summary."
@@ -46,7 +46,7 @@ verification:
   - "If staged files exist, compare the staged path list against the ticket envelope and block readiness for unrelated staged files."
   - "Confirm the proposed commit message includes the ticket ID and a specific summary of the actual change."
   - "Confirm the completion evidence names required validation commands, their results, and any skipped-command rationale."
-  - "When validate_ticket_scope.py becomes available, use it as an additional mechanical check; until AEGIS-SKILL-007 provides it, report that this verifier is pending rather than attempting to run or create it."
+  - "Run validate_ticket_scope.py when staged-file scope needs mechanical verification, using the plain YAML ticket envelope or markdown YAML-frontmatter ticket."
 output_contract:
   - "status: ready, blocked, or not_applicable."
   - "ticket_id: the ticket ID found in the envelope and expected in the commit message."

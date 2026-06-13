@@ -49,6 +49,17 @@ target repository, not in AEGIS-CORE itself:
 On Windows Git Bash, set `AEGIS_PYTHON` to the Python launcher that can run
 `tools/validate_ticket_scope.py`, such as `py -3.10` when available.
 
+## Ticket Scope
+
+```powershell
+py -3.10 .\tools\validate_ticket_scope.py --ticket .\epics\AEGIS-SKILL-INDEX\tickets\AEGIS-SKI-004.yaml --changed-file tools/validate_skill_library.py
+```
+
+`tools/validate_ticket_scope.py` accepts canonical plain YAML ticket envelopes
+and markdown ticket envelopes with YAML frontmatter. It checks each supplied or
+staged path against `allowed_areas` and rejects paths under `must_not_touch`
+before checking allowed areas.
+
 ## Workflow-Level Scenarios
 
 Use these scenarios when validating an execution runtime built on top of this library:

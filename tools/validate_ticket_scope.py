@@ -18,18 +18,25 @@ def normalize_path(path: str) -> str:
     return normalized
 
 
-def extract_frontmatter(ticket_path: Path) -> dict:
-    text = ticket_path.read_text(encoding="utf-8")
-    if not text.startswith("---\n"):
-        raise ValueError("ticket is missing YAML frontmatter opening delimiter")
+def parse_ticket_envelope(ticket_path: Path) -> dict:
+    text = ticket_path.read_text(encoding="utf-8-sig")
+    lines = text.splitlines(keepends=True)
+    if lines and lines[0].strip() == "---":
+        closing_index = next(
+            (index for index, line in enumerate(lines[1:], start=1) if line.strip() == "---"),
+            None,
+        )
+        if closing_index is None:
+            raise ValueError("ticket is missing YAML frontmatter closing delimiter")
+        yaml_text = "".join(lines[1:closing_index])
+        source_description = "ticket frontmatter"
+    else:
+        yaml_text = text
+        source_description = "ticket YAML"
 
-    parts = text.split("---\n", 2)
-    if len(parts) < 3:
-        raise ValueError("ticket is missing YAML frontmatter closing delimiter")
-
-    data = yaml.safe_load(parts[1]) or {}
+    data = yaml.safe_load(yaml_text) or {}
     if not isinstance(data, dict):
-        raise ValueError("ticket frontmatter did not parse into a mapping")
+        raise ValueError(f"{source_description} did not parse into a mapping")
     return data
 
 
@@ -94,14 +101,14 @@ def validate_paths(
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
-            "Validate changed file paths against a ticket markdown envelope's "
-            "allowed_areas and must_not_touch YAML frontmatter."
+            "Validate changed file paths against a ticket envelope's "
+            "allowed_areas and must_not_touch declarations."
         )
     )
     parser.add_argument(
         "--ticket",
         required=True,
-        help="Path to the ticket markdown file containing YAML frontmatter.",
+        help="Path to a plain YAML ticket envelope or markdown file containing YAML frontmatter.",
     )
     parser.add_argument(
         "--changed-file",
@@ -132,7 +139,7 @@ def main(argv: list[str] | None = None) -> int:
         ticket_path = ROOT / ticket_path
 
     try:
-        data = extract_frontmatter(ticket_path)
+        data = parse_ticket_envelope(ticket_path)
         allowed_areas = normalize_patterns(data.get("allowed_areas"), "allowed_areas")
         must_not_touch = normalize_patterns(data.get("must_not_touch"), "must_not_touch")
 

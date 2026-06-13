@@ -31,3 +31,6 @@ treat validators as blocking, and pass the Conformance Gate before completion.
 py -3.10 .\tools\validate_skill_library.py
 py -3.10 .\tools\validate_ticket_scope.py --ticket <ticket-file> --changed-file <path>
 ```
+
+`validate_ticket_scope.py` accepts canonical plain YAML ticket envelopes and
+markdown ticket files with YAML frontmatter.
