@@ -23,11 +23,11 @@ requirements:
     final integration.
   - State that a Master-Agent is a temporary reusable execution unit assigned
     to one epic at a time.
-  - Define assignment fields: `master_agent_id`, `assigned_epic_id`,
+  - "Define assignment fields: `master_agent_id`, `assigned_epic_id`,
     `assigned_ticket_ids`, `assignment_branch`, `base`, `visible_chat_name`,
-    `dispatched_by`, `commit_required`, and `assignment_state`.
-  - Define assignment states: `idle`, `assigned`, `executing`, `validating`,
-    `committed`, `reported`, `released`, `blocked`.
+    `dispatched_by`, `commit_required`, and `assignment_state`."
+  - "Define assignment states: `idle`, `assigned`, `executing`, `validating`,
+    `committed`, `reported`, `released`, `blocked`."
   - Add `execution/templates/master-agent-assignment.example.yaml` with the same
     fields.
 

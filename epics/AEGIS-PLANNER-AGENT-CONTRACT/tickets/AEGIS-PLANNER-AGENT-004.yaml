@@ -28,8 +28,8 @@ requirements:
   - State that existing Master-Agent chats should be reused when possible.
   - State that a Master-Agent chat should be renamed when its assignment
     changes, using `AEGIS Master-Agent | <EPIC-ID>`.
-  - Document assignment lifecycle:
-    `idle -> assigned -> executing -> validating -> committed -> reported -> released`.
+  - "Document assignment lifecycle:
+    `idle -> assigned -> executing -> validating -> committed -> reported -> released`."
   - Preserve planner non-implementation and validator-gate rules.
 
 non_goals:

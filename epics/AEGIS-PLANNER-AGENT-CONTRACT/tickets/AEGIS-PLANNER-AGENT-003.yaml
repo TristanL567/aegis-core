@@ -19,10 +19,10 @@ must_not_touch:
   - docs/
 
 requirements:
-  - State that a Master-Agent commits finished assigned work to the assignment
-    branch when `commit_required: true`.
-  - Define canonical commit format:
-    `[TICKET-ID] concise description`.
+  - "State that a Master-Agent commits finished assigned work to the assignment
+    branch when `commit_required: true`."
+  - "Define canonical commit format:
+    `[TICKET-ID] concise description`."
   - State that commit messages must match the assigned ticket ID.
   - State that commits must include only ticket-owned files.
 
