@@ -6,6 +6,7 @@ __pycache__/
 *.pyc
 *.py[cod]
 
-# Understand Anything local scratch artifacts
-.understand-anything/intermediate/
-.understand-anything/diff-overlay.json
+# Local agent state
+.aegis/active-ticket
+.claude/worktrees/
+.claude/settings.local.json
