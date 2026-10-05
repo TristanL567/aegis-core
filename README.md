@@ -17,12 +17,11 @@ system: it puts reviewability ahead of volume.
 
 ```mermaid
 flowchart TD
-    A[Request] --> B["write-ticket<br/>drafts a scoped ticket"]
-    B -->|human approves| C["Agent implements<br/>inside scope"]
-    C --> D{"validator<br/>fresh context"}
-    D -->|FIXES_REQUIRED| C
-    D -->|BLOCKED| E[Human decides]
-    D -->|APPROVED| F["Report, then commit<br/>hooks check scope"]
+    A[write-ticket drafts a ticket] -->|human approves| B[Agent implements in scope]
+    B --> C{Validator}
+    C -->|FIXES_REQUIRED| B
+    C -->|BLOCKED| D[Human decides]
+    C -->|APPROVED| E[Report, then commit]
 ```
 
 1. **Ticket.** Every edit starts from a ticket the human approved. It names the
