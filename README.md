@@ -17,14 +17,14 @@ system: it puts reviewability ahead of volume.
 
 ```text
 write-ticket drafts a ticket
-  │ human approves
-  v
-implement in scope <──────────┐
-  │                           │
-  v                           │
-validator ── FIXES_REQUIRED ──┘
-  ├── BLOCKED ──> human decides
-  └── APPROVED ─> report, commit
+│ human approves
+v
+implement in scope <────────┐
+│                           │
+v                           │
+validator ─ FIXES_REQUIRED ─┘
+├─ BLOCKED ──> human decides
+└─ APPROVED ─> report, commit
 ```
 
 1. **Ticket.** Every edit starts from a ticket the human approved. It names the
