@@ -36,7 +36,7 @@ ticket_dir="$(dirname "$ticket_path")"
 ticket_base="$(basename "$ticket_path")"
 ticket_path="$(cd "$ticket_dir" && pwd)/$ticket_base"
 
-validator="$AEGIS_CORE_ROOT/tools/validate_ticket_scope.py"
+validator="$AEGIS_CORE_ROOT/tools/check_scope.py"
 [ -f "$validator" ] || fail "missing validator: $validator"
 
 staged_files="$(git diff --cached --name-only --diff-filter=ACMR)"

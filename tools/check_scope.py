@@ -8,9 +8,6 @@ import sys
 import yaml
 
 
-ROOT = Path(__file__).resolve().parents[1]
-
-
 def normalize_path(path: str) -> str:
     normalized = path.replace("\\", "/").strip()
     while normalized.startswith("./"):
@@ -63,7 +60,6 @@ def matches_pattern(path: str, pattern: str) -> bool:
 def read_staged_paths() -> list[str]:
     result = subprocess.run(
         ["git", "diff", "--cached", "--name-only"],
-        cwd=ROOT,
         check=False,
         capture_output=True,
         text=True,
@@ -124,7 +120,7 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help=(
             "Also validate staged paths from 'git diff --cached --name-only'. "
-            "The git command runs from the repository root."
+            "Paths come from the git repository in the current directory."
         ),
     )
     return parser
@@ -135,8 +131,6 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     ticket_path = Path(args.ticket)
-    if not ticket_path.is_absolute():
-        ticket_path = ROOT / ticket_path
 
     try:
         data = parse_ticket_envelope(ticket_path)
