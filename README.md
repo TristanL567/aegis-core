@@ -16,7 +16,7 @@ system: it puts reviewability ahead of volume.
 ## How it works
 
 ```mermaid
-flowchart LR
+flowchart TD
     A[Request] --> B["write-ticket<br/>drafts a scoped ticket"]
     B -->|human approves| C["Agent implements<br/>inside scope"]
     C --> D{"validator<br/>fresh context"}
