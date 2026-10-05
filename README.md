@@ -15,14 +15,16 @@ system: it puts reviewability ahead of volume.
 
 ## How it works
 
-```mermaid
-flowchart LR
-    A[Request] --> B["write-ticket<br/>drafts a scoped ticket"]
-    B -->|human approves| C["Agent implements<br/>inside scope"]
-    C --> D{"validator<br/>fresh context"}
-    D -->|FIXES_REQUIRED| C
-    D -->|BLOCKED| E[Human decides]
-    D -->|APPROVED| F["Report, then commit<br/>hooks check scope"]
+```text
+write-ticket drafts a ticket
+│ human approves
+v
+implement in scope <────────┐
+│                           │
+v                           │
+validator ─ FIXES_REQUIRED ─┘
+├─ BLOCKED ──> human decides
+└─ APPROVED ─> report, commit
 ```
 
 1. **Ticket.** Every edit starts from a ticket the human approved. It names the
