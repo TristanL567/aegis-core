@@ -1,0 +1,41 @@
+id: AEGIS-001
+goal: AGENTS.md alone defines the AEGIS workflow, with automatic validation by a fresh subagent following the validate skill, optional human gates, and worktree-isolated smoke tests.
+context: >
+  aegis-core becomes three parts (AGENTS.md, .claude/skills/, PROMPTS.md) so it
+  can be copied into any repo and work with no reference back to aegis-core.
+  Instructions replace deterministic tooling; the validator is a skill run by
+  a separate subagent, so it stays independent of the implementer.
+depends_on: []
+allowed_areas:
+  - .aegis/tickets/AEGIS-001.yaml
+  - AGENTS.md
+  - .claude/skills/write-ticket/SKILL.md
+  - .claude/skills/validate/SKILL.md
+  - .claude/agents/validator.md
+  - hooks/
+  - tools/
+must_not_touch:
+  - README.md
+  - PROMPTS.md
+non_goals:
+  - PROMPTS.md and the bootstrap prompt (AEGIS-002).
+  - Rewriting README.md (AEGIS-003); it stays stale until then.
+  - A CI scope check or any other enforcement tooling.
+  - Cleaning up .gitignore.
+acceptance_criteria:
+  - AGENTS.md is wrapped in <!-- aegis:begin --> / <!-- aegis:end --> markers, and its ticket format includes `human_gates` (allowed values ticket, merge; default []) and `smoke` (how to start the dev environment and what to check).
+  - AGENTS.md makes validation automatic. After implementing, the agent starts a fresh-context subagent that follows .claude/skills/validate/SKILL.md. On FIXES_REQUIRED it fixes and re-validates, stopping to ask the human after three failed rounds. On BLOCKED it stops. Human approval is needed only for the gates listed in human_gates.
+  - AGENTS.md lists actions that always stop for a human whatever human_gates says. Merging or pushing to the default branch, deploys, migrations on shared data, handling secrets, deleting data.
+  - AGENTS.md requires one worktree per ticket, branched from the epic branch when the ticket belongs to an epic. Smoke tests run in an isolated environment (free port, per-ticket database or schema, no git stash, shut down afterwards), and an epic is validated again after its tickets are merged into the epic branch.
+  - .claude/skills/validate/SKILL.md carries the validator procedure. It checks the ticket against the originating request. It checks scope by hand (`/` prefix, exact match, must_not_touch wins). It runs `verify` and `smoke` in the ticket's worktree and never edits files. Its output format has the verdicts APPROVED, FIXES_REQUIRED and BLOCKED.
+  - write-ticket covers human_gates and smoke; .claude/agents/validator.md, hooks/ and tools/ are deleted, and no file other than README.md mentions check_scope, AEGIS_CORE_ROOT or hooks/.
+verify:
+  - test ! -e .claude/agents/validator.md && test ! -e hooks && test ! -e tools
+  - test -f .claude/skills/validate/SKILL.md
+  - grep -q "aegis:begin" AGENTS.md && grep -q "aegis:end" AGENTS.md
+  - grep -q human_gates AGENTS.md && grep -q human_gates .claude/skills/write-ticket/SKILL.md
+  - grep -q smoke AGENTS.md && grep -q smoke .claude/skills/write-ticket/SKILL.md && grep -q smoke .claude/skills/validate/SKILL.md
+  - grep -q ".claude/skills/validate/SKILL.md" AGENTS.md
+  - '! grep -rn -e check_scope -e AEGIS_CORE_ROOT -e "hooks/" --exclude=README.md --exclude-dir=.git --exclude-dir=.aegis .'
+manual_checks:
+  - Read the new AGENTS.md end to end and confirm the gate rules and the default of automatic validation match your intent.
