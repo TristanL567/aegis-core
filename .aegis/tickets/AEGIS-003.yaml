@@ -1,0 +1,23 @@
+id: AEGIS-003
+goal: README.md describes aegis-core as three parts and sets it up with the bootstrap prompt.
+context: >
+  After AEGIS-001 and AEGIS-002 the README still documents hooks, the scope
+  script and the validator agent file, which no longer exist.
+depends_on: [AEGIS-002]
+allowed_areas:
+  - .aegis/tickets/AEGIS-003.yaml
+  - README.md
+must_not_touch:
+  - AGENTS.md
+  - PROMPTS.md
+  - .claude/skills/
+non_goals:
+  - Changing the rules or prompts themselves.
+acceptance_criteria:
+  - README presents the three parts (AGENTS.md, .claude/skills/ with write-ticket and validate, PROMPTS.md) with links, and setup is "paste the bootstrap prompt from PROMPTS.md".
+  - README no longer mentions hooks/, tools/, check_scope, AEGIS_CORE_ROOT, PyYAML or agents/validator, and its diagram stays plain text that fits a phone screen.
+verify:
+  - '! grep -n -e check_scope -e AEGIS_CORE_ROOT -e PyYAML -e "hooks/" -e "agents/validator" README.md'
+  - grep -q PROMPTS.md README.md && grep -q "skills/validate" README.md
+manual_checks:
+  - Read the README on a phone-width screen.

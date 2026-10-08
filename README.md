@@ -4,55 +4,70 @@
 
 AI coding agents drift. They widen scope, refactor code nobody asked them to
 touch, approve their own work, and report checks that never ran. AEGIS is a
-short rule set plus enforcement tooling. Every agent change stays inside a
-ticket the human approved, is reviewed by an agent that didn't write it, and
-lands as one traceable commit.
+short rule set that agents carry inside each repo. Every agent change stays
+inside a ticket, is validated by an agent that didn't write it, and lands as
+one traceable commit.
 
 It's for developers who use Claude Code, Codex, or similar agents on real
 codebases and want to control what changes without reading every line of
-every diff. It is not a spec-to-code pipeline or an autonomous multi-agent
-system: it puts reviewability ahead of volume.
+every diff. Validation runs automatically; you add a human gate only where
+you want one.
 
 ## How it works
 
 ```text
 write-ticket drafts a ticket
-│ human approves
+│ gate "ticket"? human approves
 v
-implement in scope <────────┐
-│                           │
-v                           │
-validator ─ FIXES_REQUIRED ─┘
+implement in own worktree <──┐
+│                            │
+v                            │
+validate (fresh subagent)    │
+├─ FIXES_REQUIRED ───────────┘
 ├─ BLOCKED ──> human decides
 └─ APPROVED ─> report, commit
+   gate "merge"? human merges
 ```
 
-1. **Ticket.** Every edit starts from a ticket the human approved. It names the
-   goal, the paths the agent may change, protected paths, checkable acceptance
-   criteria, and the commands that verify them.
-2. **Implement.** The agent changes only what the ticket allows. A behavior
-   change starts with a check that fails before the change.
-3. **Validate.** A separate validator with a fresh context runs the checks
-   itself, reads the whole diff, and blocks until the ticket is met.
+1. **Ticket.** Every edit starts from a ticket: the goal, the paths the agent
+   may change, protected paths, checkable acceptance criteria, the commands
+   that verify them, and smoke steps for the running app.
+2. **Implement.** The agent works in the ticket's own worktree and branch, so
+   parallel agents never see each other's unfinished work.
+3. **Validate.** Without being asked, the agent starts a fresh subagent that
+   follows the `validate` skill. It runs the checks and smoke tests itself in
+   an isolated environment, reads the whole diff, and blocks until the ticket
+   is met.
 4. **Report and commit.** The agent reports what changed, what was verified,
-   and what wasn't. Each ticket is one commit, and git hooks reject anything
-   outside its scope.
+   and what wasn't. Each ticket is one commit.
 
-## Architecture
+## The three parts
 
-| Layer | File | What it does |
-| --- | --- | --- |
-| Rules | [`AGENTS.md`](AGENTS.md) | Always loaded. The loop, the ticket format, and the rules. |
-| Planning | [`write-ticket`](.claude/skills/write-ticket/SKILL.md) skill | Loaded on demand. Turns a request into a ticket and asks instead of guessing intent. |
-| Review | [`validator`](.claude/agents/validator.md) subagent | Runs in a fresh context and never edits. Independent because it didn't write the code. |
-| Enforcement | [`hooks/`](hooks/), [`tools/check_scope.py`](tools/check_scope.py) | Deterministic. Rejects commits outside the active ticket's scope or without its ID. |
+| Part | What it does |
+| --- | --- |
+| [`AGENTS.md`](AGENTS.md) | All the rules: the loop, the ticket format, human gates, isolation, and the completion report. Always loaded. |
+| [`.claude/skills/`](.claude/skills/) | [`write-ticket`](.claude/skills/write-ticket/SKILL.md) turns a request into a ticket and asks instead of guessing. [`validate`](.claude/skills/validate/SKILL.md) is the independent review, run only by a subagent that didn't write the code. |
+| [`PROMPTS.md`](PROMPTS.md) | Copyable prompts: install AEGIS into a repo, start work, implement, validate, ask for gates, update. Says when to use each skill. |
 
-Instructions guide the agent; code enforces what matters most. Anything a hook
-can check isn't left to instructions alone.
+Once installed, a repo carries `AGENTS.md` and the skills itself;
+`PROMPTS.md` stays here for you to copy prompts from. Agents in the cloud, in
+CI, or on another machine never need this repository.
+
+## Human gates
+
+By default an agent tickets, implements, validates, and commits without
+stopping. Ask for a gate per ticket, in your prompt or as an issue label:
+
+- `human_gates: [ticket]`: you approve the ticket before work starts.
+- `human_gates: [merge]`: you approve before the branch merges.
+
+Some actions always stop for a human: merging or pushing to the default
+branch, deploys, migrations on shared data, secrets, and deleting data,
+branches, or pushed history.
 
 ## Core rules
 
-- No edits without an approved ticket, and one ticket at a time.
+- No edits without a ticket, and one ticket at a time per agent.
 - Change only `allowed_areas` and never `must_not_touch`. If the work doesn't
   fit, stop and ask; never widen scope.
 - When intent is unclear, ask instead of filling the gap with a plausible
@@ -73,12 +88,15 @@ The full rules are in [`AGENTS.md`](AGENTS.md).
 id: SHOP-012
 goal: Invoices show VAT per line.
 context: Accountants reconcile VAT per invoice line.
+epic: null
 depends_on: []
+human_gates: []
 allowed_areas: [.aegis/tickets/SHOP-012.yaml, src/billing/, tests/billing/]
 must_not_touch: [src/billing/migrations/]
 non_goals: [Changing the PDF layout.]
 acceptance_criteria: [Each invoice line returns its VAT amount.]
 verify: [pytest tests/billing]
+smoke: [Start the app on a free port, Open /invoices/42; every line shows VAT]
 manual_checks: []
 ```
 
@@ -89,38 +107,20 @@ live in `.aegis/tickets/<ID>.yaml`, and the active ticket's ID is in
 
 ## Setup
 
-Requires git, Python 3 with PyYAML, and a POSIX shell for the hooks (Git Bash
-on Windows).
-
-1. **Rules.** Copy `AGENTS.md` to your project root. Claude Code and Codex
-   read it directly. If the project has a `CLAUDE.md`, add `@AGENTS.md` to
-   it. To cover every project, put the rules in `~/.claude/CLAUDE.md` or
-   `~/.codex/AGENTS.md` instead.
-2. **Skill and validator.** Copy `.claude/skills/write-ticket/` and
-   `.claude/agents/validator.md` into the project's `.claude/` directory, or
-   into `~/.claude/` for every project.
-3. **Git.** Add `.aegis/active-ticket` to `.gitignore` and commit that change.
-4. **Hooks.** Copy `hooks/pre-commit` and `hooks/commit-msg` into
-   `.git/hooks/` and make them executable. Set `AEGIS_CORE_ROOT` to this
-   repository (default `../aegis-core`) and `AEGIS_PYTHON` to a Python with
-   PyYAML (default `python3`; on Windows, for example, `py -3.10`).
-
-Once the hooks are installed, every commit needs an active ticket.
+Paste the bootstrap prompt from [`PROMPTS.md`](PROMPTS.md#bootstrap) into an
+agent working in your repo. It copies `AGENTS.md` and the skills in, records
+the aegis-core version in `.aegis/VERSION`, and shows you the diff before
+anything is committed. If the repo already has an `AGENTS.md`, only the AEGIS
+block between its markers is added or replaced.
 
 ## Daily use
 
-1. Describe the change. The agent drafts a ticket with `write-ticket`; in
-   Claude Code you can also run `/write-ticket` yourself.
-2. Approve or correct the ticket.
-3. The agent implements and runs the validator until it approves.
+1. Describe the change or point the agent at an issue, using a prompt from
+   [`PROMPTS.md`](PROMPTS.md).
+2. Add `human_gates` if you want to approve the ticket or the merge.
+3. The agent tickets, implements, and validates until the validator approves.
 4. Read the completion report and do any manual checks it lists.
-5. Ask the agent to commit.
+5. Merge, or let the agent open a pull request for you to merge.
 
-To check scope by hand, run this from the project root:
-
-```bash
-python3 "$AEGIS_CORE_ROOT/tools/check_scope.py" --ticket .aegis/tickets/SHOP-012.yaml --staged
-```
-
-Exit 0 means every file is in scope, 1 lists the violations, and 2 means the
-check itself failed.
+To pick up a newer aegis-core, use the update prompt in
+[`PROMPTS.md`](PROMPTS.md#update-aegis-from-upstream).

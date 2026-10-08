@@ -1,0 +1,26 @@
+id: AEGIS-002
+goal: PROMPTS.md gives copyable prompts that install AEGIS into any repo and drive each step of the loop.
+context: >
+  The human pastes one short prompt into an agent working in a target repo;
+  the agent copies AEGIS in, and from then on every agent in that repo follows
+  it with no reference back to aegis-core (public: github.com/TristanL567/aegis-core).
+depends_on: [AEGIS-001]
+allowed_areas:
+  - .aegis/tickets/AEGIS-002.yaml
+  - PROMPTS.md
+must_not_touch:
+  - AGENTS.md
+  - .claude/skills/
+  - README.md
+non_goals:
+  - An installer script or CLI; the bootstrap is a prompt only.
+  - Automatic commits or PRs during bootstrap.
+acceptance_criteria:
+  - A bootstrap prompt of at most 10 lines tells the agent to do the following. Fetch aegis-core and copy AGENTS.md and .claude/skills/ into the target repo. If AGENTS.md exists there, insert or replace only the aegis:begin/end block. If CLAUDE.md exists without @AGENTS.md, add the import. Write the source commit SHA to .aegis/VERSION and add .aegis/active-ticket to .gitignore. Then show the diff and commit only when asked.
+  - Preset prompts cover these cases. Start work from an issue, bug or feature (write-ticket). Implement a ticket. Validate a ticket (fresh subagent plus the validate skill). Ask for human gates. Update AEGIS from upstream (the same block replacement, plus a new VERSION).
+  - A short table says when to use each skill (write-ticket, validate), and every prompt is in its own fenced block.
+verify:
+  - test -f PROMPTS.md && grep -q "aegis:begin" PROMPTS.md && grep -q ".aegis/VERSION" PROMPTS.md
+  - grep -q write-ticket PROMPTS.md && grep -q "skills/validate" PROMPTS.md && grep -q human_gates PROMPTS.md
+manual_checks:
+  - Paste the bootstrap prompt into an agent in a scratch repo and confirm the result matches the first acceptance criterion.
