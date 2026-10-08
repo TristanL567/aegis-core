@@ -1,0 +1,30 @@
+id: AEGIS-004
+goal: The bootstrap always makes AGENTS.md reachable through CLAUDE.md, and clones aegis-core into a uniquely named temporary directory.
+context: >
+  A scratch-repo test of the bootstrap showed two gaps. A repo without
+  CLAUDE.md gets none, so tools that read only CLAUDE.md miss the rules. Two
+  parallel runs picked the same temp folder name and one deleted the other's
+  clone.
+epic: null
+depends_on: []
+human_gates: []
+allowed_areas:
+  - .aegis/tickets/AEGIS-004.yaml
+  - PROMPTS.md
+must_not_touch:
+  - AGENTS.md
+  - .claude/skills/
+  - README.md
+non_goals:
+  - Other bootstrap changes (ignoring .claude/settings.local.json, line endings, blank-line placement).
+  - Removing skills deleted upstream during an update.
+acceptance_criteria:
+  - Bootstrap step 4 creates CLAUDE.md containing only @AGENTS.md when CLAUDE.md is missing, and otherwise adds @AGENTS.md at its top if absent.
+  - The bootstrap (step 1) and the update prompt both clone into a new, uniquely named temporary directory outside the repo.
+  - The bootstrap prompt stays at most 10 lines.
+verify:
+  - grep -q "create CLAUDE.md" PROMPTS.md
+  - test "$(grep -c "new, uniquely named temporary directory" PROMPTS.md)" -ge 2
+  - test "$(awk "/^## Bootstrap/{f=1} f&&/^\`\`\`text/{c=1;next} c&&/^\`\`\`/{exit} c{n++} END{print n}" PROMPTS.md)" -le 10
+smoke: []
+manual_checks: []

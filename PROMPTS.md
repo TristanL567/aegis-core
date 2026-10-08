@@ -19,10 +19,10 @@ this repository again.
 
 ```text
 Install AEGIS from https://github.com/TristanL567/aegis-core (branch main) into this repo. This setup step needs no ticket.
-1. Clone it to a temporary directory outside this repo and note its commit SHA.
+1. Clone it to a new, uniquely named temporary directory outside this repo and note its commit SHA.
 2. Copy its AGENTS.md here. If AGENTS.md exists, replace its <!-- aegis:begin --> ... <!-- aegis:end --> block, or add the block at the top if there is none; keep everything else.
 3. Copy each folder in its .claude/skills/ into .claude/skills/ here, replacing only skills with the same name.
-4. If CLAUDE.md exists and doesn't contain @AGENTS.md, add that line at its top.
+4. If CLAUDE.md exists and doesn't contain @AGENTS.md, add that line at its top; if there is no CLAUDE.md, create CLAUDE.md containing only @AGENTS.md.
 5. Write the SHA to .aegis/VERSION, and add .aegis/active-ticket and .claude/worktrees/ to .gitignore if missing.
 6. Remove the temporary clone (it is not project data), show me the diff, and commit only when I ask.
 ```
@@ -97,5 +97,5 @@ gates" in `AGENTS.md`.
 ## Update AEGIS from upstream
 
 ```text
-Update AEGIS in this repo from https://github.com/TristanL567/aegis-core (branch main), as an AEGIS ticket. Clone it to a temporary directory outside this repo and remove the clone afterwards. Replace only the <!-- aegis:begin --> ... <!-- aegis:end --> block in AGENTS.md and every skill folder from aegis-core's .claude/skills/ (replacing same-named ones), write the new commit SHA to .aegis/VERSION, and summarize which rules changed.
+Update AEGIS in this repo from https://github.com/TristanL567/aegis-core (branch main), as an AEGIS ticket. Clone it to a new, uniquely named temporary directory outside this repo and remove the clone afterwards. Replace only the <!-- aegis:begin --> ... <!-- aegis:end --> block in AGENTS.md and every skill folder from aegis-core's .claude/skills/ (replacing same-named ones), write the new commit SHA to .aegis/VERSION, and summarize which rules changed.
 ```
