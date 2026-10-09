@@ -1,0 +1,54 @@
+# OUTCOME (2026-10-09): ABANDONED, rejected on A/B evidence. The skill is unchanged.
+# A/B: claude plugin eval, 3 hidden-brief cases x 3 runs, Opus 5.5 under test,
+#   Sonnet 5.5 judge on the final reply, prompt "Write the AEGIS ticket for it."
+#   Old vs new write-ticket:
+#   - skill invoked: 9/9 and 9/9;
+#   - recommended answers: 9/9 and 9/9;
+#   - decision coverage: 0.70 and 0.56;
+#   - skill's own cost per run: $0.099 and $0.109.
+# Why it failed:
+#   - The premise was a measurement error. The "2 of 9" came from runs where
+#     write-ticket never fired; when it fires it already recommends answers.
+#   - The explicit format made the five-question cap binding (exactly 5
+#     questions in every run, against 3-10 before), so fewer decisions came up.
+# Follow-ups:
+#   - Test asking in rounds instead of a hard cap.
+#   - Try rationalization tables first in validate, with pressure-case evals.
+id: AEGIS-005
+goal: Every clarifying question write-ticket asks carries one recommended answer the human can accept with "yes", and the skill names the shortcuts that lead to guessed or loose tickets.
+context: >
+  Blind tests on 2026-10-09 showed write-ticket giving recommended answers in
+  2 of 9 runs, although step 2 asks for them; the grilling skill did so in 9
+  of 9. addyosmani/agent-skills shows that rationalization tables and red
+  flags keep process skills on track. The skill loads for every ticket, so it
+  must stay short and keep its five-question cap.
+epic: null
+depends_on: []
+human_gates: []
+allowed_areas:
+  - .aegis/tickets/AEGIS-005.yaml
+  - .claude/skills/write-ticket/SKILL.md
+must_not_touch:
+  - AGENTS.md
+  - PROMPTS.md
+  - README.md
+  - .claude/skills/validate/
+non_goals:
+  - Upgrading the validate skill (a follow-up ticket).
+  - Committing eval cases, graders or a harness to the repository.
+  - Changing the ticket format, the five-question cap, or the skill's name and description.
+acceptance_criteria:
+  - Step 2 specifies the question format: numbered questions, each followed by exactly one recommended answer worded so that "yes" accepts it.
+  - The skill has a Common rationalizations table with at least five rows, each pairing an excuse with its rebuttal, and a Red flags list.
+  - The frontmatter (name and description) and the five-question cap are unchanged.
+  - SKILL.md has at most 1162 words (862 before, so at most 300 added).
+  - In an A/B eval of the old and new skill (same three hidden-brief cases, 3 runs each, Opus 5.5), the new skill gives recommended answers in at least 7 of 9 runs, its mean decision coverage is not lower than the old skill's, and its own cost per run (excluding the judge) is at most 1.25 times the old skill's.
+verify:
+  - grep -n "Common rationalizations" .claude/skills/write-ticket/SKILL.md
+  - grep -n -i "red flags" .claude/skills/write-ticket/SKILL.md
+  - grep -n "at most five" .claude/skills/write-ticket/SKILL.md
+  - test "$(MSYS_NO_PATHCONV=1 git show aegis-core/main:.claude/skills/write-ticket/SKILL.md | sed -n '1,4p')" = "$(sed -n '1,4p' .claude/skills/write-ticket/SKILL.md)"
+  - test "$(wc -w < .claude/skills/write-ticket/SKILL.md)" -le 1162
+  - py -3.10 "C:/Users/TRISTA~1/AppData/Local/Temp/claude/C--Users-Tristan-Leiter-Documents-aegis-core--claude-worktrees-elated-mccarthy-be24cc/ecd0ee62-e3e8-4973-ac24-8e1cb2f325e7/scratchpad/harness-005/check.py"
+smoke: []
+manual_checks: []
