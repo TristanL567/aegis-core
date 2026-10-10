@@ -147,6 +147,46 @@ Parallel agents must not see each other's unfinished work.
 - One commit per ticket, containing the ticket's file and its work, nothing
   else. Leave unrelated changes alone: don't stage, revert, or stash them.
 
+## Design track
+
+When the design of a new screen, flow, or app feature is still open, a design
+ticket (`kind: design`) comes before the implementation epic. It runs the
+same loop and always has `human_gates: [ticket, merge]`.
+
+It adds three fields:
+- `appetite`: the timebox, such as `2 days`; overruns go to the human.
+- `personas`: IDs from `.aegis/personas.yaml`, the project's 3-5 user
+  profiles, drafted by the first design ticket and confirmed by the human.
+- `tasks`: T1..Tn, each a user goal with a success criterion.
+
+`allowed_areas` is `.aegis/design/<ID>/`, the ticket file, and
+`.aegis/personas.yaml`; product code goes in `must_not_touch`.
+
+Work in at most 3 rounds:
+1. **Prototype.** Build or revise `.aegis/design/<ID>/prototype/`: one
+   self-contained, throwaway file with fake data that includes edge cases,
+   each screen labelled with its task IDs, and only the screens and states
+   the tasks need.
+2. **Test.** A fresh subagent runs the `ux-test` skill on a served copy.
+3. **Decide.** Record findings in `findings.yaml`, and one decision per
+   finding (fix, accept, defer, or kill) in the append-only `decisions.md`.
+
+The design passes when no confirmed severity 3-4 finding is open and every
+task works at phone and desktop width. AI findings aren't user validation:
+`manual_checks` includes a real-user session. `spec.md` holds each task's
+flow and each screen's empty, loading, and error states.
+
+The `merge` gate freezes the design. The commit holds the ticket, personas,
+`spec.md`, `decisions.md`, and `findings.yaml`. The prototype is never
+imported or merged; as the one exception to one branch and commit per
+ticket, it goes to `aegis/<ID>-prototype`.
+
+`write-ticket` then turns `spec.md` into an epic. Each of its
+tickets names `design_ref: <ID>#<flow>` and takes its acceptance criteria
+from the spec's flows and states. The epic's validation reruns the `ux-test`
+inspection on the real build. Changing a frozen design needs a new design
+ticket.
+
 ## Completion report
 
 ```text

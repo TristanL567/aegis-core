@@ -1,0 +1,43 @@
+# A/B (2026-10-10): `claude plugin eval` on 3 hidden-brief design requests
+#   (dividend calendar, broker-import onboarding, family overview), 6 hidden
+#   decisions each, 3 runs per case. Opus 5.5 under test, Sonnet 5.5 judge.
+#   Old write-ticket (main) vs new:
+#   - skill fired: 9/9 and 9/9;
+#   - decision coverage: 0.407 and 0.907;
+#   - recommended answers: 9/9 and 9/9;
+#   - no premature plan: 8/9 and 6/9;
+#   - skill's own cost per run: $0.099 and $0.121.
+#   The harness is session scratch (harness-008/check.py); it is not committed.
+id: AEGIS-008
+goal: AGENTS.md defines a design track (kind design, briefs, prototype rounds, freeze, conversion to an epic), and write-ticket elicits design briefs.
+context: >
+  Design reuses the ticket, branch, validator and gates rather than parallel
+  machinery. The prototype is evidence, never production code, and persona
+  findings are synthetic: they never count as user validation.
+epic: AEGIS-E1
+depends_on: [AEGIS-007]
+human_gates: [ticket]
+allowed_areas:
+  - .aegis/tickets/AEGIS-008.yaml
+  - AGENTS.md
+  - .claude/skills/write-ticket/SKILL.md
+must_not_touch:
+  - .claude/skills/validate/
+  - .claude/skills/ux-test/
+  - PROMPTS.md
+  - README.md
+non_goals:
+  - Changing the loop for code tickets.
+  - New gate types.
+  - A design-system or design-token spec.
+acceptance_criteria:
+  - A "Design track" section inside the aegis markers defines kind design with appetite, personas and tasks; at most 3 rounds; the prototype rules (throwaway, one self-contained file, fake data with edge cases, screens labelled by task, never imported or merged); per-project personas in .aegis/personas.yaml, drafted from the first brief and confirmed by the human; the layout .aegis/design/<ID>/ with spec.md, decisions.md and findings.yaml; the pass rule (no open confirmed severity 3-4 finding and a working path for every task); a real-user check in manual_checks; mandatory ticket and merge gates, where merge freezes the design and merges only the text files; and conversion to an epic with design_ref and an inspector re-run on the real build.
+  - AGENTS.md grows by at most 300 words and changes nothing outside the ticket format block and the new section.
+  - For kind design, write-ticket asks about users, key tasks, states and data ranges, fidelity and no-gos, each with a recommended answer, in at most 150 added words.
+  - In an A/B on 3 hidden-brief design requests with 3 runs each, the new write-ticket's mean decision coverage is at least the current skill's.
+verify:
+  - grep -q "^## Design track" AGENTS.md
+  - test "$(wc -w < AGENTS.md)" -le 1442
+  - test "$(wc -w < .claude/skills/write-ticket/SKILL.md)" -le 1012
+smoke: []
+manual_checks: []
