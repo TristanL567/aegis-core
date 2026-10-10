@@ -1,0 +1,53 @@
+tokens: 89086
+matches:
+  - finding: 1
+    match: F04
+    why: No confirmation after save and the new row is not visible in the current view.
+  - finding: 2
+    match: F03
+    why: Saving with empty withholding silently clears all fields; also notes the unhelpful error (F02).
+  - finding: 3
+    match: F01
+    why: Icon-only save button with no label.
+  - finding: 4
+    match: F02
+    why: Placeholder YYYY-MM-DD conflicts with the accepted DD.MM.YYYY format.
+  - finding: 5
+    match: unplanted
+    why: Dialog has no form element, so Enter does not submit; true and not in key.
+  - finding: 6
+    match: unplanted
+    why: No Escape handler exists for either dialog.
+  - finding: 7
+    match: unplanted
+    why: No focus trap in the modal dialogs.
+  - finding: 8
+    match: F05
+    why: Selected year is shown only by a faint grey background.
+  - finding: 9
+    match: F07
+    why: Export is reachable only via the unlabelled overflow button.
+  - finding: 10
+    match: unplanted
+    why: The absolutely positioned menu overlays the report content below the header.
+  - finding: 11
+    match: F08
+    why: Prominent Continue closes without exporting; the real action is a small link.
+  - finding: 12
+    match: unplanted
+    why: Create file only renders an on-page preview and never downloads anything.
+  - finding: 13
+    match: unplanted
+    why: Export dialog shows no tax year and has no Cancel or close control.
+  - finding: 14
+    match: unplanted
+    why: CSV rows are in insertion order and contain only raw transactions.
+  - finding: 15
+    match: F06
+    why: Taxable income versus Assessment base naming inconsistency.
+  - finding: 16
+    match: unplanted
+    why: The T1/T2/T3 task badges are visible in the UI headers.
+  - finding: 17
+    match: unplanted
+    why: The date input is independent of the selected year, with no warning.
