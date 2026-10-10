@@ -1,0 +1,37 @@
+id: AEGIS-007
+goal: A fresh subagent following ux-test finds more planted flaws than the plain-prompt baseline, and every finding carries evidence and one severity.
+context: >
+  Research shows AI testers find about a third of what real users find and
+  over-succeed unless they rate confusion at every step and see only the
+  screen. The skill is process, not UX knowledge. It drives Claude's built-in
+  browser, with Playwright MCP as the fallback where that is unavailable.
+epic: AEGIS-E1
+depends_on: [AEGIS-006]
+human_gates: [ticket]
+allowed_areas:
+  - .aegis/tickets/AEGIS-007.yaml
+  - .claude/skills/ux-test/
+  - .claude/agents/ux-persona.md
+  - evals/ux-test/runs/
+must_not_touch:
+  - AGENTS.md
+  - .claude/skills/validate/
+  - .claude/skills/write-ticket/
+  - evals/ux-test/flaws.yaml
+  - evals/ux-test/prototype/
+non_goals:
+  - UX knowledge checklists.
+  - Native apps.
+  - Changing AGENTS.md (AEGIS-008).
+acceptance_criteria:
+  - SKILL.md has at most 1500 words. Its default is one inspector, the agent running the skill, which covers every task at 390x844 and 1440x900 like a user with a step budget, and reports deduplicated findings with one 0-4 severity, evidence and a confirmed/opinion status in the findings.yaml shape. An optional persona pass, run only on the human's request, briefs one screen-only subagent per behaviour card with per-step confusion ratings 1-5 and give-up, and merges them into confirmed/synthetic findings and a persona-by-task matrix. (Slimmed on the human's decision after run 1 of the full multi-agent version cost 7.4x the baseline's tokens; that run is kept in evals/ux-test/runs/ux-test-full/.)
+  - The skill names the built-in browser tools and the Playwright MCP fallback.
+  - .claude/agents/ux-persona.md restricts the subagent to browser screenshot, click, type and navigate tools; a smoke run's transcript shows no file, search or shell tool calls.
+  - In an A/B with 3 runs (the baseline prompt plus "use the ux-test skill", judged with evals/ux-test/judge.md), every run finds at least 9 of 10 planted flaws, the mean invalid count is at most the baseline's 1.00, and mean tester tokens are at most 2x the baseline's 99,235; runs go to evals/ux-test/runs/ux-test/.
+verify:
+  - test "$(wc -w < .claude/skills/ux-test/SKILL.md)" -le 1500
+  - grep -qi "confusion" .claude/skills/ux-test/SKILL.md
+  - py -3.10 evals/ux-test/grade.py --summary evals/ux-test/runs/
+smoke:
+  - Run one ux-persona subagent on a served copy of the prototype; its transcript shows only browser tool calls
+manual_checks: []

@@ -1,0 +1,50 @@
+tokens: 131216
+matches:
+  - finding: 1
+    match: F09
+    why: Bottom nav covers the Add transaction dialog's Save and Cancel at phone width.
+  - finding: 2
+    match: unplanted
+    why: The same fixed nav (z-index 50) also covers the Export dialog buttons on a phone, a real flaw not in the key.
+  - finding: 3
+    match: F03
+    why: Empty withholding tax silently clears the form and saves nothing.
+  - finding: 4
+    match: F02
+    why: YYYY-MM-DD placeholder is rejected; only DD.MM.YYYY is accepted.
+  - finding: 5
+    match: F02
+    why: '"Invalid input." names no field; this is the error-message half of F02.'
+  - finding: 6
+    match: F08
+    why: Prominent Continue only closes the dialog; the real action is the faint Create file link.
+  - finding: 7
+    match: F04
+    why: No confirmation after saving, and the list does not refresh until the year changes.
+  - finding: 8
+    match: F10
+    why: Table is clipped with overflow hidden at phone width, hiding Amount.
+  - finding: 9
+    match: unplanted
+    why: Dialogs have no Escape handler and the Export dialog has no Cancel, which is true in the source.
+  - finding: 10
+    match: unplanted
+    why: The table min-width of 600px also applies to the Report table, so it overflows the card on a phone.
+  - finding: 11
+    match: F01
+    why: Save is an unlabelled floppy-disk icon.
+  - finding: 12
+    match: F07
+    why: Export is only reachable via the unlabelled overflow button.
+  - finding: 13
+    match: F06
+    why: Taxable income vs Assessment base for the same figure.
+  - finding: 14
+    match: F05
+    why: Selected year is shown only by a faint grey fill.
+  - finding: 15
+    match: invalid
+    why: A negative realised gain is standard terminology, not an actionable usability problem.
+  - finding: 16
+    match: unplanted
+    why: The Export dialog has only a Format field and does not show the tax year, which is true in the source.

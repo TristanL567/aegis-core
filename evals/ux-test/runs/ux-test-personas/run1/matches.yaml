@@ -1,0 +1,53 @@
+tokens: 436305
+matches:
+  - finding: 1
+    match: F09
+    why: Fixed bottom nav covers Cancel and save in the add dialog at phone width.
+  - finding: 2
+    match: unplanted
+    why: Same nav overlap also hides the Export dialog buttons (z-index 50 over 40), a real problem not in the key.
+  - finding: 3
+    match: F02
+    why: YYYY-MM-DD placeholder versus accepted DD.MM.YYYY.
+  - finding: 4
+    match: F02
+    why: The generic "Invalid input." error is the second half of F02.
+  - finding: 5
+    match: F03
+    why: Empty optional withholding field makes save silently clear the form.
+  - finding: 6
+    match: F04
+    why: No confirmation and the list is not refreshed after save.
+  - finding: 7
+    match: unplanted
+    why: tx is in-memory only so entries vanish on reload; real but not in the key.
+  - finding: 8
+    match: F08
+    why: Continue only closes the dialog while the real action is a faint Create file link.
+  - finding: 9
+    match: F07
+    why: Export reachable only through the unlabelled overflow button.
+  - finding: 10
+    match: F10
+    why: Table clipped at phone width with overflow hidden, hiding Amount.
+  - finding: 11
+    match: unplanted
+    why: The global table min-width of 600px also applies to the report table, causing sideways overflow on phones.
+  - finding: 12
+    match: unplanted
+    why: No Escape or Enter handling exists in the script, a real keyboard gap not in the key.
+  - finding: 13
+    match: F06
+    why: Taxable income versus Assessment base labels.
+  - finding: 14
+    match: F05
+    why: Selected year shown only by faint #f3f4f6 background.
+  - finding: 15
+    match: F01
+    why: Save button is an unlabelled floppy emoji.
+  - finding: 16
+    match: invalid
+    why: Self-described as possibly a test-tool artefact; the source has no such defect.
+  - finding: 17
+    match: unplanted
+    why: Export shows File created with no download, and rows follow insertion order, both true in the source.
