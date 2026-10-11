@@ -1,0 +1,50 @@
+tokens: 173392
+matches:
+  - finding: 1
+    match: F09
+    why: Bottom nav covers Cancel and save in the Add transaction dialog at phone width.
+  - finding: 2
+    match: unplanted
+    why: Real; the Export dialog's actions are likewise covered by the fixed nav (z-index 50 over 40), which the key does not list.
+  - finding: 3
+    match: F02
+    why: Placeholder YYYY-MM-DD is rejected; only DD.MM.YYYY accepted.
+  - finding: 4
+    match: F04
+    why: Saved row does not appear in the list until the view is changed, with no confirmation.
+  - finding: 5
+    match: unplanted
+    why: Real; tx is in memory only, so added transactions vanish on reload.
+  - finding: 6
+    match: F03
+    why: Saving with empty withholding tax silently clears the form (also covers the vague "Invalid input." message of F02).
+  - finding: 7
+    match: F08
+    why: Continue closes the dialog without exporting; the real action is the faint Create file link.
+  - finding: 8
+    match: F10
+    why: Table clipped at phone width (overflow hidden), so Amount cannot be seen.
+  - finding: 9
+    match: unplanted
+    why: Real; no Escape handler and the Export dialog has no Cancel.
+  - finding: 10
+    match: F01
+    why: The save button is an unlabelled floppy-disk icon.
+  - finding: 11
+    match: F06
+    why: Taxable income vs Assessment base for the same figure.
+  - finding: 12
+    match: unplanted
+    why: Real; a loss is entered under the type "Realised gain" and shown as a negative, a minor labelling problem.
+  - finding: 13
+    match: F07
+    why: Export reachable only through the unlabelled overflow button.
+  - finding: 14
+    match: unplanted
+    why: Real; the min-width 600px table rule at phone width also applies to the report table, which then overflows its card.
+  - finding: 15
+    match: F05
+    why: Selected year is shown only by a faint grey background.
+  - finding: 16
+    match: unplanted
+    why: Real; the CSV contains only raw rows without report totals, in insertion order rather than date order.

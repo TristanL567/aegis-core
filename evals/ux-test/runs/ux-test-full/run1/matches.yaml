@@ -1,0 +1,50 @@
+tokens: 732639
+matches:
+  - finding: 1
+    match: F09
+    why: Fixed bottom nav covers the dialog Cancel and save buttons at phone width (export sheet is the same pattern).
+  - finding: 2
+    match: unplanted
+    why: No Escape, backdrop or focus handling, and on phone the Cancel button is covered, so dialogs are hard to close; real but not in the key.
+  - finding: 3
+    match: F02
+    why: Placeholder says YYYY-MM-DD but only DD.MM.YYYY is accepted, with a generic "Invalid input." error.
+  - finding: 4
+    match: F03
+    why: Empty optional withholding tax makes save clear the form silently.
+  - finding: 5
+    match: F04
+    why: No confirmation after save and the Transactions rows are only re-rendered on tab switch.
+  - finding: 6
+    match: F08
+    why: Prominent Continue just closes the dialog while the real action is the small grey Create file link.
+  - finding: 7
+    match: unplanted
+    why: The 600px min-width on every table at phone width makes the Report table overflow horizontally; real but not in the key.
+  - finding: 8
+    match: F10
+    why: At phone width the transactions table is clipped (overflow hidden) so Amount is unreachable.
+  - finding: 9
+    match: unplanted
+    why: The prototype has no duplicate check and no edit or delete; real but not in the key.
+  - finding: 10
+    match: unplanted
+    why: The dialogs have aria-modal but no focus trap, so focus can reach the nav behind; real but not in the key.
+  - finding: 11
+    match: F07
+    why: Export is reachable only through the unlabelled overflow button on the Report screen.
+  - finding: 12
+    match: F01
+    why: Save is an icon-only floppy-disk button with no accessible text.
+  - finding: 13
+    match: unplanted
+    why: Transactions live only in an in-memory array so a reload loses them; real but not in the key.
+  - finding: 14
+    match: unplanted
+    why: The dialog is not a form element so Enter does not submit; real but not in the key.
+  - finding: 15
+    match: unplanted
+    why: Create file only renders an in-page preview with no download, and renderReport clears it on year or tab change; real but not in the key.
+  - finding: 16
+    match: F05
+    why: The selected tax year is shown only by a barely different grey background.

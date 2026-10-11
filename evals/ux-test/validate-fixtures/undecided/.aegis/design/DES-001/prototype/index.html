@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dividend calendar</title>
+<style>
+  body { margin: 0; font: 16px/1.5 system-ui, sans-serif; color: #1f2933; background: #f5f7fa; }
+  main { max-width: 720px; margin: 0 auto; padding: 16px; }
+  .card { background: #fff; border: 1px solid #d9e2ec; border-radius: 10px; padding: 16px; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  .task { font-size: 12px; color: #52606d; border: 1px solid #d9e2ec; border-radius: 4px; padding: 1px 6px; }
+  .note { color: #52606d; font-size: 14px; margin: 0; }
+  .year { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
+  .year button { border: 1px solid #9aa5b1; background: #fff; border-radius: 6px; min-width: 44px; min-height: 44px; font: inherit; cursor: pointer; }
+  .year strong { font-size: 18px; }
+  .months { display: flex; gap: 6px; margin: 12px 0; flex-wrap: wrap; }
+  .months button { border: 1px solid #9aa5b1; background: #fff; border-radius: 6px; padding: 8px 10px; min-height: 44px; font: inherit; cursor: pointer; }
+  .months button[aria-pressed="true"] { background: #1d4ed8; color: #fff; border-color: #1d4ed8; font-weight: 600; }
+  ul { list-style: none; margin: 0; padding: 0; }
+  li { border-top: 1px solid #d9e2ec; padding: 12px 0; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .sec { font-weight: 600; }
+  .date { color: #52606d; font-size: 14px; }
+  .net { font-weight: 600; text-align: right; }
+  .gross { color: #52606d; font-size: 14px; text-align: right; }
+  .empty { color: #52606d; padding: 16px 0; }
+  @media (max-width: 480px) { .net { display: none; } }
+</style>
+</head>
+<body>
+<main>
+  <div class="card">
+    <h1>Dividend calendar <span class="task">T1 T2</span></h1>
+    <p class="note">Declared dividends from Austrian stocks, net after 27.5% KESt.</p>
+    <div class="year"><button id="prev" aria-label="Previous year">&lsaquo;</button><strong id="yr"></strong><button id="next" aria-label="Next year">&rsaquo;</button></div>
+    <div class="months" role="group" aria-label="Month"></div>
+    <ul id="list"></ul>
+  </div>
+</main>
+<script>
+  const now = new Date();
+  const Y = now.getFullYear();
+  const pay = [
+    { y: Y, m: 1, day: 20, sec: "Andritz AG", gross: 62.50 },
+    { y: Y, m: 3, day: 12, sec: "Erste Group", gross: 84.20 },
+    { y: Y, m: 4, day: 15, sec: "Verbund AG", gross: 31.50 },
+    { y: Y, m: 5, day: 6, sec: "Raiffeisen Bank International", gross: 27.00 },
+    { y: Y, m: 6, day: 2, sec: "OMV AG", gross: 46.80 },
+    { y: Y, m: 7, day: 9, sec: "voestalpine AG", gross: 18.00 },
+    { y: Y, m: 9, day: 24, sec: "Österreichische Post AG", gross: 35.10 },
+    { y: Y, m: 10, day: 8, sec: "Erste Group", gross: 84.20 },
+    { y: Y, m: 10, day: 21, sec: "Wienerberger AG", gross: 22.40 },
+    { y: Y, m: 12, day: 3, sec: "Verbund AG", gross: 31.50 }
+  ];
+  const names = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  let year = Y, month = now.getMonth() + 1;
+  const box = document.querySelector(".months");
+  names.forEach((n, i) => {
+    const b = document.createElement("button");
+    b.textContent = n.slice(0, 3);
+    b.setAttribute("aria-label", n);
+    b.addEventListener("click", () => { month = i + 1; render(); });
+    box.appendChild(b);
+  });
+  document.getElementById("prev").addEventListener("click", () => { year--; render(); });
+  document.getElementById("next").addEventListener("click", () => { year++; render(); });
+  const eur = n => "€" + n.toFixed(2);
+  const pad = n => String(n).padStart(2, "0");
+  function render() {
+    document.getElementById("yr").textContent = year;
+    box.querySelectorAll("button").forEach((b, i) => b.setAttribute("aria-pressed", String(i + 1 === month)));
+    const r = pay.filter(p => p.y === year && p.m === month);
+    document.getElementById("list").innerHTML = r.length ? r.map(p =>
+      `<li><div><div class="sec">${p.sec}</div><div class="date">${pad(p.day)}.${pad(p.m)}.${p.y}</div></div><div><div class="net">${eur(p.gross * 0.725)} net</div><div class="gross">${eur(p.gross)} gross</div></div></li>`
+    ).join("") : `<li class="empty">No dividends expected in ${names[month - 1]} ${year}.</li>`;
+  }
+  render();
+</script>
+</body>
+</html>

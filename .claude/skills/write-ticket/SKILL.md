@@ -37,6 +37,19 @@ each one a recommended answer so the human can simply confirm. Never write an
 implementation-ready ticket on guessed intent. If part of the request is
 clear, draft that part and list the open questions for the rest.
 
+**Design tickets.** When the request is for a new screen, flow, or app
+feature whose design is still open, draft a design ticket (`kind: design`,
+always `human_gates: [ticket, merge]`; see the Design track in AGENTS.md)
+instead of implementation tickets. Your questions must cover these points,
+each with a recommended answer:
+- who uses it: personas from `.aegis/personas.yaml`, or three drafted
+  personas for the human to confirm;
+- the 3 to 5 key tasks, and what success looks like for each;
+- the data it shows: realistic ranges, and the empty, error, and extreme
+  cases;
+- devices and fidelity: phone, desktop, and what the prototype must show;
+- the no-gos and the appetite.
+
 ## 3. Size it
 
 One ticket is one diff a human can review in a few minutes, and one validator

@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Taxbook</title>
+<style>
+  :root { --ink: #1f2933; --muted: #52606d; --line: #d9e2ec; --accent: #1d4ed8; --bg: #ffffff; --soft: #f5f7fa; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--ink); background: var(--soft); }
+  header { background: var(--bg); border-bottom: 1px solid var(--line); padding: 12px 24px; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+  header h1 { font-size: 20px; margin: 0; }
+  nav { display: flex; gap: 4px; }
+  nav button { border: 0; background: none; padding: 8px 12px; font: inherit; color: var(--muted); cursor: pointer; border-radius: 6px; }
+  nav button[aria-current="page"] { color: var(--accent); font-weight: 600; background: #e0e7ff; }
+  .years { margin-left: auto; display: flex; gap: 4px; align-items: center; }
+  .years span { color: var(--muted); font-size: 14px; margin-right: 4px; }
+  .years button { border: 1px solid var(--line); background: #ffffff; color: var(--ink); padding: 6px 12px; font: inherit; cursor: pointer; border-radius: 6px; }
+  .years button.sel { background: #f3f4f6; }
+  main { max-width: 960px; margin: 24px auto; padding: 0 24px 96px; }
+  .screen { display: none; }
+  .screen.on { display: block; }
+  .card { background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 20px; margin-bottom: 16px; }
+  .head { display: flex; align-items: center; gap: 12px; }
+  .head h2 { margin: 0; font-size: 22px; flex: 1; }
+  .task { font-size: 12px; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 1px 6px; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+  .stat .label { color: var(--muted); font-size: 14px; }
+  .stat .value { font-size: 28px; font-weight: 600; }
+  .primary { background: var(--accent); color: #fff; border: 0; border-radius: 6px; padding: 10px 16px; font: inherit; cursor: pointer; }
+  .plain { background: none; border: 1px solid var(--line); border-radius: 6px; padding: 10px 16px; font: inherit; cursor: pointer; color: var(--ink); }
+  .icon { background: var(--accent); color: #fff; border: 0; border-radius: 6px; padding: 10px 14px; font-size: 18px; cursor: pointer; }
+  .more { background: none; border: 1px solid var(--line); border-radius: 6px; padding: 6px 12px; font-size: 18px; cursor: pointer; color: var(--ink); }
+  .menu { position: absolute; right: 0; top: 40px; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 6px 20px rgba(0,0,0,.12); min-width: 180px; display: none; z-index: 10; }
+  .menu.on { display: block; }
+  .menu button { display: block; width: 100%; text-align: left; background: none; border: 0; padding: 10px 14px; font: inherit; cursor: pointer; }
+  .menu button:hover { background: var(--soft); }
+  .tablewrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  th { color: var(--muted); font-weight: 600; font-size: 14px; }
+  td.num, th.num { text-align: right; }
+  .empty { color: var(--muted); padding: 16px 0; }
+  .overlay { position: fixed; inset: 0; background: rgba(15,23,42,.45); display: none; align-items: center; justify-content: center; z-index: 40; }
+  .overlay.on { display: flex; }
+  .dialog { background: var(--bg); border-radius: 12px; width: min(520px, 92vw); padding: 24px; position: relative; }
+  .dialog h3 { margin: 0 0 16px; }
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+  .field input, .field select { width: 100%; padding: 9px 10px; font: inherit; border: 1px solid #9aa5b1; border-radius: 6px; }
+  .req { color: #b91c1c; }
+  .error { color: #b91c1c; background: #fef2f2; border: 1px solid #fecaca; padding: 8px 10px; border-radius: 6px; margin-bottom: 12px; display: none; }
+  .error.on { display: block; }
+  .actions { display: flex; gap: 8px; justify-content: flex-end; align-items: center; margin-top: 8px; }
+  .link { background: none; border: 0; color: var(--muted); font-size: 13px; cursor: pointer; padding: 4px; }
+  pre { background: var(--soft); border: 1px solid var(--line); border-radius: 8px; padding: 12px; overflow-x: auto; font-size: 13px; }
+  .note { color: var(--muted); font-size: 14px; }
+  @media (max-width: 600px) {
+    header { padding: 12px 16px; gap: 12px; }
+    nav { position: fixed; left: 0; right: 0; bottom: 0; height: 64px; background: var(--bg); border-top: 1px solid var(--line); justify-content: space-around; align-items: center; z-index: 50; }
+    .years { margin-left: 0; }
+    main { padding: 0 16px 96px; margin-top: 16px; }
+    .tablewrap { overflow: hidden; }
+    table { min-width: 600px; }
+    .overlay { align-items: stretch; }
+    .dialog { width: 100vw; border-radius: 0; padding: 20px 16px 0; }
+    .dialog .actions { position: absolute; left: 0; right: 0; bottom: 0; padding: 12px 16px; background: var(--bg); border-top: 1px solid var(--line); margin: 0; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Taxbook</h1>
+  <nav>
+    <button data-go="overview" aria-current="page">Overview</button>
+    <button data-go="transactions">Transactions</button>
+    <button data-go="report">Report</button>
+  </nav>
+  <div class="years" role="group" aria-label="Tax year"><span>Tax year</span></div>
+</header>
+
+<main>
+  <section class="screen on" id="overview">
+    <div class="card">
+      <div class="head"><h2>Overview</h2><span class="task">T2</span></div>
+      <p class="note">Your capital income for the selected tax year.</p>
+      <div class="stats">
+        <div class="stat"><div class="label">Taxable income</div><div class="value" id="ov-income"></div></div>
+        <div class="stat"><div class="label">Withholding tax credited</div><div class="value" id="ov-wht"></div></div>
+        <div class="stat"><div class="label">Transactions</div><div class="value" id="ov-count"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen" id="transactions">
+    <div class="card">
+      <div class="head"><h2>Transactions</h2><span class="task">T1</span><button class="primary" id="add">Add transaction</button></div>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Date</th><th>Security</th><th>Type</th><th class="num">Withholding tax</th><th class="num">Amount</th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen" id="report">
+    <div class="card">
+      <div class="head" style="position:relative"><h2>Tax report</h2><span class="task">T3</span>
+        <button class="more" id="more" aria-haspopup="menu">&#8943;</button>
+        <div class="menu" id="menu" role="menu">
+          <button role="menuitem" id="m-export">Export report</button>
+          <button role="menuitem" id="m-print">Print</button>
+        </div>
+      </div>
+      <p class="note">Figures for your capital income tax return.</p>
+      <table>
+        <tbody>
+          <tr><td>Assessment base</td><td class="num" id="rp-income"></td></tr>
+          <tr><td>Withholding tax credited</td><td class="num" id="rp-wht"></td></tr>
+          <tr><td>Tax due (27.5%) after credit</td><td class="num" id="rp-due"></td></tr>
+        </tbody>
+      </table>
+      <div id="export-out"></div>
+    </div>
+  </section>
+</main>
+
+<div class="overlay" id="form-ov">
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="form-title" style="min-height:0">
+    <h3 id="form-title">Add transaction</h3>
+    <div class="error" id="form-err">Invalid input.</div>
+    <div class="field"><label for="f-date">Date <span class="req">*</span></label><input id="f-date" placeholder="YYYY-MM-DD"></div>
+    <div class="field"><label for="f-sec">Security <span class="req">*</span></label><input id="f-sec"></div>
+    <div class="field"><label for="f-type">Type <span class="req">*</span></label>
+      <select id="f-type"><option>Dividend</option><option>Interest</option><option>Realised gain</option></select></div>
+    <div class="field"><label for="f-amt">Amount (EUR) <span class="req">*</span></label><input id="f-amt" inputmode="decimal"></div>
+    <div class="field"><label for="f-wht">Withholding tax (EUR)</label><input id="f-wht" inputmode="decimal"></div>
+    <div style="height:72px" class="spacer"></div>
+    <div class="actions"><button class="plain" id="f-cancel">Cancel</button><button class="icon" id="f-save">&#128190;</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="exp-ov">
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="exp-title">
+    <h3 id="exp-title">Export tax report</h3>
+    <div class="field"><label for="exp-fmt">Format</label><select id="exp-fmt"><option>CSV</option><option>PDF</option></select></div>
+    <div style="height:56px" class="spacer"></div>
+    <div class="actions"><button class="link" id="exp-create">Create file</button><button class="primary" id="exp-continue">Continue</button></div>
+  </div>
+</div>
+
+<script>
+  const tx = [
+    { date: "2025-01-15", sec: "iShares Core MSCI World", type: "Dividend", amt: 41.10, wht: 6.17 },
+    { date: "2025-03-28", sec: "Austrian Gov. Bond 2031", type: "Interest", amt: 120.00, wht: 33.00 },
+    { date: "2025-06-02", sec: "Siemens AG", type: "Realised gain", amt: 310.55, wht: 0 },
+    { date: "2025-09-19", sec: "Vanguard FTSE All-World", type: "Dividend", amt: 66.80, wht: 10.02 },
+    { date: "2024-02-11", sec: "Vanguard FTSE All-World", type: "Dividend", amt: 58.40, wht: 8.76 },
+    { date: "2024-07-30", sec: "Erste Group", type: "Dividend", amt: 152.00, wht: 41.80 },
+    { date: "2024-11-05", sec: "OMV AG", type: "Realised gain", amt: -84.25, wht: 0 },
+    { date: "2023-05-17", sec: "Erste Group", type: "Dividend", amt: 120.00, wht: 33.00 }
+  ];
+  const years = [2023, 2024, 2025];
+  let year = 2025;
+  const $ = id => document.getElementById(id);
+  const eur = n => (n < 0 ? "-" : "") + "€" + Math.abs(n).toFixed(2);
+  const ofYear = () => tx.filter(t => t.date.startsWith(String(year)));
+
+  const yearBox = document.querySelector(".years");
+  years.forEach(y => {
+    const b = document.createElement("button");
+    b.textContent = y;
+    b.addEventListener("click", () => { year = y; renderAll(); });
+    yearBox.appendChild(b);
+  });
+
+  function renderYears() {
+    yearBox.querySelectorAll("button").forEach(b => b.classList.toggle("sel", Number(b.textContent) === year));
+  }
+  function renderOverview() {
+    const r = ofYear();
+    $("ov-income").textContent = eur(r.reduce((s, t) => s + t.amt, 0));
+    $("ov-wht").textContent = eur(r.reduce((s, t) => s + t.wht, 0));
+    $("ov-count").textContent = r.length;
+  }
+  function renderRows() {
+    const r = ofYear().slice().sort((a, b) => a.date.localeCompare(b.date));
+    $("rows").innerHTML = r.length ? r.map(t =>
+      `<tr><td>${t.date}</td><td>${t.sec}</td><td>${t.type}</td><td class="num">${eur(t.wht)}</td><td class="num">${eur(t.amt)}</td></tr>`
+    ).join("") : `<tr><td colspan="5" class="empty">No transactions in ${year}.</td></tr>`;
+  }
+  function renderReport() {
+    const r = ofYear();
+    const inc = r.reduce((s, t) => s + t.amt, 0), w = r.reduce((s, t) => s + t.wht, 0);
+    $("rp-income").textContent = eur(inc);
+    $("rp-wht").textContent = eur(w);
+    $("rp-due").textContent = eur(Math.max(0, inc * 0.275 - w));
+    $("export-out").innerHTML = "";
+  }
+  function renderAll() { renderYears(); renderOverview(); renderRows(); renderReport(); }
+
+  document.querySelectorAll("nav button").forEach(b => b.addEventListener("click", () => {
+    document.querySelectorAll("nav button").forEach(x => x.removeAttribute("aria-current"));
+    b.setAttribute("aria-current", "page");
+    document.querySelectorAll(".screen").forEach(s => s.classList.toggle("on", s.id === b.dataset.go));
+    $("menu").classList.remove("on");
+    if (b.dataset.go === "transactions") renderRows();
+    if (b.dataset.go === "overview") renderOverview();
+    if (b.dataset.go === "report") renderReport();
+  }));
+
+  const fields = ["f-date", "f-sec", "f-amt", "f-wht"];
+  function clearForm() { fields.forEach(f => $(f).value = ""); $("f-type").selectedIndex = 0; $("form-err").classList.remove("on"); }
+  $("add").addEventListener("click", () => { clearForm(); $("form-ov").classList.add("on"); $("f-date").focus(); });
+  $("f-cancel").addEventListener("click", () => $("form-ov").classList.remove("on"));
+  $("f-save").addEventListener("click", () => {
+    const d = $("f-date").value.trim(), s = $("f-sec").value.trim(), a = $("f-amt").value.trim(), w = $("f-wht").value.trim();
+    if (w === "") { clearForm(); return; }
+    const m = d.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
+    const amt = Number(a.replace(",", ".")), wht = Number(w.replace(",", "."));
+    if (!m || !s || a === "" || isNaN(amt) || isNaN(wht)) { $("form-err").classList.add("on"); return; }
+    tx.push({ date: `${m[3]}-${m[2]}-${m[1]}`, sec: s, type: $("f-type").value, amt, wht });
+    $("form-ov").classList.remove("on");
+    renderOverview();
+  });
+
+  $("more").addEventListener("click", e => { e.stopPropagation(); $("menu").classList.toggle("on"); });
+  document.addEventListener("click", () => $("menu").classList.remove("on"));
+  $("m-print").addEventListener("click", () => window.print());
+  $("m-export").addEventListener("click", () => { $("menu").classList.remove("on"); $("exp-ov").classList.add("on"); });
+  $("exp-continue").addEventListener("click", () => $("exp-ov").classList.remove("on"));
+  $("exp-create").addEventListener("click", () => {
+    const r = ofYear(), fmt = $("exp-fmt").value;
+    const csv = ["date;security;type;amount_eur;withholding_eur"].concat(r.map(t => `${t.date};${t.sec};${t.type};${t.amt.toFixed(2)};${t.wht.toFixed(2)}`)).join("\n");
+    $("exp-ov").classList.remove("on");
+    $("export-out").innerHTML = `<h3>File created: tax-report-${year}.${fmt.toLowerCase()}</h3><pre></pre>`;
+    $("export-out").querySelector("pre").textContent = fmt === "CSV" ? csv : "PDF preview: " + r.length + " transactions, tax year " + year;
+  });
+
+  renderAll();
+</script>
+</body>
+</html>

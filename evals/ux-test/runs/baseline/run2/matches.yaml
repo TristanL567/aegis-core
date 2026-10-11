@@ -1,0 +1,65 @@
+tokens: 106721
+matches:
+  - finding: 1
+    match: F02
+    why: Placeholder YYYY-MM-DD versus the accepted DD.MM.YYYY.
+  - finding: 2
+    match: F02
+    why: The vague "Invalid input." error naming neither field nor format is part of F02.
+  - finding: 3
+    match: F03
+    why: An empty optional withholding field makes save clear the form.
+  - finding: 4
+    match: F04
+    why: The new row is missing from the list until a tab or year change.
+  - finding: 5
+    match: F04
+    why: No confirmation after a successful save, which F04 also covers.
+  - finding: 6
+    match: F01
+    why: The save button is an icon only, with no label or tooltip.
+  - finding: 7
+    match: unplanted
+    why: True, the inputs are not in a form and Enter does not submit.
+  - finding: 8
+    match: unplanted
+    why: The error banner shifts the layout and moves the buttons, which is a real but minor issue.
+  - finding: 9
+    match: F08
+    why: Continue closes the dialog without exporting, and the real action is the small Create file link.
+  - finding: 10
+    match: unplanted
+    why: True, Create file prints the text on the page and downloads nothing while claiming a file was created.
+  - finding: 11
+    match: unplanted
+    why: True, renderReport clears the export output on a year change.
+  - finding: 12
+    match: F07
+    why: Export is reachable only through the unlabelled overflow button.
+  - finding: 13
+    match: unplanted
+    why: True, there is no Escape handler and the export dialog has no cancel button.
+  - finding: 14
+    match: unplanted
+    why: True, the export dialog does not name the year.
+  - finding: 15
+    match: F05
+    why: The selected year is shown only by a faint grey background (#f3f4f6).
+  - finding: 16
+    match: unplanted
+    why: True, none of the screen headings state the year.
+  - finding: 17
+    match: F06
+    why: Taxable income versus Assessment base.
+  - finding: 18
+    match: unplanted
+    why: True, the T1/T2/T3 markers are visible in the UI.
+  - finding: 19
+    match: unplanted
+    why: True, the table column order is Withholding tax then Amount, the reverse of the form.
+  - finding: 20
+    match: unplanted
+    why: True, there is no edit or delete for transactions.
+  - finding: 21
+    match: unplanted
+    why: True, the CSV rows are unsorted and have no totals.

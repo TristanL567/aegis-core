@@ -1,0 +1,50 @@
+tokens: 188620
+matches:
+  - finding: 1
+    match: F09
+    why: Bottom nav covers Save and Cancel in the phone Add dialog.
+  - finding: 2
+    match: invalid
+    why: The menu opens on click in the source; the report is a tool caveat, not a prototype problem.
+  - finding: 3
+    match: unplanted
+    why: Export dialog actions are absolutely placed at the bottom and sit under the z-index 50 nav on phone; real but not in the key.
+  - finding: 4
+    match: F02
+    why: YYYY-MM-DD placeholder, only dd.mm.yyyy accepted, vague "Invalid input."
+  - finding: 5
+    match: F08
+    why: Primary Continue only closes the dialog; real action is the small Create file link.
+  - finding: 6
+    match: F04
+    why: No confirmation and the new row is not shown until the list re-renders.
+  - finding: 7
+    match: F10
+    why: Transactions table hides Amount at phone width (overflow hidden); the Report overflow part is also real but unkeyed.
+  - finding: 8
+    match: F03
+    why: Saving with empty withholding tax silently clears the form.
+  - finding: 9
+    match: unplanted
+    why: No Escape handler exists for dialogs or menu, and the Export dialog has no Cancel; real but not in the key.
+  - finding: 10
+    match: F01
+    why: Save is an unlabelled floppy-disk emoji.
+  - finding: 11
+    match: F07
+    why: Export is only reachable through the unlabelled ⋯ button.
+  - finding: 12
+    match: F06
+    why: Taxable income vs Assessment base for the same figure.
+  - finding: 13
+    match: F05
+    why: Selected year shown only by a faint grey fill.
+  - finding: 14
+    match: unplanted
+    why: The absolutely positioned menu at top 40px, right 0 can overlap the table value beneath; real but not in the key.
+  - finding: 15
+    match: invalid
+    why: Labelling a loss as Realised gain with a negative amount is a normal accounting convention, not a usability problem.
+  - finding: 16
+    match: unplanted
+    why: Exported CSV rows are in insertion order, unsorted unlike the list; real minor problem not in the key.

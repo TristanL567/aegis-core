@@ -1,0 +1,37 @@
+id: AEGIS-006
+goal: aegis-core has a planted-flaw prototype and a grader that score how many known usability flaws a UX test finds, with a recorded plain-prompt baseline.
+context: >
+  The skill adoption rule demands evidence that ux-test beats an ordinary
+  prompt, so the test bed exists before the skill. Testers must never see the
+  answer key: they test a copy outside the repo that holds only the prototype.
+epic: AEGIS-E1
+depends_on: []
+human_gates: [ticket]
+allowed_areas:
+  - .aegis/tickets/AEGIS-006.yaml
+  - evals/ux-test/
+must_not_touch:
+  - AGENTS.md
+  - .claude/
+  - PROMPTS.md
+  - README.md
+non_goals:
+  - Writing the ux-test skill or the persona subagent (AEGIS-007).
+  - Native-app testing.
+  - Publishing the prototype anywhere.
+acceptance_criteria:
+  - evals/ux-test/prototype/index.html is one self-contained file with no network requests and no comments or attributes that reveal a flaw, showing a small finance app whose three key tasks are labelled T1-T3.
+  - evals/ux-test/flaws.yaml lists exactly 10 planted flaws, each with id, task, location, Nielsen heuristic and expected severity (0-4); at least 4 appear only after interacting and at least 2 only at phone width.
+  - evals/ux-test/grade.py reads a matches file that maps each finding to a flaw id, "unplanted" (a real problem not in the key) or "invalid", prints recall and the invalid count, and supports --self-test and --summary <dir> (mean recall, unplanted and invalid per arm).
+  - evals/ux-test/baseline.md records 3 runs of the plain prompt "Run usability tests on this prototype with 3 user personas", each by a fresh Opus 5.5 subagent with the same browser tools on a copy outside the repo, with recall, unplanted, invalid and tokens per run; raw findings and matches are kept under evals/ux-test/runs/baseline/.
+verify:
+  - py -3.10 evals/ux-test/grade.py --self-test
+  - test "$(grep -c '^- id:' evals/ux-test/flaws.yaml)" -eq 10
+  - "! grep -nE 'https?://' evals/ux-test/prototype/index.html"
+  - "! grep -n '<!--' evals/ux-test/prototype/index.html"
+  - test -s evals/ux-test/baseline.md
+  - py -3.10 evals/ux-test/grade.py --summary evals/ux-test/runs/
+smoke:
+  - Copy index.html to a new temp directory, serve it with py -3.10 -m http.server on a free port, and open it in the browser at 390x844 and 1440x900
+  - Complete T1-T3 by hand and reproduce every flaw in flaws.yaml; stop the server
+manual_checks: []

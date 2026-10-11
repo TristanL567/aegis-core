@@ -1,0 +1,89 @@
+tokens: 101898
+matches:
+  - finding: 1
+    match: F09
+    why: Bottom nav covers Cancel and Save in the Add transaction dialog at phone width.
+  - finding: 2
+    match: unplanted
+    why: Same overlap also hides the Export dialog buttons (nav z-index 50 over overlay 40), not in the key.
+  - finding: 3
+    match: F10
+    why: Table clipped at phone width so Type, Withholding and Amount columns cannot be seen.
+  - finding: 4
+    match: unplanted
+    why: Report values are nowrap and can clip at very narrow width; not in the key.
+  - finding: 5
+    match: F01
+    why: Save is an unlabelled floppy-disk icon.
+  - finding: 6
+    match: F03
+    why: Empty withholding silently clears all fields with no error shown.
+  - finding: 7
+    match: F02
+    why: Generic "Invalid input." that names neither field nor expected date format.
+  - finding: 8
+    match: F04
+    why: No confirmation after a successful save.
+  - finding: 9
+    match: unplanted
+    why: A saved entry in another year vanishes because the year filter does not follow; real but not in the key.
+  - finding: 10
+    match: unplanted
+    why: No form element, so Enter does not submit; true and not in the key.
+  - finding: 11
+    match: unplanted
+    why: No Escape or backdrop handler on the dialog; true and not in the key.
+  - finding: 12
+    match: unplanted
+    why: Nav z-index lets tabs be switched behind the open dialog; true and not in the key.
+  - finding: 13
+    match: F05
+    why: Selected year shown only by faint grey, with no aria-pressed.
+  - finding: 14
+    match: unplanted
+    why: Overview never names the selected year; true and not in the key.
+  - finding: 15
+    match: F06
+    why: Taxable income versus Assessment base for the same figure.
+  - finding: 16
+    match: F07
+    why: Export reachable only through the unlabelled overflow button.
+  - finding: 17
+    match: F08
+    why: Continue closes the dialog without exporting.
+  - finding: 18
+    match: F08
+    why: Real action Create file is a small text link beside the prominent Continue button.
+  - finding: 19
+    match: unplanted
+    why: Export dialog does not state the year; true and not in the key.
+  - finding: 20
+    match: unplanted
+    why: Create file only prints text on the page and offers no download; true and not in the key.
+  - finding: 21
+    match: unplanted
+    why: CSV is in insertion order and has no totals; true and not in the key.
+  - finding: 22
+    match: unplanted
+    why: Semicolon separators with dot decimals; true and not in the key.
+  - finding: 23
+    match: invalid
+    why: Wrong, because renderReport clears export-out on every year switch.
+  - finding: 24
+    match: unplanted
+    why: T1/T2/T3 badges are unexplained; true, though they are test-harness labels.
+  - finding: 25
+    match: unplanted
+    why: No way to edit or delete transactions; true and not in the key.
+  - finding: 26
+    match: invalid
+    why: Claims several date formats are accepted, but only DD.MM.YYYY is; it misses the actual placeholder mismatch.
+  - finding: 27
+    match: unplanted
+    why: Tax due floors at 0 with no explanation of excess withholding; true and not in the key.
+  - finding: 28
+    match: invalid
+    why: Column order is a subjective preference, not a checkable usability problem.
+  - finding: 29
+    match: unplanted
+    why: Report table can overflow the card at phone width; same family as finding 4, not in the key.

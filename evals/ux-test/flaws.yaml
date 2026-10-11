@@ -1,0 +1,73 @@
+# Answer key for prototype/index.html. Never give this file, or the repo, to a tester.
+# severity: Nielsen 0-4. reveal: what it takes to see the flaw.
+# heuristic: Nielsen's 10 (H1 visibility of status ... H10 help and documentation).
+- id: F01
+  task: T1
+  location: Add transaction dialog, save button
+  flaw: The save button is a floppy-disk icon with no text, label or tooltip.
+  heuristic: H6 recognition rather than recall
+  severity: 2
+  reveal: interaction
+- id: F02
+  task: T1
+  location: Add transaction dialog, Date field
+  flaw: The placeholder says YYYY-MM-DD but only DD.MM.YYYY is accepted; the error just says "Invalid input." without naming the field or format.
+  heuristic: H9 help users recognise, diagnose and recover from errors
+  severity: 3
+  reveal: interaction
+- id: F03
+  task: T1
+  location: Add transaction dialog, Withholding tax field
+  flaw: Withholding tax is not marked required, but saving with it empty silently clears every field.
+  heuristic: H5 error prevention
+  severity: 3
+  reveal: interaction
+- id: F04
+  task: T1
+  location: Transactions list after saving
+  flaw: After a successful save there is no confirmation and the new row does not appear until the user changes year or reopens the tab.
+  heuristic: H1 visibility of system status
+  severity: 3
+  reveal: interaction
+- id: F05
+  task: T2
+  location: Header, Tax year buttons
+  flaw: The selected tax year is shown only by a barely different grey background.
+  heuristic: H1 visibility of system status
+  severity: 2
+  reveal: visible
+- id: F06
+  task: T2
+  location: Overview "Taxable income" vs Report "Assessment base"
+  flaw: The same figure is called "Taxable income" on the overview and "Assessment base" on the report.
+  heuristic: H4 consistency and standards
+  severity: 2
+  reveal: visible
+- id: F07
+  task: T3
+  location: Tax report header, "..." button
+  flaw: Export is only reachable through an unlabelled "..." overflow button.
+  heuristic: H6 recognition rather than recall
+  severity: 3
+  reveal: visible
+- id: F08
+  task: T3
+  location: Export dialog buttons
+  flaw: The prominent "Continue" button closes the dialog without exporting; the real action is a small grey "Create file" link.
+  heuristic: H2 match between system and the real world
+  severity: 3
+  reveal: interaction
+- id: F09
+  task: T1
+  location: Add transaction dialog at phone width
+  flaw: At phone width the fixed bottom navigation covers the dialog's Cancel and save buttons, so the transaction cannot be saved.
+  heuristic: H3 user control and freedom
+  severity: 4
+  reveal: phone
+- id: F10
+  task: T1
+  location: Transactions table at phone width
+  flaw: At phone width the table is clipped without scrolling, so the Amount column cannot be seen.
+  heuristic: H8 aesthetic and minimalist design
+  severity: 3
+  reveal: phone

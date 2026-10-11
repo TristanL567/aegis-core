@@ -1,0 +1,27 @@
+id: AEGIS-010
+goal: README and PROMPTS explain the design track, and the bootstrap and update install the persona subagent.
+context: >
+  Repos get AEGIS through the bootstrap and update prompts, so ux-persona.md
+  reaches them only if those prompts copy it.
+epic: AEGIS-E1
+depends_on: [AEGIS-009]
+human_gates: [ticket]
+allowed_areas:
+  - .aegis/tickets/AEGIS-010.yaml
+  - README.md
+  - PROMPTS.md
+must_not_touch:
+  - AGENTS.md
+  - .claude/
+non_goals:
+  - Rewriting README sections unrelated to the design track.
+acceptance_criteria:
+  - README shows the design track in one diagram or table no wider than 40 columns, readable at phone width.
+  - PROMPTS has a "Start a design" prompt; the bootstrap and update copy .claude/agents/ux-persona.md; the bootstrap prompt stays at most 10 lines.
+verify:
+  - grep -q "ux-persona" PROMPTS.md
+  - grep -q "Start a design" PROMPTS.md
+  - test "$(awk "/^## Bootstrap/{f=1} f&&/^\`\`\`text/{c=1;next} c&&/^\`\`\`/{exit} c{n++} END{print n}" PROMPTS.md)" -le 10
+smoke: []
+manual_checks:
+  - Run one real design ticket end to end, for example an EasyRep page, and judge whether the findings were worth the cost
