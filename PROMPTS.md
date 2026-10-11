@@ -12,6 +12,8 @@ this repository again.
 | Repo has no AEGIS yet | Bootstrap prompt | You, once per repo |
 | New issue, bug, feature, or epic | `write-ticket` skill | The working agent, before any edit |
 | Ticket implemented | `validate` skill | The working agent, in a fresh subagent; never itself |
+| New screen, flow, or feature whose design is open | Start a design prompt | You |
+| Prototype or build needs a usability test | `ux-test` skill | The working agent, in a fresh subagent |
 | You want to approve something | `human_gates` | You, in the prompt or as an issue label |
 | aegis-core changed | Update prompt | You |
 
@@ -21,7 +23,7 @@ this repository again.
 Install AEGIS from https://github.com/TristanL567/aegis-core (branch main) into this repo. This setup step needs no ticket.
 1. Clone it to a new, uniquely named temporary directory outside this repo and note its commit SHA.
 2. Copy its AGENTS.md here. If AGENTS.md exists, replace its <!-- aegis:begin --> ... <!-- aegis:end --> block, or add the block at the top if there is none; keep everything else.
-3. Copy each folder in its .claude/skills/ into .claude/skills/ here, replacing only skills with the same name.
+3. Copy each folder in its .claude/skills/ into .claude/skills/ here, replacing only skills with the same name, and copy its .claude/agents/ux-persona.md into .claude/agents/ here (create the folder if missing).
 4. If CLAUDE.md exists and doesn't contain @AGENTS.md, add that line at its top; if there is no CLAUDE.md, create CLAUDE.md containing only @AGENTS.md.
 5. Write the SHA to .aegis/VERSION, and add .aegis/active-ticket and .claude/worktrees/ to .gitignore if missing.
 6. Remove the temporary clone (it is not project data), show me the diff, and commit only when I ask.
@@ -46,6 +48,20 @@ An epic:
 ```text
 Follow AGENTS.md. Use the write-ticket skill to split <description> into epic <EPIC-ID>: ordered tickets on branches from aegis/<EPIC-ID>. Run each ticket through the loop, merge each validated ticket into aegis/<EPIC-ID>, then validate the epic branch. human_gates: []
 ```
+
+## Start a design
+
+For a new screen, flow, or feature whose design is still open. The design
+ticket always stops for you twice: to approve the brief, and to freeze the
+design.
+
+```text
+Follow the Design track in AGENTS.md for <screen, flow, or feature>. Draft a design ticket with the write-ticket skill (kind: design, human_gates: [ticket, merge]) and show it to me. After I approve it, run up to 3 rounds of prototype, ux-test in a fresh subagent, and a decision per finding, then stop at the merge gate with spec.md, findings.yaml, and decisions.md.
+```
+
+For a high-stakes design, add `Include a persona pass.` It runs one
+screen-only subagent per persona and costs about three times as much as the
+standard inspection.
 
 ## Implement a ticket
 
@@ -97,5 +113,5 @@ gates" in `AGENTS.md`.
 ## Update AEGIS from upstream
 
 ```text
-Update AEGIS in this repo from https://github.com/TristanL567/aegis-core (branch main), as an AEGIS ticket. Clone it to a new, uniquely named temporary directory outside this repo and remove the clone afterwards. Replace only the <!-- aegis:begin --> ... <!-- aegis:end --> block in AGENTS.md and every skill folder from aegis-core's .claude/skills/ (replacing same-named ones), write the new commit SHA to .aegis/VERSION, and summarize which rules changed.
+Update AEGIS in this repo from https://github.com/TristanL567/aegis-core (branch main), as an AEGIS ticket. Clone it to a new, uniquely named temporary directory outside this repo and remove the clone afterwards. Replace only the <!-- aegis:begin --> ... <!-- aegis:end --> block in AGENTS.md, and every skill folder from aegis-core's .claude/skills/ (replacing same-named ones). Add or replace .claude/agents/ux-persona.md, creating .claude/agents/ if missing. Write the new commit SHA to .aegis/VERSION, and summarize which rules changed.
 ```

@@ -45,9 +45,9 @@ validate (fresh subagent)    │
 
 | Part | What it does |
 | --- | --- |
-| [`AGENTS.md`](AGENTS.md) | All the rules: the loop, the ticket format, human gates, isolation, and the completion report. Always loaded. |
-| [`.claude/skills/`](.claude/skills/) | [`write-ticket`](.claude/skills/write-ticket/SKILL.md) turns a request into a ticket and asks instead of guessing. [`validate`](.claude/skills/validate/SKILL.md) is the independent review, run only by a subagent that didn't write the code. |
-| [`PROMPTS.md`](PROMPTS.md) | Copyable prompts: install AEGIS into a repo, start work, implement, validate, ask for gates, update. Says when to use each skill. |
+| [`AGENTS.md`](AGENTS.md) | All the rules: the loop, the ticket format, human gates, isolation, the design track, and the completion report. Always loaded. |
+| [`.claude/skills/`](.claude/skills/) | [`write-ticket`](.claude/skills/write-ticket/SKILL.md) turns a request into a ticket and asks instead of guessing. [`validate`](.claude/skills/validate/SKILL.md) is the independent review, run only by a subagent that didn't write the code. [`ux-test`](.claude/skills/ux-test/SKILL.md) usability-tests a prototype or build at phone and desktop width; [`ux-persona`](.claude/agents/ux-persona.md) is its screen-only persona subagent. |
+| [`PROMPTS.md`](PROMPTS.md) | Copyable prompts: install AEGIS into a repo, start work or a design, implement, validate, ask for gates, update. Says when to use each skill. |
 
 Once installed, a repo carries `AGENTS.md` and the skills itself;
 `PROMPTS.md` stays here for you to copy prompts from. Agents in the cloud, in
@@ -105,13 +105,49 @@ There are no globs, and `must_not_touch` wins over `allowed_areas`. Tickets
 live in `.aegis/tickets/<ID>.yaml`, and the active ticket's ID is in
 `.aegis/active-ticket`.
 
+## Design track
+
+When the design of a screen, flow, or feature is still open, start with a
+design ticket instead of code:
+
+```text
+design ticket, gate "ticket"
+│
+v
+prototype (one HTML file) <──┐
+│                            │
+v                            │
+ux-test (fresh subagent)     │
+│                            │
+v                            │
+decide each finding          │
+├─ fix (max 3 rounds) ───────┘
+└─ passes ─> gate "merge"
+   freezes spec, findings,
+   and decisions
+   │
+   v
+   write-ticket: build epic
+```
+
+- The prototype is a throwaway file with fake data. It never ships.
+- `ux-test` drives every key task like a user, at phone and desktop width,
+  and rates each finding. Persona subagents run only if you ask for a
+  persona pass.
+- AI test results are evidence, not user validation. The design ticket
+  keeps a short real-user check for you.
+- The project's user profiles live in `.aegis/personas.yaml`.
+
+Start with the design prompt in [`PROMPTS.md`](PROMPTS.md#start-a-design).
+
 ## Setup
 
 Paste the bootstrap prompt from [`PROMPTS.md`](PROMPTS.md#bootstrap) into an
-agent working in your repo. It copies `AGENTS.md` and the skills in, records
-the aegis-core version in `.aegis/VERSION`, and shows you the diff before
-anything is committed. If the repo already has an `AGENTS.md`, only the AEGIS
-block between its markers is added or replaced.
+agent working in your repo. It copies `AGENTS.md`, the skills, and the
+`ux-persona` agent in, records the aegis-core version in `.aegis/VERSION`,
+and shows you the diff before anything is committed. If the repo already has
+an `AGENTS.md`, only the AEGIS block between its markers is added or
+replaced.
 
 ## Daily use
 
