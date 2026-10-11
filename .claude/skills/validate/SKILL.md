@@ -64,7 +64,7 @@ started. Work only inside that worktree.
   kill.
 - The pass rule holds: no confirmed finding of severity 3 or 4 is still
   undecided, or decided `fix`. A fixed finding must be gone from the latest
-  round. The latest test report shows every task's success criterion met at
+  round. The latest `report.md` shows every task's success criterion met at
   phone and desktop width.
 - The prototype is isolated. Nothing under `prototype/` and no product code
   is committed on the ticket branch. The prototype lives only in the worktree
@@ -83,7 +83,9 @@ Never redesign anything, and never run persona tests yourself.
 **Epic mode.** When asked to validate an epic branch, do steps 3 to 7 on that
 branch against the default branch, with every ticket of the epic: scope is the
 union of their `allowed_areas`, and every ticket's `verify` and `smoke` must
-pass together.
+pass together. If the tickets carry `design_ref`, a `ux-test` inspection of
+the real build must exist. Fail the epic if it doesn't, if a spec task is
+unmet, or if a confirmed severity 3 or 4 finding is open.
 
 ## Verdict
 

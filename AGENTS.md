@@ -167,7 +167,8 @@ Work in at most 3 rounds:
    self-contained, throwaway file with fake data that includes edge cases,
    each screen labelled with its task IDs, and only the screens and states
    the tasks need.
-2. **Test.** A fresh subagent runs the `ux-test` skill on a served copy.
+2. **Test.** A fresh subagent runs the `ux-test` skill on a served copy and
+   writes `report.md`.
 3. **Decide.** Record findings in `findings.yaml`, and one decision per
    finding (fix, accept, defer, or kill) in the append-only `decisions.md`.
 
@@ -177,7 +178,7 @@ task works at phone and desktop width. AI findings aren't user validation:
 flow and each screen's empty, loading, and error states.
 
 The `merge` gate freezes the design. The commit holds the ticket, personas,
-`spec.md`, `decisions.md`, and `findings.yaml`. The prototype is never
+`spec.md`, `report.md`, `decisions.md`, and `findings.yaml`. The prototype is never
 imported or merged; as the one exception to one branch and commit per
 ticket, it goes to `aegis/<ID>-prototype`.
 

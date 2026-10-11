@@ -1,0 +1,34 @@
+id: AEGIS-013
+goal: An implementation epic built from a frozen design cannot be reported done until a ux-test inspection of the real build meets every design task at phone and desktop width.
+context: >
+  As the human who froze a design, I want the shipped build checked against
+  the same tasks the prototype passed, so that the design doesn't quietly
+  degrade during implementation. AGENTS.md says the epic's validation reruns
+  the ux-test inspection on the real build. Neither write-ticket nor
+  validate's epic mode enforces that, so the rerun can be skipped silently
+  (epic validator note 2, PR TristanL567/aegis-core#7).
+epic: null
+depends_on: [AEGIS-E1 merged into main (PR TristanL567/aegis-core#7), AEGIS-012]
+human_gates: []
+allowed_areas:
+  - .aegis/tickets/AEGIS-013.yaml
+  - .claude/skills/write-ticket/SKILL.md
+  - .claude/skills/validate/SKILL.md
+must_not_touch:
+  - AGENTS.md
+  - .claude/skills/ux-test/
+  - evals/
+non_goals:
+  - Persona passes on the real build.
+  - Naming the design report file (AEGIS-012).
+acceptance_criteria:
+  - When write-ticket converts a frozen spec.md into an epic, every ticket gets a `design_ref`. The epic's last ticket gets a `smoke` step that runs the ux-test inspection on the served build for the spec's tasks, at 390x844 and 1440x900.
+  - validate's Epic mode fails an epic whose tickets carry `design_ref` in two cases. One is when no ux-test inspection of the real build exists. The other is when that inspection has an open confirmed finding of severity 3 or 4, or a spec task it doesn't meet.
+  - write-ticket and validate each grow by at most 40 words.
+verify:
+  - grep -q "design_ref" .claude/skills/write-ticket/SKILL.md
+  - grep -q "design_ref" .claude/skills/validate/SKILL.md
+  - test "$(wc -w < .claude/skills/write-ticket/SKILL.md)" -le 1014
+  - test "$(wc -w < .claude/skills/validate/SKILL.md)" -le 1055
+smoke: []
+manual_checks: []
