@@ -64,7 +64,7 @@ started. Work only inside that worktree.
   kill.
 - The pass rule holds: no confirmed finding of severity 3 or 4 is still
   undecided, or decided `fix`. A fixed finding must be gone from the latest
-  round. The latest test report shows every task's success criterion met at
+  round. The latest `report.md` shows every task's success criterion met at
   phone and desktop width.
 - The prototype is isolated. Nothing under `prototype/` and no product code
   is committed on the ticket branch. The prototype lives only in the worktree

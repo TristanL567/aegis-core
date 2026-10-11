@@ -103,6 +103,9 @@ Reply with:
 - one line stating that these are AI test results and need a real-user check
   before they count as validation.
 
+In a design round, also save this reply as `.aegis/design/<ID>/report.md`,
+next to `findings.yaml`.
+
 Don't propose redesigns unless asked.
 
 ## Optional: persona pass

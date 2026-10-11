@@ -1,0 +1,39 @@
+id: AEGIS-012
+goal: Every design round leaves its test report at `.aegis/design/<ID>/report.md`, and the Design track, its freeze commit, ux-test, and validate all name that file.
+context: >
+  As the human reviewing a design at the merge gate, I want the round's test
+  report frozen next to the spec, findings, and decisions, so that I and the
+  validator judge the design from one named file. Today the validator reads
+  "the latest test report", but neither AGENTS.md nor ux-test says where that
+  report lives, and the freeze commit leaves it out (epic validator note 1,
+  PR TristanL567/aegis-core#7).
+epic: null
+depends_on: [AEGIS-E1 merged into main (PR TristanL567/aegis-core#7)]
+human_gates: []
+allowed_areas:
+  - .aegis/tickets/AEGIS-012.yaml
+  - AGENTS.md
+  - .claude/skills/ux-test/SKILL.md
+  - .claude/skills/validate/SKILL.md
+must_not_touch:
+  - .claude/skills/write-ticket/
+  - evals/
+  - README.md
+  - PROMPTS.md
+non_goals:
+  - Changing the report's content or the coverage grid.
+  - The ux-test rerun on the real build (AEGIS-013).
+acceptance_criteria:
+  - AGENTS.md's Design track names `report.md` in the round's Test step and in the freeze commit's list of files.
+  - ux-test's Report section says that in a design round the report goes to `.aegis/design/<ID>/report.md`, next to `findings.yaml`.
+  - validate's Design mode checks `report.md` by name.
+  - AGENTS.md has at most 1462 words (1440 before), and ux-test and validate each grow by at most 25 words.
+verify:
+  - test "$(grep -c 'report.md' AGENTS.md)" -ge 2
+  - grep -q "report.md" .claude/skills/ux-test/SKILL.md
+  - grep -q "report.md" .claude/skills/validate/SKILL.md
+  - test "$(wc -w < AGENTS.md)" -le 1462
+  - test "$(wc -w < .claude/skills/ux-test/SKILL.md)" -le 1128
+  - test "$(wc -w < .claude/skills/validate/SKILL.md)" -le 1015
+smoke: []
+manual_checks: []
