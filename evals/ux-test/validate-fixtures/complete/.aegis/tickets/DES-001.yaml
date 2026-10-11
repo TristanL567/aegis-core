@@ -1,0 +1,32 @@
+id: DES-001
+kind: design
+goal: Investors can see on their phone which dividends arrive this month and how much lands net.
+context: >
+  Fixture for the validate skill's design mode. A dividend calendar page for
+  a portfolio web app; design only, no product code.
+epic: null
+depends_on: []
+human_gates: [ticket, merge]
+appetite: 1 day
+personas: [P1, P2]
+tasks:
+  - id: T1
+    goal: See which payments arrive in a given month.
+    success: The month's payments are listed, or an empty state says there are none.
+  - id: T2
+    goal: See how much of a payment lands net.
+    success: The net amount after withholding and KESt is visible for each payment at phone and desktop width.
+allowed_areas:
+  - .aegis/tickets/DES-001.yaml
+  - .aegis/design/DES-001/
+  - .aegis/personas.yaml
+must_not_touch:
+  - src/
+non_goals:
+  - Forecasting undeclared dividends.
+acceptance_criteria:
+  - The design passes the Design track's pass rule, with findings.yaml, decisions.md and spec.md complete.
+verify: []
+smoke: []
+manual_checks:
+  - A real investor finds the net amount of each of this month's payments on their phone.

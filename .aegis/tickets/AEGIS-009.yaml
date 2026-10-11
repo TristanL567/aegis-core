@@ -1,0 +1,27 @@
+id: AEGIS-009
+goal: validate checks design tickets - protocol followed, every finding evidenced and decided, pass rule true, spec complete, prototype isolated.
+context: >
+  The validator stays a judge: it re-runs the inspector checks but never
+  designs or runs persona tests itself.
+epic: AEGIS-E1
+depends_on: [AEGIS-008]
+human_gates: [ticket]
+allowed_areas:
+  - .aegis/tickets/AEGIS-009.yaml
+  - .claude/skills/validate/SKILL.md
+  - evals/ux-test/validate-fixtures/
+must_not_touch:
+  - AGENTS.md
+  - .claude/skills/ux-test/
+  - .claude/skills/write-ticket/
+non_goals:
+  - The validator running persona tests.
+acceptance_criteria:
+  - The design mode adds at most 250 words and checks that persona logs exist with only screen-level actions; every finding has evidence, a severity and a decision; the pass claims match findings.yaml; every task in spec.md maps to a flow with empty, loading and error states and no TBD; and product code is untouched.
+  - On two fixtures, a complete design branch and one with an undecided severity-3 finding, fresh validators return APPROVED and FIXES_REQUIRED respectively.
+verify:
+  - test "$(wc -w < .claude/skills/validate/SKILL.md)" -le 1012
+  - grep -qi "design" .claude/skills/validate/SKILL.md
+smoke:
+  - Run a fresh validator on each fixture and record its verdict
+manual_checks: []

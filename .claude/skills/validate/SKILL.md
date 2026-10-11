@@ -22,7 +22,7 @@ started. Work only inside that worktree.
 
 1. **Read the ticket** at `.aegis/tickets/<ID>.yaml`. If it is missing, or has
    no `goal`, `allowed_areas`, `must_not_touch`, `acceptance_criteria`, or
-   `verify`, stop with `BLOCKED`.
+   `verify` (a design ticket may have `verify: []`), stop with `BLOCKED`.
 2. **Check the ticket against the request.** Does the `goal` match what was
    asked? Do the `acceptance_criteria` cover all of it? Is anything that was
    asked for missing or listed under `non_goals`? A mismatch is blocking,
@@ -54,6 +54,31 @@ started. Work only inside that worktree.
    - a behavior change comes with a test that would fail without it;
    - no unrelated refactors, formatting churn, dead code, or abstraction the
      ticket doesn't need.
+
+**Design mode.** For a ticket with `kind: design`, also check these in
+`.aegis/design/<ID>/`. Each failure is blocking.
+- `findings.yaml` is the latest round's result. Every finding in it has
+  `task`, `where`, `problem`, `evidence`, a `severity` from 0 to 4, and a
+  `status`.
+- `decisions.md` has a decision for every finding: fix, accept, defer, or
+  kill.
+- The pass rule holds: no confirmed finding of severity 3 or 4 is still
+  undecided, or decided `fix`. A fixed finding must be gone from the latest
+  round. The latest test report shows every task's success criterion met at
+  phone and desktop width.
+- The prototype is isolated. Nothing under `prototype/` and no product code
+  is committed on the ticket branch. The prototype lives only in the worktree
+  or on `aegis/<ID>-prototype`.
+- If persona logs exist, every action in them is a screenshot, click,
+  keystroke, or scroll. Persona testimony alone never makes a finding
+  `confirmed`.
+- `spec.md` maps every ticket task to a flow, and gives each screen its
+  empty, loading, and error states. It contains no "TBD" or "TODO".
+- Serve a copy of the prototype, from the worktree or the prototype branch,
+  from a temp directory outside the repo, on a free port. Reproduce the two
+  most severe findings there. Then stop the server.
+
+Never redesign anything, and never run persona tests yourself.
 
 **Epic mode.** When asked to validate an epic branch, do steps 3 to 7 on that
 branch against the default branch, with every ticket of the epic: scope is the
