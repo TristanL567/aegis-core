@@ -50,6 +50,11 @@ each with a recommended answer:
 - devices and fidelity: phone, desktop, and what the prototype must show;
 - the no-gos and the appetite.
 
+When you turn a frozen `spec.md` into an epic, give every ticket
+`design_ref: <ID>#<flow>`. Give the epic's last ticket a `smoke` step that
+runs the `ux-test` inspection on the served build, covering the spec's tasks
+at 390x844 and 1440x900.
+
 ## 3. Size it
 
 One ticket is one diff a human can review in a few minutes, and one validator

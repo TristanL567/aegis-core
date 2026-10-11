@@ -83,7 +83,9 @@ Never redesign anything, and never run persona tests yourself.
 **Epic mode.** When asked to validate an epic branch, do steps 3 to 7 on that
 branch against the default branch, with every ticket of the epic: scope is the
 union of their `allowed_areas`, and every ticket's `verify` and `smoke` must
-pass together.
+pass together. If the tickets carry `design_ref`, a `ux-test` inspection of
+the real build must exist. Fail the epic if it doesn't, if a spec task is
+unmet, or if a confirmed severity 3 or 4 finding is open.
 
 ## Verdict
 
