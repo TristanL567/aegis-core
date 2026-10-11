@@ -1,0 +1,34 @@
+id: AEGIS-011
+goal: Fresh blind validators agree on both design fixtures - 3 of 3 approve `complete` and 3 of 3 return FIXES_REQUIRED on `undecided`.
+context: >
+  After AEGIS-009 was committed on a human override, a late blind validator
+  rejected the `complete` fixture on fair grounds. The spec handled only
+  Austrian securities without saying so, and it froze fixed January-June
+  2025 month buttons that came from the fake data, not from a product
+  decision. A fixture meant to pass must hold up against a strict validator,
+  or it proves nothing.
+epic: AEGIS-E1
+depends_on: [AEGIS-009]
+human_gates: [ticket]
+allowed_areas:
+  - .aegis/tickets/AEGIS-011.yaml
+  - evals/ux-test/validate-fixtures/
+must_not_touch:
+  - .claude/
+  - AGENTS.md
+non_goals:
+  - Changing the validate skill.
+  - Adding fixtures beyond `complete` and `undecided`.
+acceptance_criteria:
+  - In both fixtures, DES-001's non_goals exclude non-Austrian securities and coupon or interest payments. The prototype lists dividends from Austrian stocks only, and every net value equals gross x 0.725.
+  - In both fixtures, spec.md and the prototype agree. The page opens on the current month, month buttons cover January to December of the shown year, and previous/next controls change the year. Every decision in decisions.md rests on product grounds, not on the range of the fake data.
+  - `undecided` differs from `complete` only by the phone-width rule that hides the net amount, finding U03, and the T2 phone cell in report.md.
+  - Three fresh blind validators per fixture return APPROVED for `complete` (3 of 3) and FIXES_REQUIRED for `undecided` (3 of 3). README.md records each verdict.
+verify:
+  - py -3.10 -c "import yaml;[yaml.safe_load(open(f'evals/ux-test/validate-fixtures/{f}/.aegis/tickets/DES-001.yaml')) for f in ('complete','undecided')]"
+  - grep -q "Non-Austrian" evals/ux-test/validate-fixtures/complete/.aegis/tickets/DES-001.yaml
+  - "! grep -qi 'bond' evals/ux-test/validate-fixtures/complete/.aegis/design/DES-001/prototype/index.html"
+  - test "$(grep -c 'APPROVED' evals/ux-test/validate-fixtures/README.md)" -ge 3
+smoke:
+  - Build each fixture with make_repo.py into a new empty temp dir and run fresh blind validators on it; record the verdicts
+manual_checks: []

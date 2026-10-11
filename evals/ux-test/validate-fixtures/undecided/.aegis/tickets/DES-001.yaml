@@ -1,9 +1,10 @@
 id: DES-001
 kind: design
-goal: Investors can see on their phone which dividends arrive this month and how much lands net.
+goal: Investors can see on their phone which dividends arrive this month and how much of each lands net.
 context: >
   Fixture for the validate skill's design mode. A dividend calendar page for
-  a portfolio web app; design only, no product code.
+  a portfolio web app used by private investors in Austria; design only, no
+  product code.
 epic: null
 depends_on: []
 human_gates: [ticket, merge]
@@ -11,11 +12,11 @@ appetite: 1 day
 personas: [P1, P2]
 tasks:
   - id: T1
-    goal: See which payments arrive in a given month.
-    success: The month's payments are listed, or an empty state says there are none.
+    goal: See which dividends arrive this month, or in another month.
+    success: The page opens on the current month and lists its dividends, or an empty state says there are none; any other month and year can be reached.
   - id: T2
-    goal: See how much of a payment lands net.
-    success: The net amount after withholding and KESt is visible for each payment at phone and desktop width.
+    goal: See how much of a dividend lands net.
+    success: Each dividend shows its net amount after 27.5% Austrian KESt, with the gross amount, at phone and desktop width.
 allowed_areas:
   - .aegis/tickets/DES-001.yaml
   - .aegis/design/DES-001/
@@ -24,9 +25,11 @@ must_not_touch:
   - src/
 non_goals:
   - Forecasting undeclared dividends.
+  - Non-Austrian securities and foreign withholding tax (a later design ticket).
+  - Coupon and interest payments; this calendar shows dividends only.
 acceptance_criteria:
   - The design passes the Design track's pass rule, with findings.yaml, decisions.md and spec.md complete.
 verify: []
 smoke: []
 manual_checks:
-  - A real investor finds the net amount of each of this month's payments on their phone.
+  - A real investor finds the net amount of each of this month's dividends on their phone.

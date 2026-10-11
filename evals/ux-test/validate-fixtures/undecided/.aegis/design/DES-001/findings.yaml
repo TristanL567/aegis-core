@@ -1,24 +1,24 @@
 - id: U01
   task: T1
-  viewport: both
+  viewport: phone
   where: Month buttons
-  problem: Months are shown only as three-letter abbreviations ("Mar"), with no year.
-  evidence: At 390x844 and 1440x900 the buttons read Jan to Jun; the year appears only in each payment's date.
+  problem: At phone width the twelve month buttons wrap onto two rows, so the selected month is not always on the first row.
+  evidence: At 390x844 the month buttons wrap onto two rows; at 1440x900 they fit on one row.
   severity: 2
   status: confirmed
 - id: U02
   task: T2
   viewport: both
-  where: Payment row, gross amount
+  where: Dividend row, gross amount
   problem: The gross amount sits under the net amount in small grey text and is easy to miss.
-  evidence: March list at both widths; gross is 14px grey under the bold net.
+  evidence: Any month with dividends, both widths; gross is 14px grey under the bold net.
   severity: 1
   status: opinion
 - id: U03
   task: T2
   viewport: phone
-  where: Payment row, net amount
+  where: Dividend row, net amount
   problem: At phone width the net amount is hidden; only the gross amount shows.
-  evidence: At 390x844, March list shows "€84.20 gross" and no net value; at 1440x900 the net shows.
+  evidence: At 390x844, March shows Erste Group with "€84.20 gross" and no net value; at 1440x900 the net (€61.05) shows.
   severity: 3
   status: confirmed
