@@ -1,0 +1,37 @@
+id: AEGIS-014
+goal: aegis-core has a mobile-parity test bed - an EasyRep-style page whose phone view hides 10 planted gaps against its desktop view - with the current ux-test's score recorded as the baseline.
+context: >
+  As an EasyRep user who mostly checks figures on a phone, I want the phone
+  view to give me the same information and actions as the desktop view, in a
+  form made for touch. Before ux-test gets a parity mode (AEGIS-015), we need
+  evidence of what the current skill misses: the adoption rule says a change
+  is kept only if it beats the version without it. "Mobile" here means the
+  same web app in a phone browser.
+epic: null
+depends_on: [AEGIS-E1 merged into main (PR TristanL567/aegis-core#7)]
+human_gates: []
+allowed_areas:
+  - .aegis/tickets/AEGIS-014.yaml
+  - evals/ux-test/parity/
+must_not_touch:
+  - .claude/
+  - AGENTS.md
+  - evals/ux-test/prototype/
+  - evals/ux-test/flaws.yaml
+non_goals:
+  - Changing ux-test (AEGIS-015).
+  - Native or PWA apps.
+  - Auditing the real EasyRep app.
+acceptance_criteria:
+  - evals/ux-test/parity/prototype/index.html is one self-contained file with no network requests and no comments that reveal a gap. It models EasyRep screens (a portfolio holdings table and a tax-year report), and it works without defects at 1440x900.
+  - evals/ux-test/parity/gaps.yaml lists exactly 10 planted gaps, each visible only by comparing 390x844 with 1440x900. At least one gap is of each of these types - a missing action, missing data (such as a dropped column or total), hover-only information, a terminology change between views, a touch target under 44px, a wrong input type for numbers, and wide content clipped with no phone alternative.
+  - The existing grade.py and judge.md score parity runs against gaps.yaml, with a changed answer-key path only.
+  - evals/ux-test/parity/baseline.md records 3 runs of the current ux-test skill on a served copy, using a fixed prompt that names the page's key tasks. Each run records recall, unplanted, invalid, and tokens.
+verify:
+  - test "$(grep -c '^- id:' evals/ux-test/parity/gaps.yaml)" -eq 10
+  - "! grep -nE 'https?://' evals/ux-test/parity/prototype/index.html"
+  - "! grep -n '<!--' evals/ux-test/parity/prototype/index.html"
+  - test -s evals/ux-test/parity/baseline.md
+smoke:
+  - Serve a copy of the parity prototype on a free port; at 1440x900 every key task works, and at 390x844 each gap in gaps.yaml reproduces; stop the server
+manual_checks: []

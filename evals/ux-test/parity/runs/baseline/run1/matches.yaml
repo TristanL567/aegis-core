@@ -1,0 +1,26 @@
+tokens: 116976
+matches:
+  - finding: 1
+    match: F09
+    why: "The tax year selector is hidden on the phone, so the report is stuck on 2025."
+  - finding: 2
+    match: F03
+    why: "The phone drops the Total row and the per-holding gain column (F02 too); F03 is listed as the more severe or equal one, both severity 3."
+  - finding: 3
+    match: F01
+    why: "The Export CSV button is hidden on the phone; the desktop-only CSV-as-text point is extra and not in the key."
+  - finding: 4
+    match: F10
+    why: "The fixed bottom nav covers the last row and the Prices as of line on the phone."
+  - finding: 5
+    match: F08
+    why: "The Withheld and Due columns are clipped on the phone (F04 hover-only tooltip also covered, but F08 is more severe)."
+  - finding: 6
+    match: unplanted
+    why: "The prototype has no edit or delete for holdings, which is real and not in the key."
+  - finding: 7
+    match: F05
+    why: "The nav label is Statements on the phone and Tax report on desktop."
+  - finding: 8
+    match: invalid
+    why: "The merge is announced by the 'Added N shares to ...' message, and the unchecked free-text security is an opinion, not an actionable problem."

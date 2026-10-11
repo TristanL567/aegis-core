@@ -1,0 +1,50 @@
+tokens: 124877
+matches:
+  - finding: 1
+    match: F09
+    why: "The year selector is hidden on the phone so the report is stuck on 2025."
+  - finding: 2
+    match: F01
+    why: "Export CSV is display:none on the phone with no other way to export."
+  - finding: 3
+    match: F03
+    why: "The phone drops the total row; it also covers the missing gain column (F02), which is the same severity."
+  - finding: 4
+    match: invalid
+    why: "The holdings array is in memory only, which is a prototype limitation the tester itself flagged, not a usability problem."
+  - finding: 5
+    match: unplanted
+    why: "New holdings get cost = qty*price so gain is 0, and the same security appears as a separate row; both are true in the code."
+  - finding: 6
+    match: F04
+    why: "The KESt explanation is only a title tooltip on a non-focusable span."
+  - finding: 7
+    match: F08
+    why: "The breakdown table has min-width 640px with overflow hidden on the phone, so later columns are clipped."
+  - finding: 8
+    match: F10
+    why: "The fixed 60px bottom nav covers the end of the page content, and main has no bottom padding on the phone."
+  - finding: 9
+    match: unplanted
+    why: "There is no Escape key handler for the dialog; this is true in the code."
+  - finding: 10
+    match: unplanted
+    why: "The dialog has no form element or Enter handler, so Enter does not submit."
+  - finding: 11
+    match: unplanted
+    why: "The dialog has no focus trap despite aria-modal, so focus can leave it."
+  - finding: 12
+    match: unplanted
+    why: "One shared error paragraph with no aria-live, aria-invalid or field link is shown for all validation errors."
+  - finding: 13
+    match: F06
+    why: "The add button shrinks to a 28x28 px '+' with an aria-hidden icon and no accessible name."
+  - finding: 14
+    match: F05
+    why: "The bottom nav says Statements while the top nav and heading say Tax report."
+  - finding: 15
+    match: unplanted
+    why: "The CSV uses ';' separators with '.' decimals; this is true in the code, though the locale impact is an opinion."
+  - finding: 16
+    match: F07
+    why: "The Shares and Price inputs are type=text with no inputmode."
