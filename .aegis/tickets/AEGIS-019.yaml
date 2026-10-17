@@ -1,0 +1,47 @@
+id: AEGIS-019
+goal: Reusable design presets let a product's DESIGN.md start from saved, tested design conditions instead of re-deciding them, and new presets can be saved from any product.
+context: >
+  The human wants to "save some preset design conditions which we can reuse".
+  They chose partial DESIGN.md blocks over whole profiles, kept in aegis-core
+  under the design-track skill so the bootstrap carries them into each repo.
+  The first presets are extracted from EasyRep's DESIGN.md draft (claude/design-md
+  in EasyRep), keeping only what is generic. A preset is copied into the
+  product's DESIGN.md, not referenced, so agents read one file. The product's
+  own choices override a preset.
+epic: null
+depends_on: []
+human_gates: []
+allowed_areas:
+  - .aegis/tickets/AEGIS-019.yaml
+  - .claude/skills/design-track/
+  - PROMPTS.md
+  - README.md
+  - evals/design-presets/
+must_not_touch:
+  - AGENTS.md
+  - .claude/skills/write-ticket/
+  - .claude/skills/validate/
+  - .claude/skills/ux-test/
+non_goals:
+  - Whole-product DESIGN.md profiles, or a personal style preset.
+  - Product names, brands or EasyRep-only rules in a preset.
+  - Syncing presets back into products after they are copied.
+  - Installing anything in EasyRep (it has its own process).
+acceptance_criteria:
+  - .claude/skills/design-track/presets/ holds two presets extracted from EasyRep's draft - finance-eu (formats, input, and a finance glossary) and data-portal (phone forms of tables, charts, side panels and sidebar navigation; touch, hover, shortcut, dark-mode and token rules). Each starts with what it is for and when not to use it, uses DESIGN.md's section headings, and is at most 350 words. Neither names EasyRep, Parqet or any person.
+  - The design-track skill says, in at most 80 added words, that a DESIGN.md draft proposes the presets that fit, copies their sections in, lists them at its top, and that the product's own choices override them; and how a new preset is saved.
+  - DESIGN-template.md has a "Presets" line at its top, and stays at most 450 words.
+  - PROMPTS.md has a "Save a design preset" prompt; README's "Design and mobile" section mentions presets in at most 30 added words.
+  - "Blind test, 3 runs per arm, a fresh subagent following the design-track skill drafts a DESIGN.md (no human; recommended answers stand) for (a) a household budgeting web app for Austrian families, and (b) a recipe-sharing web app. With presets: (a) adopts finance-eu and data-portal in 3 of 3 with their formats unchanged; (b) does not adopt finance-eu in 3 of 3. The drafts with presets have no more open questions than without, and results with token counts are recorded in evals/design-presets/README.md."
+verify:
+  - test -f .claude/skills/design-track/presets/finance-eu.md
+  - test -f .claude/skills/design-track/presets/data-portal.md
+  - test "$(wc -w < .claude/skills/design-track/presets/finance-eu.md)" -le 350
+  - test "$(wc -w < .claude/skills/design-track/presets/data-portal.md)" -le 350
+  - "! grep -riE 'easyrep|parqet' .claude/skills/design-track/presets/"
+  - test "$(wc -w < .claude/skills/design-track/DESIGN-template.md)" -le 450
+  - grep -q "presets/" .claude/skills/design-track/SKILL.md
+  - grep -q "^## Save a design preset" PROMPTS.md
+smoke: []
+manual_checks:
+  - Read both presets and judge whether they are the conditions you want to reuse in your next product.
