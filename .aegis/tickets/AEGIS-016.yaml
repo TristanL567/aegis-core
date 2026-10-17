@@ -1,0 +1,62 @@
+# TEST (2026-10-17): a scratch git repo with the new AGENTS.md (via CLAUDE.md)
+#   and all four skills. claude -p ran on claude-opus-5-5 with tools Read,
+#   Glob, Grep and Skill, at most 12 turns. Inputs: the 3 hidden-brief design
+#   requests from AEGIS-008, 3 runs each. Three extra runs used neutral
+#   phrasing ("Write the AEGIS ticket for it.", with no "design").
+# Sonnet 5.5 judged the replies blind under neutral names, using AEGIS-008's
+#   six hidden decisions per request plus D0: a kind-design ticket with both
+#   gates.
+# Results on the 9 specified runs:
+#   - D0: 9/9. Neutral runs: 3/3.
+#   - Coverage, one rule for all judges: 51/54 = 0.944. Neutral runs: 0.944.
+#     The rule counts a draft presented for the human's confirmation as a
+#     suggested answer, as the rubric says.
+#   - Coverage, first pass: 43/54 = 0.796, because judges applied different
+#     rules; one counted only explicit questions.
+#   - Baseline: AEGIS-008 measured 0.907 with the old layout.
+#   - Cost: about $0.29 per run.
+# Evidence: scratchpad ab016/ (out/*.json, judge/*.json, judge/first-pass/).
+#   It is session scratch, not committed.
+id: AEGIS-016
+goal: The design-track process lives in a `design-track` skill that loads only for design work, AGENTS.md keeps a short trigger, and design requests still lead to design tickets.
+context: >
+  As a developer whose agents mostly do non-UI work, I want AGENTS.md - loaded
+  on every task - to hold only general rules, so that the design process costs
+  tokens only when someone designs. The Design track takes about 300 of
+  AGENTS.md's 1,444 words. Skills are AEGIS's mechanism for loading on demand.
+  Tools that don't load skills read the file, as AGENTS.md already says.
+
+  The risk is that agents stop recognising design requests. So a trigger
+  stays in AGENTS.md, and a test must show design tickets are still drafted.
+epic: null
+depends_on: [AEGIS-015]
+human_gates: []
+allowed_areas:
+  - .aegis/tickets/AEGIS-016.yaml
+  - AGENTS.md
+  - .claude/skills/design-track/SKILL.md
+  - .claude/skills/write-ticket/SKILL.md
+  - PROMPTS.md
+must_not_touch:
+  - .claude/skills/ux-test/
+  - .claude/skills/validate/
+  - evals/
+  - README.md
+non_goals:
+  - Changing what the design process does; it moves, it doesn't change.
+  - The per-project DESIGN.md contract and parity for every UI ticket (AEGIS-017).
+  - README changes (AEGIS-018).
+acceptance_criteria:
+  - .claude/skills/design-track/SKILL.md holds the full Design track - kind design, appetite, personas, tasks, scope, the three-step rounds, the pass rule, the freeze with report.md and the prototype branch, and conversion to an epic with design_ref - with a description that triggers on requests for a new screen, flow, or app feature whose design is open.
+  - AGENTS.md replaces its "Design track" section with a trigger of at most 60 words. A new screen, flow, or app feature with an open design gets a design ticket that follows the design-track skill, with human_gates [ticket, merge].
+  - AGENTS.md has at most 1,230 words.
+  - write-ticket and PROMPTS.md point to the design-track skill instead of "the Design track in AGENTS.md". write-ticket does not grow.
+  - The test uses a scratch repo carrying the new AGENTS.md (through CLAUDE.md) and the skills, with the 3 hidden-brief design requests from AEGIS-008 and 3 runs each. The agent drafts a design ticket (kind design, both gates) in at least 8 of 9 runs. Mean decision coverage is at least 0.80, against 0.907 for AEGIS-008 with the old layout.
+verify:
+  - test -f .claude/skills/design-track/SKILL.md
+  - grep -q "design-track" AGENTS.md
+  - "! grep -q '^## Design track' AGENTS.md"
+  - test "$(wc -w < AGENTS.md)" -le 1230
+  - "! grep -q 'Design track in AGENTS.md' .claude/skills/write-ticket/SKILL.md PROMPTS.md"
+smoke: []
+manual_checks: []

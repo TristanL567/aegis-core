@@ -39,7 +39,7 @@ clear, draft that part and list the open questions for the rest.
 
 **Design tickets.** When the request is for a new screen, flow, or app
 feature whose design is still open, draft a design ticket (`kind: design`,
-always `human_gates: [ticket, merge]`; see the Design track in AGENTS.md)
+always `human_gates: [ticket, merge]`; see the `design-track` skill)
 instead of implementation tickets. Your questions must cover these points,
 each with a recommended answer:
 - who uses it: personas from `.aegis/personas.yaml`, or three drafted
@@ -97,6 +97,16 @@ order.
   nothing to run, such as docs or a library without an app.
 - `manual_checks`: only what a human has to look at, such as UI, real data, or
   external systems. `[]` if none.
+
+**UI tickets.** If the change touches what users see, add two acceptance
+criteria and one smoke step:
+- each touched task works at 390x844 and at 1440x900, with the same
+  information and actions;
+- labels match the glossary in `DESIGN.md`;
+- a `smoke` step that checks both widths.
+
+Without a `DESIGN.md`, keep the first criterion and propose a design ticket
+to create it.
 
 ## 5. Check, then present
 

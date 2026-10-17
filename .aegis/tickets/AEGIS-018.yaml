@@ -1,0 +1,36 @@
+id: AEGIS-018
+goal: A newcomer can learn from README.md alone, in about two minutes, what aegis-core is for, how to install it, how to call it day to day, and how design and phone parity are applied.
+context: >
+  The human asked for a concise explanation in the README of how the repo is
+  used, how it is called, and how to apply the design. After AEGIS-016 and
+  AEGIS-017, design runs on three layers, and the README should show them:
+  general rules in AGENTS.md, the design process in the design-track skill,
+  and each product's design decisions in its own DESIGN.md. The README is
+  often read on a phone, so diagrams stay narrow.
+epic: null
+depends_on: [AEGIS-017]
+human_gates: []
+allowed_areas:
+  - .aegis/tickets/AEGIS-018.yaml
+  - README.md
+  - PROMPTS.md
+must_not_touch:
+  - AGENTS.md
+  - .claude/
+  - evals/
+non_goals:
+  - Changing any rule or skill.
+  - Tutorials or long examples. Link to PROMPTS.md instead.
+acceptance_criteria:
+  - README.md opens with a "How to use" section of at most 250 words. It covers the steps install (bootstrap prompt), start work (prompt), and start a design (prompt), and says what the human approves and when. It links each prompt in PROMPTS.md.
+  - A "Design and mobile" section of at most 200 words shows the three layers in one table - AGENTS.md (always loaded, general rules), the design-track skill (design process), and the project's DESIGN.md (that product's design contract). It states the parity rule and says that every UI ticket is checked at 390x844 and 1440x900.
+  - Sections no longer accurate after AEGIS-016 and AEGIS-017 are corrected, such as the parts table, the design-track text, and the diagram. Every diagram is at most 40 characters wide.
+  - README.md has fewer words than before this ticket, or at most 10% more.
+  - Every link and anchor in README.md and PROMPTS.md resolves.
+verify:
+  - grep -q "^## How to use" README.md
+  - grep -q "DESIGN.md" README.md
+  - grep -q "design-track" README.md
+smoke: []
+manual_checks:
+  - Read the README on a phone and judge whether "How to use" is enough to get started.
