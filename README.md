@@ -13,6 +13,37 @@ codebases and want to control what changes without reading every line of
 every diff. Validation runs automatically; you add a human gate only where
 you want one.
 
+## How to use
+
+1. **Install, once per repo.** Paste the
+   [bootstrap prompt](PROMPTS.md#bootstrap) into an agent working in your
+   repo. It copies in `AGENTS.md`, the skills, and the `ux-persona` agent,
+   records the aegis-core version in `.aegis/VERSION`, and shows you the
+   diff before anything is committed. An existing `AGENTS.md` keeps
+   everything outside its AEGIS block.
+2. **Start work.** Describe the change or point the agent at an issue with
+   a [start-work prompt](PROMPTS.md#start-work). The agent tickets,
+   implements in its own worktree, validates, commits, and sends you a
+   completion report. Do the manual checks it lists, then merge.
+3. **Start a design.** For a screen, flow, or feature whose design is still
+   open, use the [design prompt](PROMPTS.md#start-a-design). It ends in a
+   frozen spec that becomes a build epic.
+
+What you approve, and when:
+
+- Nothing by default; validation is automatic.
+- The ticket before work starts, if you add `human_gates: [ticket]`.
+- The merge, if you add `human_gates: [merge]`.
+- Gates go in your prompt or on the issue as the label `aegis:gate-ticket`
+  or `aegis:gate-merge`.
+- A design ticket always stops twice: for the brief and for the freeze.
+- Some actions always stop for you: merging or pushing to the default
+  branch, deploys, migrations on shared data, secrets, and deleting data,
+  branches, or pushed history.
+
+[`PROMPTS.md`](PROMPTS.md) also has prompts to implement or validate one
+ticket, and to [update AEGIS](PROMPTS.md#update-aegis-from-upstream).
+
 ## How it works
 
 ```text
@@ -29,41 +60,25 @@ validate (fresh subagent)    │
    gate "merge"? human merges
 ```
 
-1. **Ticket.** Every edit starts from a ticket: the goal, the paths the agent
-   may change, protected paths, checkable acceptance criteria, the commands
-   that verify them, and smoke steps for the running app.
-2. **Implement.** The agent works in the ticket's own worktree and branch, so
-   parallel agents never see each other's unfinished work.
-3. **Validate.** Without being asked, the agent starts a fresh subagent that
-   follows the `validate` skill. It runs the checks and smoke tests itself in
-   an isolated environment, reads the whole diff, and blocks until the ticket
-   is met.
-4. **Report and commit.** The agent reports what changed, what was verified,
-   and what wasn't. Each ticket is one commit.
+1. **Ticket.** The goal, the paths the agent may change, checkable
+   acceptance criteria, and the commands and smoke steps that verify them.
+2. **Implement** in the ticket's own worktree and branch, so parallel agents
+   never see each other's unfinished work.
+3. **Validate.** Unasked, a fresh subagent runs every check itself, reads the
+   whole diff, and blocks until the ticket is met.
+4. **Report and commit:** what was and wasn't verified; one commit per
+   ticket.
 
 ## The three parts
 
 | Part | What it does |
 | --- | --- |
-| [`AGENTS.md`](AGENTS.md) | All the rules: the loop, the ticket format, human gates, isolation, the design track, and the completion report. Always loaded. |
-| [`.claude/skills/`](.claude/skills/) | [`write-ticket`](.claude/skills/write-ticket/SKILL.md) turns a request into a ticket and asks instead of guessing. [`validate`](.claude/skills/validate/SKILL.md) is the independent review, run only by a subagent that didn't write the code. [`ux-test`](.claude/skills/ux-test/SKILL.md) usability-tests a prototype or build at phone and desktop width; [`ux-persona`](.claude/agents/ux-persona.md) is its screen-only persona subagent. |
+| [`AGENTS.md`](AGENTS.md) | All the rules: the loop, the ticket format, human gates, isolation, when design work starts, and the completion report. Always loaded. |
+| [`.claude/skills/`](.claude/skills/) | [`write-ticket`](.claude/skills/write-ticket/SKILL.md) turns a request into a ticket and asks instead of guessing. [`validate`](.claude/skills/validate/SKILL.md) is the independent review, run only by a subagent that didn't write the code. [`design-track`](.claude/skills/design-track/SKILL.md) runs a design ticket from brief to frozen spec. [`ux-test`](.claude/skills/ux-test/SKILL.md) usability-tests a prototype or build at phone and desktop width; [`ux-persona`](.claude/agents/ux-persona.md) is its screen-only persona subagent. |
 | [`PROMPTS.md`](PROMPTS.md) | Copyable prompts: install AEGIS into a repo, start work or a design, implement, validate, ask for gates, update. Says when to use each skill. |
 
-Once installed, a repo carries `AGENTS.md` and the skills itself;
-`PROMPTS.md` stays here for you to copy prompts from. Agents in the cloud, in
-CI, or on another machine never need this repository.
-
-## Human gates
-
-By default an agent tickets, implements, validates, and commits without
-stopping. Ask for a gate per ticket, in your prompt or as an issue label:
-
-- `human_gates: [ticket]`: you approve the ticket before work starts.
-- `human_gates: [merge]`: you approve before the branch merges.
-
-Some actions always stop for a human: merging or pushing to the default
-branch, deploys, migrations on shared data, secrets, and deleting data,
-branches, or pushed history.
+Once installed, a repo carries `AGENTS.md` and the skills itself; agents
+never need this repository.
 
 ## Core rules
 
@@ -74,8 +89,7 @@ branches, or pushed history.
   default.
 - Make the smallest diff that meets the acceptance criteria: no speculative
   code, no unrelated refactors.
-- The validator is blocking. Only the human can override it, and an override
-  is reported as one.
+- Only the human can override the validator.
 - Never claim a check passed without running it, and name every skipped check.
 - One commit per ticket, `[ID] description`, containing the ticket file and
   its work.
@@ -105,6 +119,23 @@ There are no globs, and `must_not_touch` wins over `allowed_areas`. Tickets
 live in `.aegis/tickets/<ID>.yaml`, and the active ticket's ID is in
 `.aegis/active-ticket`.
 
+## Design and mobile
+
+Most people read on a phone, so the phone layout is never a cut-down
+desktop. Design lives in three layers:
+
+| Layer | Holds |
+| --- | --- |
+| [`AGENTS.md`](AGENTS.md) | Always loaded: when a design ticket is needed, and the parity rule. |
+| [`design-track`](.claude/skills/design-track/SKILL.md) skill | The design process: prototype rounds, `ux-test`, the pass rule, the freeze. |
+| `DESIGN.md` in your repo | That product's design contract: breakpoints, navigation, touch and input, formats, glossary. The first design ticket drafts it from the [template](.claude/skills/design-track/DESIGN-template.md); you approve it. |
+
+**Parity rule:** one product, two layouts. Phone and desktop offer the same
+tasks, information, actions, and names; only the layout differs. Every UI
+ticket gets parity acceptance criteria, and the validator checks each
+touched task at 390x844 and 1440x900. Anything available at only one width
+blocks the ticket.
+
 ## Design track
 
 When the design of a screen, flow, or feature is still open, start with a
@@ -123,8 +154,8 @@ v                            │
 decide each finding          │
 ├─ fix (max 3 rounds) ───────┘
 └─ passes ─> gate "merge"
-   freezes spec, findings,
-   and decisions
+   freezes spec, decisions,
+   findings, and DESIGN.md
    │
    v
    write-ticket: build epic
@@ -136,27 +167,4 @@ decide each finding          │
   persona pass.
 - AI test results are evidence, not user validation. The design ticket
   keeps a short real-user check for you.
-- The project's user profiles live in `.aegis/personas.yaml`.
-
-Start with the design prompt in [`PROMPTS.md`](PROMPTS.md#start-a-design).
-
-## Setup
-
-Paste the bootstrap prompt from [`PROMPTS.md`](PROMPTS.md#bootstrap) into an
-agent working in your repo. It copies `AGENTS.md`, the skills, and the
-`ux-persona` agent in, records the aegis-core version in `.aegis/VERSION`,
-and shows you the diff before anything is committed. If the repo already has
-an `AGENTS.md`, only the AEGIS block between its markers is added or
-replaced.
-
-## Daily use
-
-1. Describe the change or point the agent at an issue, using a prompt from
-   [`PROMPTS.md`](PROMPTS.md).
-2. Add `human_gates` if you want to approve the ticket or the merge.
-3. The agent tickets, implements, and validates until the validator approves.
-4. Read the completion report and do any manual checks it lists.
-5. Merge, or let the agent open a pull request for you to merge.
-
-To pick up a newer aegis-core, use the update prompt in
-[`PROMPTS.md`](PROMPTS.md#update-aegis-from-upstream).
+- The build epic reruns `ux-test` on the real build.

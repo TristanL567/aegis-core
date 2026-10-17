@@ -56,7 +56,7 @@ ticket always stops for you twice: to approve the brief, and to freeze the
 design.
 
 ```text
-Follow the design-track skill for <screen, flow, or feature>. Draft a design ticket with the write-ticket skill (kind: design, human_gates: [ticket, merge]) and show it to me. After I approve it, run up to 3 rounds of prototype, ux-test in a fresh subagent, and a decision per finding, then stop at the merge gate with spec.md, findings.yaml, and decisions.md.
+Follow the design-track skill for <screen, flow, or feature>. Draft a design ticket with the write-ticket skill (kind: design, human_gates: [ticket, merge]) and show it to me. After I approve it, run up to 3 rounds of prototype, ux-test in a fresh subagent, and a decision per finding, then stop at the merge gate with DESIGN.md, spec.md, findings.yaml, and decisions.md.
 ```
 
 For a high-stakes design, add `Include a persona pass.` It runs one
