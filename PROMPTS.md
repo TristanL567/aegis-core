@@ -63,6 +63,14 @@ For a high-stakes design, add `Include a persona pass.` It runs one
 screen-only subagent per persona and costs about three times as much as the
 standard inspection.
 
+## Save a design preset
+
+Run in aegis-core, to reuse a product's design conditions in later products:
+
+```text
+Follow AGENTS.md: as a ticket, save a design preset <name> from the <sections> of <repo path>/DESIGN.md into .claude/skills/design-track/presets/<name>.md. Keep only what is generic: no product names. Start it with what it is for and when not to use it, and keep DESIGN.md's section headings.
+```
+
 ## Implement a ticket
 
 For a ticket that already exists in `.aegis/tickets/`:

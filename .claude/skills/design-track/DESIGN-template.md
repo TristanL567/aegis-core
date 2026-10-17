@@ -1,5 +1,7 @@
 # DESIGN.md: <product>
 
+Presets: <names from the design-track skill's `presets/`, or none>
+
 This is the product's design contract. Every UI ticket follows it, and the
 validator checks against it. The first design ticket fills it in and the human
 approves it. Later design freezes add new patterns and terms.
@@ -9,6 +11,11 @@ approves it. Later design freezes add new patterns and terms.
 One product, two layouts. Every task, piece of information, action and label
 on desktop exists on the phone. Layout may differ; capability and names may
 not. A gap at one width is a defect, never a simplification.
+
+## Look
+
+- Colours, fonts and components: <where they are defined; reuse before adding>
+- Light and dark mode: <for example, both, following the system setting>
 
 ## Breakpoints
 

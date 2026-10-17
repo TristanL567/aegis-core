@@ -136,6 +136,10 @@ ticket gets parity acceptance criteria, and the validator checks each
 touched task at 390x844 and 1440x900. Anything available at only one width
 blocks the ticket.
 
+Saved design conditions live in the skill's
+[`presets/`](.claude/skills/design-track/presets/), such as `finance-eu` and
+`data-portal`. A new `DESIGN.md` copies the ones that fit.
+
 ## Design track
 
 When the design of a screen, flow, or feature is still open, start with a

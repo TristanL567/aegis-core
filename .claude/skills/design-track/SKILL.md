@@ -21,13 +21,21 @@ It adds three fields:
 ## The product's DESIGN.md
 
 `DESIGN.md` at the repo root is the product's design contract: the parity
-rule, breakpoints, navigation, touch and input, formats, glossary, and
+rule, look, breakpoints, navigation, touch and input, formats, glossary, and
 content priority.
 - If the project has none, the first design ticket drafts it from
   `DESIGN-template.md` in this skill's folder. The human approves it at the
   `ticket` gate.
 - Prototypes follow `DESIGN.md`.
 - At the freeze, add the round's new patterns and terms to it.
+- `presets/` holds saved design conditions, such as formats or phone
+  patterns. A draft picks the presets that fit, copies their sections in,
+  and lists them under "Presets" at its top; the human confirms that choice
+  with the draft, not as an open question. The product's own choices
+  override a preset.
+- To save one, extract a product's generic sections into
+  `presets/<name>.md` in aegis-core, as a ticket: what it is for, when not to
+  use it, no product names.
 
 ## Rounds
 
