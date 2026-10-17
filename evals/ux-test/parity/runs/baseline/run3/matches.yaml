@@ -1,0 +1,44 @@
+tokens: 112812
+matches:
+  - finding: 1
+    match: F01
+    why: "Export CSV is hidden on the phone with no alternative, exactly the planted gap."
+  - finding: 2
+    match: F02
+    why: "The phone list drops each holding's gain (F02) and the total (F03, same severity); labelled F02."
+  - finding: 3
+    match: F09
+    why: "The year selector is display:none on the phone, leaving the report stuck on 2025."
+  - finding: 4
+    match: unplanted
+    why: "Holdings live only in the in-memory array, so a reload loses added ones; real but not in the key."
+  - finding: 5
+    match: F08
+    why: "The breakdown table is overflow:hidden at min-width 640px on the phone, clipping the right-hand columns."
+  - finding: 6
+    match: F04
+    why: "The KESt explanation is only a title attribute on the info icon."
+  - finding: 7
+    match: unplanted
+    why: "The note sits at the card's end with no bottom padding on the phone, so the fixed nav covers it; a different element from F10's."
+  - finding: 8
+    match: F10
+    why: "The fixed bottom nav covers the last holding's value and the Prices as of line."
+  - finding: 9
+    match: unplanted
+    why: "The phone hides the table header, so the stacked shares, price and value carry no labels."
+  - finding: 10
+    match: F05
+    why: "The nav says Statements on the phone and Tax report on desktop."
+  - finding: 11
+    match: invalid
+    why: "The year selector is plainly visible on desktop, and the phone-hiding problem is covered by finding 3; this is an opinion without a concrete defect."
+  - finding: 12
+    match: unplanted
+    why: "The error paragraph is at the top of the dialog, not by the failing field; real but minor."
+  - finding: 13
+    match: unplanted
+    why: "The note under the table is never cleared and repeats the same text, so a second add looks unchanged."
+  - finding: 14
+    match: invalid
+    why: "Closing prices as of 10.10.2026 is a normal last-close timestamp; the contradiction is an opinion."

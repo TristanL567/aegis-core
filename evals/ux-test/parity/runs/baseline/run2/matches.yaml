@@ -1,0 +1,38 @@
+tokens: 128288
+matches:
+  - finding: 1
+    match: F09
+    why: "The phone hides the tax-year selector so the report is stuck on 2025."
+  - finding: 2
+    match: F01
+    why: "Export CSV is display:none on the phone with no other export path."
+  - finding: 3
+    match: F03
+    why: "The phone hides the Total footer; it also covers F02 (unrealised gain column hidden), same severity."
+  - finding: 4
+    match: F10
+    why: "The fixed bottom nav covers the last row and the Prices-as-of line, with no bottom padding on the page."
+  - finding: 5
+    match: F08
+    why: "The breakwrap is overflow:hidden with a 640px table, so later columns are clipped."
+  - finding: 6
+    match: F04
+    why: "The KESt explanation is only a title attribute on the info icon."
+  - finding: 7
+    match: unplanted
+    why: "Export only renders the CSV in a pre block, with no download or copy, which is true in the code."
+  - finding: 8
+    match: unplanted
+    why: "The code has no edit, delete or undo for holdings, and this is not in the key."
+  - finding: 9
+    match: F05
+    why: "The phone nav says Statements while the desktop nav and heading say Tax report."
+  - finding: 10
+    match: invalid
+    why: "Empty save calls fail('Enter the security's name.') which shows an error, so the claim is not reproduced and is wrong."
+  - finding: 11
+    match: unplanted
+    why: "The phone hides the table header, leaving shares, price and value as unlabelled numbers, which is real and not in the key."
+  - finding: 12
+    match: unplanted
+    why: "The CSV uses semicolons with decimal points via toFixed(2), a real locale-import risk that is not in the key."

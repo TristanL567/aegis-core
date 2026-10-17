@@ -1,0 +1,53 @@
+tokens: 129167
+matches:
+  - finding: 1
+    match: F01
+    why: "Export CSV is hidden on phone with no alternative, exactly the key's gap."
+  - finding: 2
+    match: F09
+    why: "The year selector is display:none on phone so the report is stuck on 2025."
+  - finding: 3
+    match: F03
+    why: "Phone shows no total (tfoot hidden); it also covers the dropped gain column (F02), but F03 is listed first."
+  - finding: 4
+    match: unplanted
+    why: "New holdings are given cost = qty*price so gain is 0.00 and a duplicate row is allowed; real in the code, not in the key."
+  - finding: 5
+    match: unplanted
+    why: "There is no edit or delete control for holdings in the prototype."
+  - finding: 6
+    match: F08
+    why: "The breakdown table has min-width 640px with overflow hidden on phone, so right columns are unreachable."
+  - finding: 7
+    match: F04
+    why: "KESt explanation is only a title attribute on the info icon."
+  - finding: 8
+    match: F10
+    why: "The fixed bottom nav covers the last holding and the price-date line because the main has no bottom padding on phone."
+  - finding: 9
+    match: unplanted
+    why: "The dialog has no Escape handler or focus trap, so this is true and not in the key."
+  - finding: 10
+    match: unplanted
+    why: "wht adds the foreign-tax credit to withheld, so the headline differs from the Withheld column sum."
+  - finding: 11
+    match: F05
+    why: "Bottom nav says Statements while the top nav and heading say Tax report."
+  - finding: 12
+    match: invalid
+    why: "Desktop shows the year selector with 2025 selected, and the phone case is already F09; this is an opinion without a distinct checkable problem."
+  - finding: 13
+    match: unplanted
+    why: "A single top error element shows one message at a time and is only cleared when the dialog opens, so stale errors persist."
+  - finding: 14
+    match: unplanted
+    why: "Security is a free-text input with no lookup or duplicate check."
+  - finding: 15
+    match: F06
+    why: "The phone add button is a 28x28 plus icon with aria-hidden and no accessible label."
+  - finding: 16
+    match: unplanted
+    why: "Holdings cells are nowrap and the holdings table has no overflow wrapper, so a long name can overflow the card."
+  - finding: 17
+    match: invalid
+    why: "The dialog has no height constraint and fields have min-height 44px, so clipping at desktop size is not supported by the source."

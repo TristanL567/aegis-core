@@ -1,0 +1,61 @@
+# OUTCOME (2026-10-17): the human's "Fix procedure, re-test" decision is in effect.
+#   floor: 9/9/9 gaps found, 0 invalid; failed the regression run (8/10).
+#   procedure: 10/10/10 gaps found; failed the invalid bar (2.00).
+#   procedure-v2 (procedure plus a prototype-limits sentence) was adopted:
+#   10/10/10 gaps found, 0 invalid, 1.07x tokens, original test bed 10/10
+#   with 1 invalid. Details are in evals/ux-test/parity/arms/results.md.
+id: AEGIS-015
+goal: ux-test checks that the phone view of a web app matches its desktop view - same information and actions, made for touch - using the cheapest parity instruction that clears the consistency bar.
+context: >
+  As an EasyRep user who mostly reads figures on a phone, I want every design
+  round to catch the places where the phone view drops data or actions, hides
+  information behind hover, renames things, clips wide content, or gives
+  number fields the wrong keyboard. On the AEGIS-014 parity test bed the
+  current ux-test found 6.67 of 10 gaps, and it missed the 28px tap target and
+  the number keyboard in every run. The human chose to extend ux-test rather
+  than add a skill, and to run the check in design rounds. It must stay a
+  procedure, not a mobile-UX knowledge dump.
+
+  The 2026-10-17 evaluation of nextlevelbuilder/ui-ux-pro-max-skill@56ea9cf
+  (MIT) and pbakaus/impeccable@6af45ac (Apache-2.0) found that neither should
+  be installed. ui-ux-pro-max's mobile rules, however, cover exactly our
+  misses. So this ticket tests the borrowed excerpt against our own parity
+  procedure.
+epic: null
+depends_on: [AEGIS-014, AEGIS-012]
+human_gates: []
+allowed_areas:
+  - .aegis/tickets/AEGIS-015.yaml
+  - .claude/skills/ux-test/SKILL.md
+  - .claude/skills/ux-test/NOTICE.md
+  - evals/ux-test/parity/runs/
+  - evals/ux-test/parity/arms/
+must_not_touch:
+  - AGENTS.md
+  - .claude/agents/
+  - .claude/skills/validate/
+  - .claude/skills/write-ticket/
+  - evals/ux-test/parity/gaps.yaml
+  - evals/ux-test/parity/prototype/
+  - evals/ux-test/parity/runs/baseline/
+non_goals:
+  - Installing ui-ux-pro-max or impeccable, in whole or in part, including impeccable's hooks, binary, or detect scanner.
+  - Native or PWA app parity.
+  - A separate mobile skill.
+  - Generic mobile design guidelines beyond the tested excerpt.
+acceptance_criteria:
+  - Two candidate versions of ux-test are written into evals/ux-test/parity/arms/, each at most 200 words longer than the current SKILL.md.
+  - Arm "floor" is the current ux-test plus a mobile parity floor of at most about 15 lines, excerpted from ui-ux-pro-max's quick-reference.md at commit 56ea9cf. It covers touch-target size, inputmode or number keyboards, hover versus tap, horizontal scroll, and viewport units, with an MIT attribution line.
+  - Arm "procedure" is the current ux-test plus our own parity procedure. For each key task it builds a desktop-against-phone matrix of information, actions, labels, and inputs, reports every gap as a separate finding with both viewports as evidence, and adds touch checks covering hover-only content, targets under 44px, number keyboards, and wide content without a phone form.
+  - Each arm runs 3 times on the parity test bed, using the fixed prompt in evals/ux-test/parity/prompt.md with the arm's skill file, and is judged with ../judge.md against gaps.yaml exactly as the AEGIS-014 baseline was.
+  - The arm adopted into .claude/skills/ux-test/SKILL.md is the cheaper one, in added words, that meets the consistency bar. Under that bar every run finds at least 9 of 10 gaps, mean invalid findings are at most the AEGIS-014 baseline mean of 1.33, and mean tester tokens are at most 1.5 times the baseline mean of 119,359. If neither arm meets the bar, ux-test is not changed and the ticket records the evidence and stops for the human.
+  - On 2026-10-17 neither arm met every condition: floor failed the regression run and procedure failed the invalid bar. The human then chose "Fix procedure, re-test". Arm "procedure-v2", the procedure arm plus the sentence "Limits of a throwaway prototype, such as data that isn't saved or a download shown as a preview, are notes, not findings.", is written to evals/ux-test/parity/arms/procedure-v2/. It is re-tested with 3 parity runs and 1 original-bed run under the same prompt, blind judging and bar. If it meets the bar, it becomes .claude/skills/ux-test/SKILL.md word for word, with only rewrapping allowed. The evidence goes in evals/ux-test/parity/arms/results.md.
+  - The floor arm's verbatim excerpt carries the MIT copyright and permission notice of ui-ux-pro-max-skill in evals/ux-test/parity/arms/floor/NOTICE.md, and in .claude/skills/ux-test/NOTICE.md if floor is adopted.
+  - The adopted version does not regress on the original test bed. One run on evals/ux-test/ finds at least 9 of 10 flaws with at most 2 invalid findings.
+verify:
+  - grep -qi "parity" .claude/skills/ux-test/SKILL.md
+  - test "$(wc -w < .claude/skills/ux-test/SKILL.md)" -le 1316
+  - py -3.10 evals/ux-test/parity/grade.py --summary evals/ux-test/parity/runs/
+smoke: []
+manual_checks:
+  - Run the parity-aware ux-test on one real EasyRep page at phone and desktop width, and judge whether the gaps it reports are real.

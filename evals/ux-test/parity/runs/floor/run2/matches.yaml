@@ -1,0 +1,53 @@
+tokens: 135592
+matches:
+  - finding: 1
+    match: unplanted
+    why: "Added holdings live only in the in-memory array, so they vanish on reload; real and not in the key."
+  - finding: 2
+    match: F02
+    why: "Phone hides the Unrealised gain column (F02) and the Total row (F03, also sev 3); labelled with F02."
+  - finding: 3
+    match: F09
+    why: "The .yearpick is hidden on the phone, so the tax year cannot be switched."
+  - finding: 4
+    match: F01
+    why: "#export is display:none on the phone, so there is no way to export."
+  - finding: 5
+    match: F04
+    why: "KESt explanation is only a title attribute on the info icon."
+  - finding: 6
+    match: F08
+    why: "Breakwrap is overflow:hidden with a 640px table, clipping the right-hand columns."
+  - finding: 7
+    match: F10
+    why: "Fixed bottom nav covers the last holding and the Prices-as-of line."
+  - finding: 8
+    match: unplanted
+    why: "The prototype has no edit or delete for holdings; real and not in the key."
+  - finding: 9
+    match: F06
+    why: "#add shrinks to a 28x28 unlabelled plus on the phone."
+  - finding: 10
+    match: unplanted
+    why: "Export only prints a text preview below the list with no download or confirmation; real and not in the key."
+  - finding: 11
+    match: F05
+    why: "Desktop nav says Tax report while the phone nav says Statements."
+  - finding: 12
+    match: F07
+    why: "Shares and price inputs are type=text with no inputmode."
+  - finding: 13
+    match: unplanted
+    why: "Bottom nav buttons have 8px padding plus one 24px text line, about 40px tall, under 44px; distinct from the key."
+  - finding: 14
+    match: unplanted
+    why: "The note says today's closing prices while the footer says prices as of 10.10.2026; real inconsistency."
+  - finding: 15
+    match: unplanted
+    why: "A single #err paragraph at the top of the dialog shows one error at a time, away from the field."
+  - finding: 16
+    match: unplanted
+    why: "The CSV uses semicolons with dot decimals and omits the (purchase) marker, as the export code shows."
+  - finding: 17
+    match: unplanted
+    why: "The success message template yields Added 1 shares; real grammar flaw."

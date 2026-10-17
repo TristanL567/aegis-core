@@ -1,0 +1,56 @@
+tokens: 131509
+matches:
+  - finding: 1
+    match: F09
+    why: "Phone hides the tax year selector, so the report is stuck on 2025."
+  - finding: 2
+    match: F01
+    why: "Export CSV is hidden on the phone with no alternative."
+  - finding: 3
+    match: F03
+    why: "tfoot with the total is hidden on the phone."
+  - finding: 4
+    match: F02
+    why: "col-gain is hidden on the phone list."
+  - finding: 5
+    match: unplanted
+    why: "Phone card layout hides thead and shows bare numbers without labels; real and checkable."
+  - finding: 6
+    match: F08
+    why: "Breakwrap is overflow hidden with a 640px table, so later columns are clipped."
+  - finding: 7
+    match: F04
+    why: "KESt explanation is only a title tooltip on the info icon."
+  - finding: 8
+    match: unplanted
+    why: "The prototype has no edit or delete for holdings; real gap."
+  - finding: 9
+    match: F10
+    why: "Bottom nav covers the last content and Prices as of line (the confirmation note sits in the same bottom area)."
+  - finding: 10
+    match: F05
+    why: "Nav label is Statements on the phone and Tax report on desktop."
+  - finding: 11
+    match: F06
+    why: "Add button shrinks to a 28x28 plus; the nav-tab remark is extra."
+  - finding: 12
+    match: F07
+    why: "Shares and Price inputs are type text with no inputmode."
+  - finding: 13
+    match: unplanted
+    why: "The note says today's closing prices while the footer shows 10.10.2026; real inconsistency."
+  - finding: 14
+    match: unplanted
+    why: "Real but opinion-level; the report defaults to 2025 with only a small selector and no stated year in the stats."
+  - finding: 15
+    match: unplanted
+    why: "Security is free text and a new name creates a separate holding valued at purchase price."
+  - finding: 16
+    match: unplanted
+    why: "The error paragraph is at the top of the dialog and is only cleared on reopen."
+  - finding: 17
+    match: unplanted
+    why: "The message template yields 'Added 1 shares' for singular."
+  - finding: 18
+    match: unplanted
+    why: "On the phone the add text is hidden and the plus is aria-hidden, leaving no accessible name."

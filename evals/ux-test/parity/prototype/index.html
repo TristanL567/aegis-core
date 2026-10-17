@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EasyRep</title>
+<style>
+  :root { --ink: #1f2933; --muted: #52606d; --line: #d9e2ec; --accent: #1d4ed8; --soft: #f5f7fa; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--ink); background: var(--soft); }
+  header { background: #fff; border-bottom: 1px solid var(--line); padding: 12px 24px; display: flex; align-items: center; gap: 24px; }
+  header h1 { font-size: 20px; margin: 0; }
+  .topnav { display: flex; gap: 4px; }
+  .topnav button, .bottomnav button { border: 0; background: none; font: inherit; color: var(--muted); padding: 8px 14px; border-radius: 6px; cursor: pointer; }
+  .topnav button[aria-current="page"], .bottomnav button[aria-current="page"] { color: var(--accent); font-weight: 600; background: #e0e7ff; }
+  .bottomnav { display: none; }
+  main { max-width: 1000px; margin: 24px auto; padding: 0 24px 40px; }
+  .screen { display: none; }
+  .screen.on { display: block; }
+  .card { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 20px; margin-bottom: 16px; }
+  .head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .head h2 { margin: 0; font-size: 22px; flex: 1; }
+  .task { font-size: 12px; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 1px 6px; }
+  .note { color: var(--muted); font-size: 14px; }
+  .btn { background: var(--accent); color: #fff; border: 0; border-radius: 6px; padding: 10px 16px; font: inherit; cursor: pointer; min-height: 44px; }
+  .btn.secondary { background: #fff; color: var(--ink); border: 1px solid #9aa5b1; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  td:first-child { white-space: normal; overflow-wrap: anywhere; }
+  th { color: var(--muted); font-size: 14px; font-weight: 600; }
+  .num { text-align: right; }
+  .pos { color: #047857; }
+  .neg { color: #b91c1c; }
+  tfoot td { font-weight: 700; border-top: 2px solid var(--ink); }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 16px 0; }
+  .stat .label { color: var(--muted); font-size: 14px; display: flex; align-items: center; gap: 6px; }
+  .stat .value { font-size: 26px; font-weight: 600; }
+  .info { position: relative; display: inline-flex; width: 20px; height: 20px; border-radius: 50%; border: 1px solid #9aa5b1; align-items: center; justify-content: center; font-size: 12px; color: var(--muted); cursor: default; }
+  .yearpick { display: flex; align-items: center; gap: 8px; }
+  .yearpick select { font: inherit; padding: 8px 10px; border: 1px solid #9aa5b1; border-radius: 6px; min-height: 44px; }
+  .breakwrap { overflow-x: auto; }
+  .updated { color: var(--muted); font-size: 13px; margin-top: 8px; }
+  .overlay { position: fixed; inset: 0; background: rgba(15,23,42,.45); display: none; align-items: center; justify-content: center; z-index: 40; }
+  .overlay.on { display: flex; }
+  .dialog { background: #fff; border-radius: 12px; width: min(460px, 92vw); padding: 24px; }
+  .dialog h3 { margin: 0 0 16px; }
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+  .field input { width: 100%; padding: 10px; font: inherit; border: 1px solid #9aa5b1; border-radius: 6px; min-height: 44px; }
+  .actions { display: flex; gap: 8px; justify-content: flex-end; }
+  .error { color: #b91c1c; font-size: 14px; margin: 0 0 10px; display: none; }
+  .error.on { display: block; }
+  pre { background: var(--soft); border: 1px solid var(--line); border-radius: 8px; padding: 12px; overflow-x: auto; font-size: 13px; }
+  .addicon { display: none; }
+  @media (max-width: 600px) {
+    header { padding: 12px 16px; }
+    .topnav { display: none; }
+    .bottomnav { display: flex; position: fixed; left: 0; right: 0; bottom: 0; height: 60px; background: #fff; border-top: 1px solid var(--line); justify-content: space-around; align-items: center; z-index: 30; }
+    main { padding: 0 16px; margin: 16px auto 0; }
+    .card { margin-bottom: 0; padding-bottom: 0; }
+    .updated { margin: 0; }
+    #export, .col-gain, tfoot, .yearpick, .addtext { display: none; }
+    .addicon { display: inline-flex; align-items: center; justify-content: center; font-size: 18px; }
+    #add { width: 28px; height: 28px; min-height: 0; padding: 0; }
+    #holdings .col-gain { display: none; }
+    #holdings table thead { display: none; }
+    #holdings table, #holdings tbody, #holdings tr, #holdings td { display: block; width: 100%; }
+    #holdings tr { border-bottom: 1px solid var(--line); padding: 10px 0; }
+    #holdings td { border: 0; padding: 2px 0; text-align: left; }
+    .breakwrap { overflow: hidden; }
+    .breakwrap table { min-width: 640px; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>EasyRep</h1>
+  <nav class="topnav">
+    <button data-go="holdings" aria-current="page">Holdings</button>
+    <button data-go="report">Tax report</button>
+  </nav>
+</header>
+
+<main>
+  <section class="screen on" id="holdings">
+    <div class="card">
+      <div class="head">
+        <h2>Holdings</h2><span class="task">T1 T2 T4</span>
+        <button class="btn secondary" id="export">Export CSV</button>
+        <button class="btn" id="add"><span class="addtext">Add holding</span><span class="addicon" aria-hidden="true">+</span></button>
+      </div>
+      <p class="note">Your portfolio at today's closing prices.</p>
+      <table>
+        <thead><tr><th>Security</th><th class="num">Shares</th><th class="num">Price</th><th class="num">Market value</th><th class="num col-gain">Unrealised gain</th></tr></thead>
+        <tbody id="rows"></tbody>
+        <tfoot><tr><td>Total</td><td></td><td></td><td class="num" id="tot-value"></td><td class="num col-gain" id="tot-gain"></td></tr></tfoot>
+      </table>
+      <p class="updated">Prices as of 10.10.2026, 17:35 (Vienna close).</p>
+      <div id="export-out"></div>
+    </div>
+  </section>
+
+  <section class="screen" id="report">
+    <div class="card">
+      <div class="head">
+        <h2>Tax report</h2><span class="task">T3</span>
+        <div class="yearpick"><label for="year">Tax year</label>
+          <select id="year"><option>2024</option><option selected>2025</option><option>2026</option></select></div>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="label">Capital income</div><div class="value" id="r-income"></div></div>
+        <div class="stat"><div class="label">KESt (27.5%) <span class="info" title="KESt is Austria's 27.5% tax on capital income. Your broker usually withholds it; 'KESt still due' is what remains after withholding and foreign-tax credits.">i</span></div><div class="value" id="r-kest"></div></div>
+        <div class="stat"><div class="label">Withheld + foreign credit</div><div class="value" id="r-wht"></div></div>
+        <div class="stat"><div class="label">KESt still due</div><div class="value" id="r-due"></div></div>
+      </div>
+      <div class="breakwrap">
+        <table>
+          <thead><tr><th>Security</th><th>Type</th><th class="num">Gross</th><th class="num">Foreign tax</th><th class="num">KESt</th><th class="num">Withheld</th><th class="num">Due</th></tr></thead>
+          <tbody id="brows"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</main>
+
+<nav class="bottomnav">
+  <button data-go="holdings" aria-current="page">Holdings</button>
+  <button data-go="report">Statements</button>
+</nav>
+
+<div class="overlay" id="dlg">
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dlg-title">
+    <h3 id="dlg-title">Add holding</h3>
+    <p class="error" id="err"></p>
+    <div class="field"><label for="f-sec">Security</label><input id="f-sec" autocomplete="off"></div>
+    <div class="field"><label for="f-qty">Shares</label><input id="f-qty" type="text"></div>
+    <div class="field"><label for="f-price">Purchase price per share (EUR)</label><input id="f-price" type="text"></div>
+    <div class="actions"><button class="btn secondary" id="f-cancel">Cancel</button><button class="btn" id="f-save">Save holding</button></div>
+  </div>
+</div>
+
+<script>
+  const hold = [
+    { sec: "Erste Group", qty: 40, price: 52.30, cost: 1610.00 },
+    { sec: "OMV AG", qty: 25, price: 41.85, cost: 1150.00 },
+    { sec: "Verbund AG", qty: 12, price: 68.40, cost: 905.20 },
+    { sec: "Andritz AG", qty: 15, price: 57.10, cost: 812.50 },
+    { sec: "voestalpine AG", qty: 30, price: 23.95, cost: 801.00 },
+    { sec: "Wienerberger AG", qty: 20, price: 29.70, cost: 640.00 },
+    { sec: "Raiffeisen Bank International", qty: 35, price: 18.62, cost: 702.10 },
+    { sec: "Österreichische Post AG", qty: 18, price: 30.15, cost: 560.40 }
+  ];
+  const income = {
+    2024: [
+      { sec: "Erste Group", type: "Dividend", gross: 108.00, foreign: 0, withheld: 29.70 },
+      { sec: "OMV AG", type: "Dividend", gross: 76.25, foreign: 0, withheld: 20.97 },
+      { sec: "iShares Core MSCI World", type: "Distribution", gross: 64.80, foreign: 9.72, withheld: 0 }
+    ],
+    2025: [
+      { sec: "Erste Group", type: "Dividend", gross: 120.00, foreign: 0, withheld: 33.00 },
+      { sec: "OMV AG", type: "Dividend", gross: 81.25, foreign: 0, withheld: 22.34 },
+      { sec: "Verbund AG", type: "Dividend", gross: 33.60, foreign: 0, withheld: 9.24 },
+      { sec: "Nestle SA", type: "Dividend", gross: 54.00, foreign: 8.10, withheld: 0 },
+      { sec: "Siemens AG", type: "Realised gain", gross: 412.30, foreign: 0, withheld: 0 }
+    ],
+    2026: []
+  };
+  const $ = id => document.getElementById(id);
+  const eur = n => (n < 0 ? "-" : "") + "€" + Math.abs(n).toLocaleString("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const r2 = n => Math.round(n * 100) / 100;
+
+  function renderHoldings() {
+    let tv = 0, tg = 0;
+    $("rows").innerHTML = hold.map(h => {
+      const v = h.qty * h.price, g = v - h.cost; tv += v; tg += g;
+      return `<tr><td><strong>${h.sec}</strong></td><td class="num">${h.qty}</td><td class="num">${eur(h.price)}${h.noClose ? " (purchase)" : ""}</td><td class="num">${eur(v)}</td><td class="num col-gain ${g >= 0 ? "pos" : "neg"}">${eur(g)}</td></tr>`;
+    }).join("");
+    $("tot-value").textContent = eur(tv);
+    $("tot-gain").textContent = eur(tg);
+  }
+  function renderReport() {
+    const rows = income[$("year").value];
+    let inc = 0, kest = 0, wht = 0, due = 0;
+    $("brows").innerHTML = rows.length ? rows.map(r => {
+      const k = r2(r.gross * 0.275), credit = Math.min(r.foreign, r2(r.gross * 0.15)), d = Math.max(0, r2(k - credit - r.withheld));
+      inc += r.gross; kest += k; wht += r.withheld + credit; due += d;
+      return `<tr><td>${r.sec}</td><td>${r.type}</td><td class="num">${eur(r.gross)}</td><td class="num">${eur(r.foreign)}</td><td class="num">${eur(k)}</td><td class="num">${eur(r.withheld)}</td><td class="num">${eur(d)}</td></tr>`;
+    }).join("") : `<tr><td colspan="7" class="note">No capital income recorded for ${$("year").value}.</td></tr>`;
+    $("r-income").textContent = eur(inc);
+    $("r-kest").textContent = eur(kest);
+    $("r-wht").textContent = eur(wht);
+    $("r-due").textContent = eur(due);
+  }
+
+  document.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => {
+    document.querySelectorAll("[data-go]").forEach(x => x.toggleAttribute("aria-current", x.dataset.go === b.dataset.go));
+    document.querySelectorAll("[data-go]").forEach(x => { if (x.dataset.go === b.dataset.go) x.setAttribute("aria-current", "page"); });
+    document.querySelectorAll(".screen").forEach(s => s.classList.toggle("on", s.id === b.dataset.go));
+  }));
+  $("year").addEventListener("change", renderReport);
+
+  const num = s => { s = s.trim(); if (s.includes(",")) s = s.replace(/\./g, "").replace(",", "."); return s === "" ? NaN : Number(s); };
+  const closeDlg = () => { $("dlg").classList.remove("on"); $("add").focus(); };
+  $("add").addEventListener("click", () => { ["f-sec", "f-qty", "f-price"].forEach(f => $(f).value = ""); $("err").classList.remove("on"); $("dlg").classList.add("on"); $("f-sec").focus(); });
+  $("f-cancel").addEventListener("click", closeDlg);
+  $("dlg").addEventListener("click", e => { if (e.target === $("dlg")) closeDlg(); });
+  $("dlg").addEventListener("keydown", e => {
+    if (e.key === "Escape") { closeDlg(); return; }
+    if (e.key === "Enter" && e.target.tagName === "INPUT") { e.preventDefault(); save(); return; }
+    if (e.key === "Tab") {
+      const f = [...$("dlg").querySelectorAll("input, button")], first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+  function fail(msg, field) { $("err").textContent = msg; $("err").classList.add("on"); $(field).focus(); }
+  function save() {
+    const sec = $("f-sec").value.trim(), qty = num($("f-qty").value), price = num($("f-price").value);
+    if (!sec) return fail("Enter the security's name.", "f-sec");
+    if (!(qty > 0)) return fail("Shares must be a number above 0.", "f-qty");
+    if (!(price > 0)) return fail("Purchase price must be a number above 0, for example 42,50.", "f-price");
+    const same = hold.find(h => h.sec.toLowerCase() === sec.toLowerCase());
+    let msg;
+    if (same) { same.qty += qty; same.cost += qty * price; msg = `Added ${qty} shares to ${same.sec}.`; }
+    else { hold.push({ sec, qty, price, cost: qty * price, noClose: true }); msg = `Added ${sec}. It is valued at its purchase price until the next closing price.`; }
+    closeDlg();
+    renderHoldings();
+    $("export-out").innerHTML = `<p class="note">${msg}</p>`;
+  }
+  $("f-save").addEventListener("click", save);
+  $("export").addEventListener("click", () => {
+    const csv = ["security;shares;price_eur;market_value_eur;unrealised_gain_eur"].concat(hold.map(h => `${h.sec};${h.qty};${h.price.toFixed(2)};${(h.qty * h.price).toFixed(2)};${(h.qty * h.price - h.cost).toFixed(2)}`)).join("\n");
+    $("export-out").innerHTML = `<h3>holdings.csv</h3><pre></pre>`;
+    $("export-out").querySelector("pre").textContent = csv;
+  });
+
+  renderHoldings();
+  renderReport();
+</script>
+</body>
+</html>

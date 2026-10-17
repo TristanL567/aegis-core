@@ -1,0 +1,44 @@
+tokens: 120349
+matches:
+  - finding: 1
+    match: F02
+    why: "Phone list drops each holding's unrealised gain (F02); it also drops the portfolio total (F03)."
+  - finding: 2
+    match: F09
+    why: "The year selector is hidden at phone width, so the report is stuck on 2025."
+  - finding: 3
+    match: F01
+    why: "The Export CSV button is hidden at phone width with no other way to export."
+  - finding: 4
+    match: unplanted
+    why: "A new holding is stored with price equal to the purchase price, so its value and gain are wrong (confirmed in the save handler)."
+  - finding: 5
+    match: unplanted
+    why: "Save pushes onto the list without any duplicate check and there is no edit or delete control."
+  - finding: 6
+    match: F04
+    why: "The KESt explanation is only a title attribute on the info icon, which touch devices do not show."
+  - finding: 7
+    match: F10
+    why: "The fixed bottom nav covers the last holding and the prices-as-of line, as the key describes."
+  - finding: 8
+    match: F08
+    why: "The breakdown table is overflow:hidden at phone width, so the Foreign tax to Due columns are clipped."
+  - finding: 9
+    match: unplanted
+    why: "The dialog has no Escape, backdrop or focus-trap handling in the script."
+  - finding: 10
+    match: unplanted
+    why: "A single top error paragraph is shown and only cleared on reopening the dialog."
+  - finding: 11
+    match: unplanted
+    why: "Only the first comma is replaced, so 1.234,50 becomes NaN, and the error example uses a dot."
+  - finding: 12
+    match: F05
+    why: "The phone nav says Statements while the desktop nav and heading say Tax report."
+  - finding: 13
+    match: unplanted
+    why: "The fields are not in a form and no Enter key handler exists, so Enter does not submit."
+  - finding: 14
+    match: invalid
+    why: "Labelled opinion; the selector is 44 px tall and beside the heading on desktop, and it is hidden on phone (already covered by finding 2)."

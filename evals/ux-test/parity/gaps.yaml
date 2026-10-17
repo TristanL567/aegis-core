@@ -1,0 +1,64 @@
+# Answer key for parity/prototype/index.html. Never give this file, or the repo, to a tester.
+# Every gap shows only by comparing the phone view (390x844) with the desktop view (1440x900);
+# the desktop view itself works. IDs use F01..F10 so the shared grade.py and judge.md apply unchanged.
+# kind: missing-action | missing-data | hover-only | terminology | touch-target | input-type | clipped | covered
+- id: F01
+  task: T4
+  kind: missing-action
+  location: Holdings header, Export CSV
+  gap: Desktop has an "Export CSV" button; on the phone it is gone and there is no other way to export.
+  severity: 3
+- id: F02
+  task: T1
+  kind: missing-data
+  location: Holdings list, Unrealised gain
+  gap: Desktop shows each holding's unrealised gain; the phone list drops it entirely.
+  severity: 3
+- id: F03
+  task: T1
+  kind: missing-data
+  location: Holdings list, Total row
+  gap: Desktop shows the portfolio total (market value and gain); the phone shows no total.
+  severity: 3
+- id: F04
+  task: T3
+  kind: hover-only
+  location: Tax report, KESt (27.5%) info icon
+  gap: The explanation of KESt is only a native hover tooltip (title attribute) on the "i"; phones never show it, so on a phone there is no way to learn what KESt is.
+  severity: 2
+- id: F05
+  task: T3
+  kind: terminology
+  location: Navigation, Tax report vs Statements
+  gap: The same screen is "Tax report" on desktop but "Statements" in the phone's bottom navigation.
+  severity: 2
+- id: F06
+  task: T2
+  kind: touch-target
+  location: Holdings header, Add holding button
+  gap: On the phone "Add holding" shrinks to an unlabelled "+" of 28x28 px, below the 44 px touch minimum.
+  severity: 2
+- id: F07
+  task: T2
+  kind: input-type
+  location: Add holding dialog, Shares and Price fields
+  gap: Shares and Price are plain text inputs with no numeric inputmode, so phones open the full text keyboard for numbers.
+  severity: 2
+- id: F08
+  task: T3
+  kind: clipped
+  location: Tax report, per-security breakdown table
+  gap: On the phone the breakdown table is clipped with no scroll or card form; the Withheld and Due columns cannot be seen.
+  severity: 3
+- id: F09
+  task: T3
+  kind: missing-action
+  location: Tax report, Tax year selector
+  gap: Desktop can switch the tax year; on the phone the year selector is hidden and the report is stuck on 2025.
+  severity: 3
+- id: F10
+  task: T1
+  kind: covered
+  location: Holdings list, last holding and price timestamp
+  gap: On the phone the fixed bottom navigation covers the last holding's market value and the "Prices as of" line; the page cannot scroll them clear.
+  severity: 3
