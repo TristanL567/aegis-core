@@ -1,0 +1,38 @@
+tokens: 120310
+matches:
+  - finding: 1
+    match: F03
+    why: "Names the hidden Total row and gain column on the phone; it also covers F02 (per-holding gain dropped), which is equally severe."
+  - finding: 2
+    match: F09
+    why: "The year selector is display:none on the phone, so 2024 cannot be reached."
+  - finding: 3
+    match: F01
+    why: "#export is hidden on the phone with no alternative."
+  - finding: 4
+    match: F04
+    why: "KESt explanation is only a title attribute on the info icon."
+  - finding: 5
+    match: F10
+    why: "Fixed bottom nav covers the 'Prices as of' line at the end of the page."
+  - finding: 6
+    match: F08
+    why: "Breakdown table is overflow:hidden with min-width 640px so Withheld and Due are clipped."
+  - finding: 7
+    match: unplanted
+    why: "Real gap: no edit or delete for holdings, and repeat adds merge silently, but it is not in the key."
+  - finding: 8
+    match: F06
+    why: "Add holding becomes a 28x28 unlabelled plus on the phone."
+  - finding: 9
+    match: F07
+    why: "Shares and Price inputs are type=text with no inputmode."
+  - finding: 10
+    match: F05
+    why: "Nav label is 'Tax report' on desktop and 'Statements' in the bottom nav."
+  - finding: 11
+    match: unplanted
+    why: "Real: export only writes a pre block below the table with no download or copy control and no confirmation."
+  - finding: 12
+    match: unplanted
+    why: "Real: the export-out message persists because the screen is only hidden, not re-rendered, so it can go stale."

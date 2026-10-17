@@ -1,0 +1,47 @@
+tokens: 120772
+matches:
+  - finding: 1
+    match: F02
+    why: "Phone list drops per-holding unrealised gain; it also covers the missing total (F03), same severity."
+  - finding: 2
+    match: F09
+    why: "The tax-year selector is hidden on the phone so 2024 cannot be reached."
+  - finding: 3
+    match: F01
+    why: "Export CSV is hidden at max-width 600px with no alternative."
+  - finding: 4
+    match: F04
+    why: "KESt explanation is only a title-attribute tooltip on the info icon."
+  - finding: 5
+    match: F08
+    why: "The breakwrap is overflow hidden with a 640px table, so later columns are clipped without scroll."
+  - finding: 6
+    match: F10
+    why: "Fixed 60px bottom nav covers the last holding and the Prices as of line."
+  - finding: 7
+    match: unplanted
+    why: "Export only renders a text preview in the page, with no download or copy action, as the code shows."
+  - finding: 8
+    match: unplanted
+    why: "No edit or delete exists for holdings in the code, so a mistaken add cannot be undone."
+  - finding: 9
+    match: unplanted
+    why: "save() merges a same-named security into the existing one silently, doubling the position."
+  - finding: 10
+    match: unplanted
+    why: "A single #err paragraph at the top of the dialog shows one error at a time, not per field."
+  - finding: 11
+    match: F05
+    why: "Desktop nav says Tax report while the phone bottom nav says Statements."
+  - finding: 12
+    match: F06
+    why: "The phone Add button is a 28x28 unlabelled plus, below the 44px minimum."
+  - finding: 13
+    match: F07
+    why: "Shares and Price are type=text without inputmode, so phones show a text keyboard."
+  - finding: 14
+    match: unplanted
+    why: "The message template yields 'Added 1 shares' with no plural handling."
+  - finding: 15
+    match: unplanted
+    why: "The CSV uses semicolons with dot decimals, a real but minor locale mismatch for Austrian Excel."

@@ -1,0 +1,86 @@
+tokens: 194022
+matches:
+  - finding: 1
+    match: F09
+    why: "Phone bottom nav covers the Add transaction save button."
+  - finding: 2
+    match: unplanted
+    why: "Real: on phone the fixed nav also covers the Export dialog's Create file link, which is not in the key."
+  - finding: 3
+    match: F03
+    why: "The silent wipe of all fields happens because Withholding tax is empty (cause misattributed to date and decimal point), which is F03's symptom."
+  - finding: 4
+    match: F02
+    why: "Placeholder says YYYY-MM-DD but only DD.MM.YYYY is accepted (the claim that decimal points are rejected is wrong, but the date mismatch is F02)."
+  - finding: 5
+    match: F08
+    why: "Continue closes the export dialog without exporting while the real action is a small link."
+  - finding: 6
+    match: F04
+    why: "No confirmation and the new row is missing after save until the year is switched."
+  - finding: 7
+    match: unplanted
+    why: "Real: on phone the Export dialog's Continue is covered by the nav and there is no close control, so it cannot be left."
+  - finding: 8
+    match: F09
+    why: "Phone nav covers Cancel and save in the Add transaction dialog (same flaw as F09)."
+  - finding: 9
+    match: F10
+    why: "Phone table clipped without scrolling so Amount cannot be seen."
+  - finding: 10
+    match: F10
+    why: "Duplicate of F10: the clipped phone table also hides Withholding tax."
+  - finding: 11
+    match: F10
+    why: "Duplicate of F10: the clipped phone table also hides Type."
+  - finding: 12
+    match: unplanted
+    why: "Real: the report table has min-width 600px on phone so Assessment base is clipped and the page scrolls sideways."
+  - finding: 13
+    match: unplanted
+    why: "Real: same report-table overflow on phone clips the Withholding tax credited value."
+  - finding: 14
+    match: unplanted
+    why: "Real: same report-table overflow on phone clips the Tax due value."
+  - finding: 15
+    match: unplanted
+    why: "Real: the report table's min-width makes the page overflow sideways on phone."
+  - finding: 16
+    match: invalid
+    why: "The export dialog is 100vw with a 100%-wide select, so it is not wider than the screen or cut off by its own layout."
+  - finding: 17
+    match: F02
+    why: "The generic Invalid input. error names neither field nor format."
+  - finding: 18
+    match: F03
+    why: "Saving with Withholding tax empty clears the form silently with no message (empty form is one case of F03)."
+  - finding: 19
+    match: unplanted
+    why: "Real: there are no Escape handlers and focus is not moved into the export dialog."
+  - finding: 20
+    match: F06
+    why: "Same figure is labelled Taxable income and Assessment base."
+  - finding: 21
+    match: F05
+    why: "Selected year is shown only by a faint grey background."
+  - finding: 22
+    match: unplanted
+    why: "Real: buttons such as the Create file link (13px font, 4px padding) and the years are small tap targets."
+  - finding: 23
+    match: F01
+    why: "Save is an unlabelled floppy-disk icon."
+  - finding: 24
+    match: F07
+    why: "Export is only reachable via the unlabelled overflow button (the missing year in the dialog is extra)."
+  - finding: 25
+    match: unplanted
+    why: "Real: the CSV export lists only transactions, not the report figures."
+  - finding: 26
+    match: unplanted
+    why: "Real: for 2024 the credited withholding exceeds the 27.5% tax and the report shows no explanation."
+  - finding: 27
+    match: F02
+    why: "Duplicate of F02: input date format differs from the displayed and placeholder format with no hint."
+  - finding: 28
+    match: unplanted
+    why: "Real: exportcsv uses unsorted ofYear, so a new transaction comes last."

@@ -1,0 +1,77 @@
+tokens: 133294
+matches:
+  - finding: 1
+    match: F09
+    why: "The tax-year selector is hidden on the phone, so other years cannot be reached."
+  - finding: 2
+    match: F01
+    why: "Export CSV is hidden on the phone with no alternative."
+  - finding: 3
+    match: F03
+    why: "The tfoot total is hidden on the phone."
+  - finding: 4
+    match: F02
+    why: "The col-gain column is hidden on the phone."
+  - finding: 5
+    match: unplanted
+    why: "The phone table header is hidden and the cells are stacked blocks with no labels, a real problem not in the key."
+  - finding: 6
+    match: F08
+    why: "The breakdown table is clipped with overflow hidden on the phone, so the Foreign tax column cannot be seen."
+  - finding: 7
+    match: F08
+    why: "Same clipped breakdown table, with the KESt column cut off."
+  - finding: 8
+    match: F08
+    why: "Same clipped breakdown table, with the Withheld column cut off."
+  - finding: 9
+    match: F08
+    why: "Same clipped breakdown table, with the Due column cut off."
+  - finding: 10
+    match: unplanted
+    why: "With the selector hidden, the phone report never states its tax year, a distinct problem from F09's missing switch."
+  - finding: 11
+    match: F04
+    why: "The KESt explanation is only a title-attribute tooltip, so it is not available on touch."
+  - finding: 12
+    match: F05
+    why: "The bottom nav says Statements while the desktop nav and heading say Tax report."
+  - finding: 13
+    match: unplanted
+    why: "The add confirmation renders in export-out at the bottom of the card, where the fixed nav can cover it; this is distinct from F10's last row and footnote."
+  - finding: 14
+    match: F10
+    why: "The fixed bottom nav covers the last holding and the prices footnote because main has no bottom padding on the phone."
+  - finding: 15
+    match: F06
+    why: "The Add button shrinks to a 28x28 px '+' icon."
+  - finding: 16
+    match: F07
+    why: "The shares and price inputs are type=text without inputmode."
+  - finding: 17
+    match: unplanted
+    why: "The bottom nav buttons are about 40 px tall (8 px padding plus 24 px line), under 44 px, and this is not in the key."
+  - finding: 18
+    match: unplanted
+    why: "The num() parser leaves the euro sign in place, so '€ 1.234,50' becomes NaN and is rejected."
+  - finding: 19
+    match: unplanted
+    why: "The single error line at the top of the dialog is real, though minor, and sits away from the offending field."
+  - finding: 20
+    match: invalid
+    why: "False: save() shows 'Added N shares to X', so the merge is announced."
+  - finding: 21
+    match: invalid
+    why: "Losing state on reload is prototype behaviour, not a usability problem."
+  - finding: 22
+    match: unplanted
+    why: "The note says 'today's closing prices' while the footnote says prices are as of 10.10.2026; the two statements do conflict."
+  - finding: 23
+    match: unplanted
+    why: "The export result is printed as inline pre text below the card, not as a download or confirmation."
+  - finding: 24
+    match: unplanted
+    why: "The CSV uses ';' separators with '.' decimals, which is a real locale mismatch for Austrian Excel."
+  - finding: 25
+    match: invalid
+    why: "A minus sign is shown alongside the color, so this is not a problem."

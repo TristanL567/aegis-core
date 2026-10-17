@@ -1,0 +1,74 @@
+tokens: 118644
+matches:
+  - finding: 1
+    match: F09
+    why: "Year selector is hidden on the phone so other tax years are unreachable."
+  - finding: 2
+    match: F01
+    why: "Export CSV button is hidden on the phone."
+  - finding: 3
+    match: F03
+    why: "The Total row (market value) is hidden on the phone."
+  - finding: 4
+    match: F02
+    why: "The col-gain column is hidden on the phone list."
+  - finding: 5
+    match: F03
+    why: "Total unrealised gain is in the hidden tfoot; pure duplicate of the missing total row."
+  - finding: 6
+    match: unplanted
+    why: "Real: main has no bottom padding on phone so the fixed nav covers the add confirmation in export-out; distinct text from F10's targets."
+  - finding: 7
+    match: F08
+    why: "Breakdown table is clipped with overflow hidden so Foreign tax cannot be reached."
+  - finding: 8
+    match: F08
+    why: "Same clipped breakdown table, KESt column; duplicate."
+  - finding: 9
+    match: F08
+    why: "Same clipped breakdown table, Withheld column."
+  - finding: 10
+    match: F08
+    why: "Same clipped breakdown table, Due column."
+  - finding: 11
+    match: F04
+    why: "KESt explanation is only a title tooltip on the info icon."
+  - finding: 12
+    match: unplanted
+    why: "Real: with the year picker hidden, nothing on the phone shows the report year."
+  - finding: 13
+    match: invalid
+    why: "Data is in-memory in a prototype; the tester itself calls it a possible prototype limitation."
+  - finding: 14
+    match: unplanted
+    why: "Real: phone table header is hidden so the card numbers have no labels."
+  - finding: 15
+    match: F05
+    why: "Tax report is labelled Statements in the bottom nav."
+  - finding: 16
+    match: F06
+    why: "Add holding becomes an unlabelled plus on the phone."
+  - finding: 17
+    match: F06
+    why: "The 28x28 px add button is the same planted touch-target flaw; duplicate."
+  - finding: 18
+    match: F07
+    why: "Shares input is type text with no inputmode."
+  - finding: 19
+    match: F07
+    why: "Price input is type text with no inputmode; duplicate of the same flaw."
+  - finding: 20
+    match: F10
+    why: "Fixed bottom nav covers the Prices as of line."
+  - finding: 21
+    match: unplanted
+    why: "Real: Export CSV only prints the CSV text into the page and never downloads a file."
+  - finding: 22
+    match: unplanted
+    why: "Real desktop issue: the title tooltip on a non-focusable span is unreachable by keyboard; differs from the phone-hover flaw."
+  - finding: 23
+    match: unplanted
+    why: "Real: bottom nav buttons are about 40 px tall (8px padding plus 24px line), under 44 px."
+  - finding: 24
+    match: unplanted
+    why: "Real but minor: a single error paragraph at the top of the dialog, not next to the field."

@@ -1,0 +1,44 @@
+tokens: 129954
+matches:
+  - finding: 1
+    match: F02
+    why: "The phone list drops the per-holding unrealised gain column (.col-gain hidden)."
+  - finding: 2
+    match: F03
+    why: "The tfoot total row is hidden on the phone, so no total value or gain shows."
+  - finding: 3
+    match: F01
+    why: "#export is display:none at phone width and no other export path exists."
+  - finding: 4
+    match: F09
+    why: "The .yearpick selector is hidden on the phone, so the report is stuck on 2025."
+  - finding: 5
+    match: F08
+    why: "The breakwrap is overflow:hidden with a 640px min-width table, clipping the right columns."
+  - finding: 6
+    match: F04
+    why: "The KESt explanation is only a title attribute on the info icon."
+  - finding: 7
+    match: unplanted
+    why: "True: the phone report never names its tax year because the selector is hidden; a distinct problem from the missing selector."
+  - finding: 8
+    match: F10
+    why: "The fixed 60px bottom nav covers the last holding and the Prices as of line, with no bottom padding."
+  - finding: 9
+    match: unplanted
+    why: "True: the add confirmation renders in export-out below the table, under the fixed nav on the phone; not in the key."
+  - finding: 10
+    match: unplanted
+    why: "True: the thead is hidden on the phone and the stacked cells carry no labels."
+  - finding: 11
+    match: F06
+    why: "The phone Add button is a 28x28 icon-only '+' with aria-hidden text and no label."
+  - finding: 12
+    match: F05
+    why: "The bottom nav says Statements while the desktop nav and heading say Tax report."
+  - finding: 13
+    match: F07
+    why: "The Shares and Price inputs are type=text with no inputmode."
+  - finding: 14
+    match: unplanted
+    why: "True: the bottom nav buttons are about 40px tall (8px padding plus 24px line), under 44px; not in the key."

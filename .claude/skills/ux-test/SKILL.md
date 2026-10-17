@@ -46,6 +46,8 @@ off-screen. Retry a screenshot that times out.
 Act like a user. Never set field values or click by script, never use hidden
 elements, and never type a URL other than the start URL. Ignore the task
 badges (T1..) and anything marked as a stub: they are prototype scaffolding.
+Limits of a throwaway prototype, such as data that isn't saved or a download
+shown as a preview, are notes, not findings.
 
 For each task, first at 390x844 and then at 1440x900:
 
@@ -63,6 +65,17 @@ For each task, first at 390x844 and then at 1440x900:
    - one keyboard-only pass (Tab, Enter, Escape) per dialog.
 3. Note anything that names one thing two ways, or shows state only by
    colour.
+4. **Parity.** After both widths, compare them task by task:
+   - List every piece of information, every action, label and input the
+     task shows at 1440x900, and check each one at 390x844.
+   - Report each item that is missing, renamed, unreachable, clipped or
+     covered on the phone as its own finding, even when several share one
+     cause. Give both widths as evidence.
+   - Then check the phone for touch. Look for:
+     - information that only appears on hover;
+     - tap targets under 44x44 px;
+     - number fields without a numeric keyboard (`type` or `inputmode`);
+     - wide tables or charts without a phone form.
 
 The budget is about 15 actions per task per width. Two failed attempts to
 recover count as a finding. Reproduce each finding once more before you
@@ -70,8 +83,8 @@ report it.
 
 ## 3. Report
 
-Deduplicate by cause, not by symptom. Rate each finding once, from what you
-saw, on Nielsen's scale:
+Deduplicate by cause, not by symptom, except parity gaps, which stay one per
+item. Rate each finding once, from what you saw, on Nielsen's scale:
 - 4: blocks a key task on a target device, or loses or corrupts data;
 - 3: causes failure or a wrong result for many users, or has no visible
   recovery;

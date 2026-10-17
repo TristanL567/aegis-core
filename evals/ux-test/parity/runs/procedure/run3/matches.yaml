@@ -1,0 +1,53 @@
+tokens: 131839
+matches:
+  - finding: 1
+    match: F09
+    why: "The tax year selector is hidden on the phone, matching the key."
+  - finding: 2
+    match: F01
+    why: "Export CSV is hidden on the phone with no alternative."
+  - finding: 3
+    match: F03
+    why: "The tfoot total row is hidden on the phone."
+  - finding: 4
+    match: F02
+    why: "The col-gain column is hidden in the phone holdings list."
+  - finding: 5
+    match: invalid
+    why: "Losing in-memory data on reload is expected throwaway-prototype behaviour and the finding itself hedges."
+  - finding: 6
+    match: F08
+    why: "The breakwrap table is clipped (overflow hidden, min-width 640px) so later columns are unreachable."
+  - finding: 7
+    match: F04
+    why: "The KESt explanation is only a title attribute on the info icon."
+  - finding: 8
+    match: F10
+    why: "The fixed bottom nav covers the Prices as of line and the last holding; the save confirmation point is an extra symptom of the same covering."
+  - finding: 9
+    match: unplanted
+    why: "True: the prototype has no delete, edit or undo for holdings, and this is not in the key."
+  - finding: 10
+    match: unplanted
+    why: "True: the phone hides the table header so card values have no labels, and this is not in the key."
+  - finding: 11
+    match: F05
+    why: "Tax report on desktop versus Statements in the phone nav."
+  - finding: 12
+    match: F06
+    why: "Add holding becomes an unlabelled 28x28 plus button on the phone."
+  - finding: 13
+    match: F07
+    why: "The Shares and Price inputs are type text with no inputmode."
+  - finding: 14
+    match: invalid
+    why: "The merge is not silent, since a message states shares were added to the existing holding, and the finding is an opinion."
+  - finding: 15
+    match: unplanted
+    why: "True: with the selector hidden the phone never labels the year shown, which is a distinct labelling problem."
+  - finding: 16
+    match: unplanted
+    why: "True: bottom nav buttons are about 40 px high (8px padding plus 24px line), below 44 px, and not in the key."
+  - finding: 17
+    match: unplanted
+    why: "True: the summary says Withheld + foreign credit while the table says Foreign tax and Withheld, a distinct wording inconsistency."

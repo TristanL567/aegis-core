@@ -1,0 +1,59 @@
+tokens: 122315
+matches:
+  - finding: 1
+    match: F03
+    why: "Phone hides the tfoot Total row with market value and gain."
+  - finding: 2
+    match: F02
+    why: "The col-gain cells are hidden on the phone."
+  - finding: 3
+    match: F01
+    why: "#export is display:none on the phone."
+  - finding: 4
+    match: F09
+    why: "The .yearpick selector is hidden on the phone."
+  - finding: 5
+    match: F08
+    why: "Breakdown table is min-width 640px inside overflow:hidden, so columns are clipped."
+  - finding: 6
+    match: F08
+    why: "Duplicate of the clipped breakdown table, KESt column."
+  - finding: 7
+    match: F08
+    why: "Duplicate of the clipped breakdown table, Withheld column."
+  - finding: 8
+    match: F08
+    why: "Duplicate of the clipped breakdown table, Due column."
+  - finding: 9
+    match: unplanted
+    why: "num() only treats a comma as decimal, so 1.000 parses as 1; real bug not in the key."
+  - finding: 10
+    match: F04
+    why: "The KESt explanation is only a title tooltip on a non-focusable i icon."
+  - finding: 11
+    match: F10
+    why: "The fixed bottom nav covers the end of the page, including the prices note and last value."
+  - finding: 12
+    match: F05
+    why: "Top nav says Tax report, bottom nav says Statements."
+  - finding: 13
+    match: F06
+    why: "#add shrinks to an unlabelled 28x28 plus button on the phone."
+  - finding: 14
+    match: F07
+    why: "Shares and Price inputs are type=text with no inputmode."
+  - finding: 15
+    match: unplanted
+    why: "Phone cards hide the thead and show bare numbers without labels; real and not in the key."
+  - finding: 16
+    match: F09
+    why: "Report defaults to 2025 and the year selector is not available or noticeable; same year-selector gap."
+  - finding: 17
+    match: unplanted
+    why: "Summary says foreign credit while the table column says Foreign tax; real inconsistency not in the key."
+  - finding: 18
+    match: unplanted
+    why: "Bottom nav buttons are about 40px tall (8px padding plus 24px line), under 44px; not in the key."
+  - finding: 19
+    match: unplanted
+    why: "Message template yields Added 1 shares; real grammar bug not in the key."
