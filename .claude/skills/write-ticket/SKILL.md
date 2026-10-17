@@ -98,6 +98,16 @@ order.
 - `manual_checks`: only what a human has to look at, such as UI, real data, or
   external systems. `[]` if none.
 
+**UI tickets.** If the change touches what users see, add two acceptance
+criteria and one smoke step:
+- each touched task works at 390x844 and at 1440x900, with the same
+  information and actions;
+- labels match the glossary in `DESIGN.md`;
+- a `smoke` step that checks both widths.
+
+Without a `DESIGN.md`, keep the first criterion and propose a design ticket
+to create it.
+
 ## 5. Check, then present
 
 Before showing the ticket, confirm:

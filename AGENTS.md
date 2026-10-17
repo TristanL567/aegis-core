@@ -154,6 +154,10 @@ ticket (`kind: design`, always `human_gates: [ticket, merge]`) before any
 implementation. Draft it with `write-ticket` and run it with the
 `design-track` skill: prototype rounds, the pass rule, and the freeze.
 
+Every change users see follows the product's `DESIGN.md`. It must work the
+same at phone and desktop width: the same tasks, information, actions, and
+names.
+
 ## Completion report
 
 ```text

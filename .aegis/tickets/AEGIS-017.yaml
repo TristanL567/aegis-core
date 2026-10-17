@@ -1,0 +1,48 @@
+id: AEGIS-017
+goal: Every UI change in a project is checked against that project's DESIGN.md - the same information, actions, and labels at phone and desktop width, built for touch - from ticket to validation.
+context: >
+  As an EasyRep user who mostly reads figures on a phone, I want every
+  screen to work the same on phone and desktop, not only the screens that went
+  through a design round. aegis-core holds the process. Each product holds
+  its own design decisions - breakpoints, layout patterns, navigation, touch
+  rules, number formats, and a glossary - in DESIGN.md, so that coherence comes
+  from one source of truth per product. The human chose parity for every UI
+  ticket, not only for design rounds.
+epic: null
+depends_on: [AEGIS-016]
+human_gates: []
+allowed_areas:
+  - .aegis/tickets/AEGIS-017.yaml
+  - AGENTS.md
+  - .claude/skills/design-track/
+  - .claude/skills/write-ticket/SKILL.md
+  - .claude/skills/validate/SKILL.md
+  - evals/ux-test/ui-parity-fixtures/
+must_not_touch:
+  - .claude/skills/ux-test/
+  - evals/ux-test/parity/
+  - README.md
+  - PROMPTS.md
+non_goals:
+  - Product-specific design choices in aegis-core. The template has placeholders, not EasyRep's answers.
+  - Native or PWA apps.
+  - README changes (AEGIS-018).
+acceptance_criteria:
+  - .claude/skills/design-track/DESIGN-template.md is at most 450 words. It has sections for the parity rule ("one product, two layouts - same tasks, information, actions, and names"), breakpoints and phone forms of wide content, navigation, touch and input, number and date formats, a glossary, and content priority per screen. Each section is a placeholder, except the parity rule and a short touch floor taken from whichever arm AEGIS-015 adopted.
+  - The design-track skill says the first design ticket in a project creates DESIGN.md from the template, which the human approves at the ticket gate. A freeze adds new patterns and terms to DESIGN.md.
+  - write-ticket gives every ticket that changes UI two parity acceptance criteria and a smoke step. The criteria require that each touched task works at 390x844 and at 1440x900 with the same information and actions, and that the labels come from DESIGN.md's glossary. The smoke step checks both widths. If the project has no DESIGN.md, write-ticket uses the generic parity criteria and proposes a design ticket to create one. write-ticket grows by at most 70 words, with its cap raised to 1,083.
+  - validate fails a UI ticket when a task, figure, action, or label is available at one width but not the other, or when the ticket lacks the parity criteria. It grows by at most 60 words.
+  - AGENTS.md gains at most 30 words, saying that UI changes follow the project's DESIGN.md.
+  - Two UI-change fixtures exist: the same small page, with and without one phone-only gap. Fresh blind validators return APPROVED and FIXES_REQUIRED respectively, 2 of 2 runs each.
+  - In a scratch repo with a filled-in DESIGN.md, write-ticket includes the parity criteria in 3 of 3 small UI-change requests.
+verify:
+  - test -f .claude/skills/design-track/DESIGN-template.md
+  - test "$(wc -w < .claude/skills/design-track/DESIGN-template.md)" -le 450
+  - grep -q "DESIGN.md" .claude/skills/write-ticket/SKILL.md
+  - grep -q "DESIGN.md" .claude/skills/validate/SKILL.md
+  - grep -q "DESIGN.md" AGENTS.md
+  - test "$(wc -w < .claude/skills/write-ticket/SKILL.md)" -le 1083
+smoke:
+  - Build each UI-parity fixture into a temp repo and run a fresh blind validator; record the verdicts
+manual_checks:
+  - Draft EasyRep's DESIGN.md through a design ticket and judge whether it captures how EasyRep should look and behave on phone and desktop.

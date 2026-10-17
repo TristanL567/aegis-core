@@ -80,6 +80,12 @@ started. Work only inside that worktree.
 
 Never redesign anything, and never run persona tests yourself.
 
+**UI tickets.** If the change touches what users see, the ticket needs the
+parity criteria: both widths, the same information and actions, and labels
+from the glossary in `DESIGN.md` if one exists. Missing criteria are
+blocking. Check each touched task at 390x844 and 1440x900. Anything
+available at only one width is blocking: a task, figure, action, or label.
+
 **Epic mode.** When asked to validate an epic branch, do steps 3 to 7 on that
 branch against the default branch, with every ticket of the epic: scope is the
 union of their `allowed_areas`, and every ticket's `verify` and `smoke` must

@@ -14,8 +14,20 @@ It adds three fields:
   profiles, drafted by the first design ticket and confirmed by the human.
 - `tasks`: T1..Tn, each a user goal with a success criterion.
 
-`allowed_areas` is `.aegis/design/<ID>/`, the ticket file, and
-`.aegis/personas.yaml`; product code goes in `must_not_touch`.
+`allowed_areas` is `.aegis/design/<ID>/`, the ticket file,
+`.aegis/personas.yaml`, and `DESIGN.md`; product code goes in
+`must_not_touch`.
+
+## The product's DESIGN.md
+
+`DESIGN.md` at the repo root is the product's design contract: the parity
+rule, breakpoints, navigation, touch and input, formats, glossary, and
+content priority.
+- If the project has none, the first design ticket drafts it from
+  `DESIGN-template.md` in this skill's folder. The human approves it at the
+  `ticket` gate.
+- Prototypes follow `DESIGN.md`.
+- At the freeze, add the round's new patterns and terms to it.
 
 ## Rounds
 
@@ -40,7 +52,7 @@ flow and each screen's empty, loading, and error states.
 ## Freeze
 
 The `merge` gate freezes the design. The commit holds the ticket, personas,
-`spec.md`, `report.md`, `decisions.md`, and `findings.yaml`.
+`DESIGN.md`, `spec.md`, `report.md`, `decisions.md`, and `findings.yaml`.
 
 The prototype is never imported or merged. As the one exception to one
 branch and one commit per ticket, it goes to `aegis/<ID>-prototype`.
