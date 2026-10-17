@@ -39,7 +39,7 @@ clear, draft that part and list the open questions for the rest.
 
 **Design tickets.** When the request is for a new screen, flow, or app
 feature whose design is still open, draft a design ticket (`kind: design`,
-always `human_gates: [ticket, merge]`; see the Design track in AGENTS.md)
+always `human_gates: [ticket, merge]`; see the `design-track` skill)
 instead of implementation tickets. Your questions must cover these points,
 each with a recommended answer:
 - who uses it: personas from `.aegis/personas.yaml`, or three drafted
