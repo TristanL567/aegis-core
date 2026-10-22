@@ -25,8 +25,9 @@ Install AEGIS from https://github.com/TristanL567/aegis-core (branch main) into 
 2. Copy its AGENTS.md here. If AGENTS.md exists, replace its <!-- aegis:begin --> ... <!-- aegis:end --> block, or add the block at the top if there is none; keep everything else.
 3. Copy each folder in its .claude/skills/ into .claude/skills/ here, replacing only skills with the same name, and copy its .claude/agents/ux-persona.md into .claude/agents/ here (create the folder if missing).
 4. If CLAUDE.md exists and doesn't contain @AGENTS.md, add that line at its top; if there is no CLAUDE.md, create CLAUDE.md containing only @AGENTS.md.
-5. Write the SHA to .aegis/VERSION, and add .aegis/active-ticket and .claude/worktrees/ to .gitignore if missing.
-6. Remove the temporary clone (it is not project data), show me the diff, and commit only when I ask.
+5. Run `python <clone>/tools/install_hooks.py <clone> .` (or `py -3` instead of `python`) and show me its report. It installs the hooks without changing this repo's own hooks or settings, and adds the .gitignore entries.
+6. Write the SHA to .aegis/VERSION.
+7. Remove the temporary clone (it is not project data), show me the diff, and commit only when I ask.
 ```
 
 ## Start work
@@ -121,5 +122,5 @@ gates" in `AGENTS.md`.
 ## Update AEGIS from upstream
 
 ```text
-Update AEGIS in this repo from https://github.com/TristanL567/aegis-core (branch main), as an AEGIS ticket. Clone it to a new, uniquely named temporary directory outside this repo and remove the clone afterwards. Replace only the <!-- aegis:begin --> ... <!-- aegis:end --> block in AGENTS.md, and every skill folder from aegis-core's .claude/skills/ (replacing same-named ones). Add or replace .claude/agents/ux-persona.md, creating .claude/agents/ if missing. Write the new commit SHA to .aegis/VERSION, and summarize which rules changed.
+Update AEGIS in this repo from https://github.com/TristanL567/aegis-core (branch main), as an AEGIS ticket. Clone it to a new, uniquely named temporary directory outside this repo and remove the clone afterwards. Replace only the <!-- aegis:begin --> ... <!-- aegis:end --> block in AGENTS.md, and every skill folder from aegis-core's .claude/skills/ (replacing same-named ones). Add or replace .claude/agents/ux-persona.md, creating .claude/agents/ if missing. Update the hooks with `python <clone>/tools/install_hooks.py <clone> .` and include its report; it may change .claude/hooks/, .githooks/, .claude/settings.json, .gitignore and the repo's commit-msg hook (for example .husky/commit-msg), so put those in the ticket's allowed_areas. Write the new commit SHA to .aegis/VERSION, and summarize which rules changed.
 ```
