@@ -1,0 +1,6 @@
+#!/bin/sh
+# AEGIS: a commit's subject names the active ticket, and the validator approved
+# it. Install once per clone: git config core.hooksPath .githooks
+# (or call this file from an existing commit-msg hook).
+root=$(git rev-parse --show-toplevel) || exit 0
+exec sh "$root/.claude/hooks/aegis-guard.sh" commit-msg "$1"
