@@ -114,9 +114,10 @@ them. The human decides whether that's true.
 
 ## Output
 
-Return exactly this shape:
+Return exactly this shape; a hook reads the `Ticket:` line:
 
 ```text
+Ticket: <ID, or the epic ID>
 VERDICT: APPROVED | FIXES_REQUIRED | BLOCKED
 Request fit: fits | mismatch: <what>
 Scope: clean | <path>: <violated rule>, one per line

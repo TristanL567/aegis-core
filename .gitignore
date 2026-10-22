@@ -6,7 +6,8 @@ __pycache__/
 *.pyc
 *.py[cod]
 
-# Local agent state
+# Local agent state (verdicts are written by the SubagentStop hook)
 .aegis/active-ticket
 .claude/worktrees/
 .claude/settings.local.json
+.aegis/verdicts/

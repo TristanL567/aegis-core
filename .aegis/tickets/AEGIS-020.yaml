@@ -1,0 +1,56 @@
+id: AEGIS-020
+goal: The AEGIS rules that must always hold are enforced by Claude Code hooks, not only asked for in AGENTS.md.
+context: >
+  The best-practices guide says rules that must always happen belong in hooks,
+  because CLAUDE.md is advisory and hooks are deterministic. Today scope, the
+  commit subject, "never git stash" and "commit only after APPROVED" are text
+  only. The human chose a copy-based hooks pack now, a plugin later, and a
+  commit gate on a recorded validator verdict that is documented as a speed
+  bump (it catches forgetting, not deliberate forging). Hooks must run on
+  Windows (Git Bash, where only `python` or `py` may exist) and on Unix.
+  After three validation rounds found new ways of writing commit commands,
+  the human chose to move the commit checks into git's own commit-msg hook,
+  which reads the final message, and keep Claude Code hooks for edits and
+  stash only.
+epic: AEGIS-E2
+depends_on: []
+human_gates: []
+allowed_areas:
+  - .aegis/tickets/AEGIS-020.yaml
+  - .claude/hooks/
+  - .githooks/
+  - .claude/settings.json
+  - evals/hooks/
+  - .gitignore
+  - .claude/skills/validate/SKILL.md
+must_not_touch:
+  - AGENTS.md
+  - .claude/skills/write-ticket/
+  - .claude/skills/design-track/
+  - .claude/skills/ux-test/
+  - README.md
+  - PROMPTS.md
+non_goals:
+  - Shortening AGENTS.md or adding text about the hooks to it (AEGIS-021).
+  - A Claude Code plugin.
+  - Policing writes made through Bash (`sed -i`, redirects); only Edit, Write and NotebookEdit are guarded.
+  - CI gates.
+acceptance_criteria:
+  - ".claude/hooks/ holds one guard script and a launcher that finds python3, python or py, wired in a committed .claude/settings.json: PreToolUse on Edit|Write|NotebookEdit, PreToolUse on Bash, and SubagentStop."
+  - "Edit/Write guard: with an active ticket, a path outside its allowed_areas, or inside must_not_touch, is denied with a reason that names the rule; paths under .aegis/ are always allowed, except .aegis/verdicts/, which only the hook writes. With no active ticket, edits are allowed (the ticket rule stays a written rule, so reading-only and waived work still run). A missing or unreadable ticket never blocks: the guard fails open with a warning."
+  - "Bash guard (Claude Code, Bash and PowerShell): `git stash` in any form is denied, including after shell keywords, git global options and line continuations; the words 'git stash' inside quotes, heredoc text or a grep pattern are not."
+  - "Commit gate (`.githooks/commit-msg`, installed with `git config core.hooksPath .githooks`): a commit is refused when its subject does not start with `[<active ID>] ` or `[<epic ID>] `, or when `.aegis/verdicts/<ID>` does not say APPROVED; a `[<ID>] WIP ...` commit needs no verdict (the human chose this, so set-aside work stays possible without git stash), and the commit that concludes a merge is not checked. With no active ticket, every commit passes."
+  - "The validate skill's output shape gains a first line `Ticket: <ID>`, at most 15 added words."
+  - "SubagentStop: when a subagent's last message starts with `VERDICT: APPROVED` (after optional whitespace, a code fence, or the `Ticket:` line) and names the active ticket, the verdict for the active ticket is written to `.aegis/verdicts/<ID>` with the time; FIXES_REQUIRED or BLOCKED removes an earlier APPROVED. `.aegis/verdicts/` is git-ignored."
+  - "Tests in evals/hooks/ cover every rule above, including fail-open cases, and commit through the installed git hook in a real repo in the forms agents use (heredocs, -am, line continuations, shell keywords, a conflicted merge concluded with --no-edit); `python evals/hooks/test_guard.py` passes."
+  - "Live check, recorded in evals/hooks/README.md: in a scratch repo with the hooks installed, a fresh `claude -p` session told to edit a must_not_touch file, to run `git stash`, and to commit without a verdict is blocked in each case, with the git hook installed; and an in-scope edit plus a commit after a recorded APPROVED go through."
+verify:
+  - python evals/hooks/test_guard.py
+  - test -f .claude/settings.json
+  - grep -q "SubagentStop" .claude/settings.json
+  - grep -q ".aegis/verdicts/" .gitignore
+  - test -f .githooks/commit-msg
+  - git ls-files -s .githooks/commit-msg | grep -q "^100755"
+smoke: []
+manual_checks:
+  - In your next ticket in another repo, confirm the hooks do not get in the way of normal work.
