@@ -2,6 +2,9 @@
 
 **Scoped, independently validated, traceable changes from AI coding agents.**
 
+To use one part in another repo, type `Consider <part> from aegis-core
+<link to CONSIDER.md>`; agents read [`CONSIDER.md`](CONSIDER.md) first.
+
 AI coding agents drift. They widen scope, refactor code nobody asked them to
 touch, approve their own work, and report checks that never ran. AEGIS is a
 short rule set that agents carry inside each repo. Every agent change stays
@@ -69,12 +72,14 @@ validate (fresh subagent)    │
 4. **Report and commit:** what was and wasn't verified; one commit per
    ticket.
 
-## The three parts
+## The parts
 
 | Part | What it does |
 | --- | --- |
-| [`AGENTS.md`](AGENTS.md) | All the rules: the loop, the ticket format, human gates, isolation, when design work starts, and the completion report. Always loaded. |
-| [`.claude/skills/`](.claude/skills/) | [`write-ticket`](.claude/skills/write-ticket/SKILL.md) turns a request into a ticket and asks instead of guessing. [`validate`](.claude/skills/validate/SKILL.md) is the independent review, run only by a subagent that didn't write the code. [`design-track`](.claude/skills/design-track/SKILL.md) runs a design ticket from brief to frozen spec. [`ux-test`](.claude/skills/ux-test/SKILL.md) usability-tests a prototype or build at phone and desktop width; [`ux-persona`](.claude/agents/ux-persona.md) is its screen-only persona subagent. |
+| [`AGENTS.md`](AGENTS.md) | The core rules, always loaded: the loop, sessions, human gates, isolation, hooks, when design work starts, and the completion report. |
+| [`.claude/skills/`](.claude/skills/) | [`write-ticket`](.claude/skills/write-ticket/SKILL.md) turns a request into a ticket ([format](.claude/skills/write-ticket/ticket-format.md), with a short form for one-sentence changes) and asks instead of guessing. [`validate`](.claude/skills/validate/SKILL.md) is the independent review, run only by a subagent that didn't write the code. [`design-track`](.claude/skills/design-track/SKILL.md) runs a design ticket from brief to frozen spec. [`ux-test`](.claude/skills/ux-test/SKILL.md) usability-tests a prototype or build at phone and desktop width; [`ux-persona`](.claude/agents/ux-persona.md) is its screen-only persona subagent. |
+| Hooks | [`.claude/hooks/`](.claude/hooks/) blocks edits outside the ticket's scope and `git stash`, and records the validator's verdict; [`.githooks/commit-msg`](.githooks/commit-msg) refuses a commit without the `[ID]` subject or that verdict. [`tools/install_hooks.py`](tools/install_hooks.py) installs both without switching off a repo's own hooks. |
+| [`CONSIDER.md`](CONSIDER.md) | For taking one part into a repo with its own process. |
 | [`PROMPTS.md`](PROMPTS.md) | Copyable prompts: install AEGIS into a repo, start work or a design, implement, validate, ask for gates, update. Says when to use each skill. |
 
 Once installed, a repo carries `AGENTS.md` and the skills itself; agents
@@ -93,6 +98,8 @@ never need this repository.
 - Never claim a check passed without running it, and name every skipped check.
 - One commit per ticket, `[ID] description`, containing the ticket file and
   its work.
+- One ticket per session; implement a plan written earlier in a fresh
+  session, and start over after two corrections on the same issue.
 
 The full rules are in [`AGENTS.md`](AGENTS.md).
 
