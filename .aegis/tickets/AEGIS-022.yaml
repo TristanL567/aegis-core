@@ -1,0 +1,37 @@
+id: AEGIS-022
+goal: In any repo, the human can type "Consider XY from aegis-core <link>" and the agent adopts only XY, fitted into that repo's own process.
+context: >
+  The human wants one markdown to hand to agents in other repos. EasyRep
+  showed the need: it has its own process (GitHub issues, "never call them
+  tickets", claude/ branches into Development), so installing AEGIS wholesale
+  would clash. The human chose: adapt XY into the host's process and names and
+  show the diff, never install everything; a dedicated CONSIDER.md that the
+  README points agents to, so either the repo link or the file link works;
+  copy-based distribution.
+epic: AEGIS-E2
+depends_on: [AEGIS-021]
+human_gates: []
+allowed_areas:
+  - .aegis/tickets/AEGIS-022.yaml
+  - CONSIDER.md
+  - README.md
+  - evals/consider/
+must_not_touch:
+  - AGENTS.md
+  - .claude/
+non_goals:
+  - Changing any module itself.
+  - A plugin or marketplace.
+acceptance_criteria:
+  - "CONSIDER.md, at most 900 words, says how to adopt one module: read the host's rules first and keep them; map AEGIS names onto the host's (ticket, validator, branch); take only the files XY needs, adapted; never install AGENTS.md wholesale unless asked; show the diff and commit only as the host's rules allow."
+  - "CONSIDER.md has one table of modules - at least tickets, validator, hooks, session rules, design track, ux-test, parity and DESIGN.md, design presets - each with the files involved, what it adds, its dependencies, and how to fit it into a host process. Every path in it exists."
+  - "README.md's first lines send agents to CONSIDER.md; README describes the hooks and the session rules in at most 120 added words, and has at most 1,250 words."
+  - "Blind test, recorded in evals/consider/README.md: in a scratch host repo with its own CLAUDE.md process (issues, not tickets; its own branch rule), fresh agents given 'Consider the design presets from aegis-core <link>' and 'Consider the validator from aegis-core <link>' each adopt only that module, keep the host's names and rules, and install no AGENTS.md, 3 of 3 per prompt. After agents given the repo root skipped CONSIDER.md, the human chose that the link points at CONSIDER.md itself; CONSIDER.md and the README say so."
+verify:
+  - test -f CONSIDER.md
+  - test "$(wc -w < CONSIDER.md)" -le 900
+  - head -12 README.md | grep -q "CONSIDER.md"
+  - test "$(wc -w < README.md)" -le 1250
+smoke: []
+manual_checks:
+  - In another repo, type "Consider the design presets from aegis-core <link>" and judge the result.

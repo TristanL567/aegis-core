@@ -6,7 +6,8 @@ description: Draft an AEGIS ticket, or an ordered set of tickets, from an idea, 
 # Write Ticket
 
 Turn a request into a ticket a validator can check and, when asked, a human
-can approve. The ticket format is in AGENTS.md. This skill only plans: don't
+can approve. The format, short form included, is in `ticket-format.md`
+beside this file. This skill only plans: don't
 edit project code, and if `human_gates` includes `ticket`, don't save the
 ticket until the human approves it.
 

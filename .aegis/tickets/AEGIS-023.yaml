@@ -1,0 +1,42 @@
+id: AEGIS-023
+goal: The bootstrap and update prompts install and update the AEGIS hooks in any repo with one script, without changing or switching off that repo's own hooks or settings.
+context: >
+  Split off from AEGIS-021 by the human after its third validation round failed
+  only on the install script. Prose install steps proved fragile, so a tested
+  script, tools/install_hooks.py, does the work. A draft and 11 tests exist
+  from AEGIS-021; round 3 found three blocking defects: a rerun overwrote a
+  repo's own .githooks/commit-msg after chaining into it (F1); a global
+  core.hooksPath made the script edit a hook folder shared by every repo (F2);
+  the chained line failed commits on branches without the AEGIS files (F3);
+  and a wrongly shaped settings.json crashed mid-install (F4).
+epic: AEGIS-E2
+depends_on: [AEGIS-021]
+human_gates: []
+allowed_areas:
+  - .aegis/tickets/AEGIS-023.yaml
+  - tools/install_hooks.py
+  - evals/install/
+  - PROMPTS.md
+must_not_touch:
+  - AGENTS.md
+  - .claude/
+  - .githooks/
+non_goals:
+  - Changing the hooks themselves (AEGIS-020).
+  - A Claude Code plugin.
+  - Support for the pre-commit framework or lefthook beyond reporting that the commit check is not active.
+acceptance_criteria:
+  - "The script copies only AEGIS's files: it replaces a missing file or an earlier AEGIS version, recognised by AEGIS's own header line, never a repo's own file of the same name, also on a rerun after chaining into it."
+  - "Wherever core.hooksPath is set (local, global or system, with '~' expanded as git does), it never edits a hooks folder outside the repo and its git directory; it then reports that the commit check is not active, with the line to add by hand."
+  - "The line it chains into an existing commit-msg hook does nothing when .claude/hooks/aegis-guard.sh is missing, so commits on branches without AEGIS still work. It chains only into shell hooks it can read as UTF-8; any other hook is left byte for byte unchanged and the report says the check is not active, with what to add by hand. An older AEGIS line is upgraded, never duplicated. Files it edits keep their line endings."
+  - "It checks everything that can fail (settings.json's shape, the git version, a readable .gitignore) before changing anything, and on any problem exits non-zero having changed nothing."
+  - "It stages the two hook scripts as executable, so they are committed with mode 100755 even where core.fileMode is false (Windows), and reports that it did."
+  - "It merges the settings.json hooks without duplicates, replaces AEGIS's own older entries on an update, keeps every other setting and its non-ASCII text, adds the .gitignore entries, works from a linked worktree, handles husky's .husky/commit-msg, reports dormant hooks it activates by setting core.hooksPath, and has --dry-run."
+  - "The bootstrap and update prompts in PROMPTS.md run it and show its report; the update prompt lists the paths the script may touch, so the update ticket's allowed_areas can include them."
+  - "`python evals/install/test_install.py` covers every case above on real repositories, including a second install over a repo's own chained hook, a global hooksPath (isolated with GIT_CONFIG_GLOBAL), a commit on a branch without AEGIS files, and a wrongly shaped settings.json."
+verify:
+  - python evals/install/test_install.py
+  - grep -q "install_hooks.py" PROMPTS.md
+smoke: []
+manual_checks:
+  - Run the bootstrap prompt in one of your other repos and read the script's report.
