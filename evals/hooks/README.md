@@ -9,6 +9,7 @@ There are two kinds of hook. Both run `.claude/hooks/aegis_guard.py` through
 | Claude Code PreToolUse, Bash/PowerShell | `.claude/settings.json` | No `git stash`. |
 | Claude Code SubagentStop | `.claude/settings.json` | Records a validator's `Ticket: <ID>` / `VERDICT:` in `.aegis/verdicts/<ID>`. |
 | git `commit-msg` | `.githooks/`, installed per clone with `git config core.hooksPath .githooks` | The subject starts with `[<ID>] ` (or the epic ID), and an APPROVED verdict is recorded. `[<ID>] WIP` commits, `fixup!`/`squash!` prefixes, and the commit that concludes a merge, cherry-pick or revert are exempt. |
+| git `post-commit` | `.githooks/`, with commit-msg | After a commit whose subject starts with `[<active ID>] ` and isn't WIP, clears `.aegis/active-ticket`. Not while a rebase replays commits; never fails the commit. |
 
 **Why git checks the commits.** In three validation rounds, the first design
 read commit messages out of the shell command. Each round found another way
@@ -23,7 +24,7 @@ and for a human at the terminal.
 python evals/hooks/test_guard.py
 ```
 
-The 40 tests cover:
+The 42 tests cover:
 - **Edits:** scope, must_not_touch, `.aegis/`, verdict files, flow-list and
   column-0 lists, an active-ticket file with a BOM.
 - **Stash:** every form the validators found, including global options,
@@ -33,10 +34,13 @@ The 40 tests cover:
 - **commit-msg:** subject, verdict, WIP, `fixup!`/`squash!`, comment lines,
   merges in a normal and a linked worktree, cherry-picks and reverts in
   progress, no active ticket. A further test checks that the committed hook
-  is executable (mode 100755): git on Unix skips hooks that aren't.
+  and post-commit hooks are executable (mode 100755): git on Unix skips
+  hooks that aren't.
 - **Real git:** commits run through the installed hook, using heredoc,
   `-F -`, `-am`, line-continuation and `if ...; then` forms, plus a
   conflicted merge concluded with `git commit --no-edit`.
+- **post-commit:** the ticket's own commit clears the active ticket; a WIP
+  commit, another ID, or a rebase in progress leaves it.
 - **SubagentStop:** including reading the verdict from the subagent's
   transcript when a hand-back tool carries the report.
 - **Failing open:** unreadable input, an unreadable message file, a missing
@@ -76,8 +80,11 @@ changed. That's why the Edit-tool step was run separately.
   be committed without validating again.
 - **Writes through Bash are not guarded,** such as `sed -i` or `>`. The live
   check above shows an agent doing exactly that.
-- **A finished ticket stays active** until `.aegis/active-ticket` is cleared,
-  and so does its verdict. AEGIS-021 tells agents to clear it.
+- **A finished ticket is cleared by its own commit** (AEGIS-024), through
+  the post-commit hook. Without that hook it stays active until
+  `.aegis/active-ticket` is cleared by hand. Its verdict file stays. A commit
+  made during a rebase, such as squashing WIP commits with `git rebase -i`,
+  doesn't clear it; clear it by hand then.
 - **A squash merge (`git merge --squash`, then commit) needs a `[<ID>]`
   subject.** Git's proposed message is refused.
 - **The git hook needs `core.hooksPath`** (or a call from an existing

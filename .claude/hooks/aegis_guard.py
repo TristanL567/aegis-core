@@ -10,6 +10,9 @@ Git's own hook, .githooks/commit-msg, passes the message file:
   commit-msg     the subject starts with `[<ID>] ` and the ticket has an APPROVED
                  verdict; a `[<ID>] WIP` commit (squashed before pushing) and the
                  commit that concludes a merge need none.
+And .githooks/post-commit:
+  post-commit    after a commit whose subject starts with `[<active ID>] ` and isn't
+                 WIP, clears .aegis/active-ticket; not while a rebase replays commits.
 
 Exit 2 blocks and shows stderr. Anything unexpected fails open (exit 0) with a
 warning, so a broken guard never stops work.
@@ -17,6 +20,7 @@ warning, so a broken guard never stops work.
 import datetime
 import json
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -344,6 +348,25 @@ def commit_msg(message_file):
              "Only the human may record an override; never write the verdict file yourself.")
 
 
+def post_commit():
+    """git post-commit hook: the active ticket's own commit finishes it, so clear the active ticket."""
+    root = repo_root(Path.cwd())
+    if root is None:
+        return
+    tid, _ = active_ticket(root)
+    if not tid:
+        return
+    if any((git_dir(root) / d).exists() for d in ("rebase-merge", "rebase-apply")):
+        return  # a rebase replays commits; the ticket may still be in progress
+    p = subprocess.run(["git", "log", "-1", "--format=%s"], cwd=root, capture_output=True, text=True,
+                       encoding="utf-8", errors="replace")
+    subject = p.stdout.strip()
+    if p.returncode != 0 or not subject.startswith(f"[{tid}] ") or re.match(r"^\[[^\]]+\] WIP\b", subject):
+        return
+    (root / ".aegis" / "active-ticket").unlink()
+    print(f"AEGIS: {tid} is committed; cleared .aegis/active-ticket", file=sys.stderr)
+
+
 def strings_in(value):
     if isinstance(value, str):
         yield value
@@ -401,9 +424,9 @@ def record_verdict(data):
 
 def main():
     mode = sys.argv[1] if len(sys.argv) > 1 else ""
-    if mode == "commit-msg":
+    if mode in ("commit-msg", "post-commit"):
         try:
-            commit_msg(sys.argv[2])
+            commit_msg(sys.argv[2]) if mode == "commit-msg" else post_commit()
         except SystemExit:
             raise
         except Exception as exc:  # fail open

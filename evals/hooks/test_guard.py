@@ -266,10 +266,12 @@ class RealGit(unittest.TestCase):
         ok = ['git commit -qm "[T-001] Add"', "git commit -q -m \"$(cat <<'EOF'\n[T-001] Heredoc\n\nUse the \"x\nEOF\n)\"",
               "git commit -q -F - <<'EOF'\n[T-001] From stdin\nEOF", "if true; then git commit -qam '[T-001] Keyword'; fi"]
         bad = ['git commit -qm "Wrong subject"', "git commit -q \\\n  -m 'wrong subject'", "git commit -qam 'wrong'"]
-        for c in ok:
-            self.assertEqual(self.sh(c), 0, c)
-        for c in bad:
-            self.assertNotEqual(self.sh(c), 0, c)
+        for c in ok + bad:
+            (self.root / ".aegis" / "active-ticket").write_text("T-001\n")  # post-commit clears it after an ok commit
+            if c in ok:
+                self.assertEqual(self.sh(c), 0, c)
+            else:
+                self.assertNotEqual(self.sh(c), 0, c)
 
     def test_conclude_merge_with_no_edit(self):
         self.git("switch", "-qc", "side")
@@ -285,16 +287,38 @@ class RealGit(unittest.TestCase):
         self.git("add", "-A")
         self.assertEqual(self.git("commit", "--no-edit").returncode, 0)
 
+    def active(self):
+        return (self.root / ".aegis" / "active-ticket").exists()
+
+    def test_post_commit_clears_after_the_tickets_commit(self):
+        self.assertEqual(self.sh("git commit -qm '[T-001] WIP set aside'"), 0)
+        self.assertTrue(self.active(), "a WIP commit leaves the ticket active")
+        self.approve()
+        self.assertEqual(self.sh("git commit -qm '[T-E1] epic work'"), 0)
+        self.assertTrue(self.active(), "another ID leaves the ticket active")
+        self.assertEqual(self.sh("git commit -qm '[T-001] Add'"), 0)
+        self.assertFalse(self.active())
+        self.assertEqual(self.sh("git commit -qm 'after the ticket'"), 0)  # no active ticket, no check
+
+    def test_post_commit_not_during_rebase(self):
+        self.approve()
+        self.sh("git commit -qm '[T-001] Add'")
+        (self.root / ".aegis" / "active-ticket").write_text("T-001\n")
+        (self.root / ".git" / "rebase-merge").mkdir()
+        p = subprocess.run([sys.executable, str(GUARD), "post-commit"], cwd=self.root, capture_output=True, text=True)
+        self.assertEqual(p.returncode, 0, p.stderr)
+        self.assertTrue(self.active())
+
 
 @unittest.skipUnless(shutil.which("git"), "git not installed")
 class Executable(unittest.TestCase):
-    def test_git_hook_is_committed_executable(self):
+    def test_git_hooks_are_committed_executable(self):
         """Git on Unix skips hooks without the executable bit."""
-        out = subprocess.run(["git", "ls-files", "-s", ".githooks/commit-msg"], cwd=REPO,
-                             capture_output=True, text=True).stdout
-        if not out:
-            self.skipTest("not tracked yet")
-        self.assertTrue(out.startswith("100755"), out)
+        for hook in (".githooks/commit-msg", ".githooks/post-commit"):
+            out = subprocess.run(["git", "ls-files", "-s", hook], cwd=REPO, capture_output=True, text=True).stdout
+            if not out:
+                self.skipTest(f"{hook} not tracked yet")
+            self.assertTrue(out.startswith("100755"), out)
 
 
 class SubagentStop(unittest.TestCase):

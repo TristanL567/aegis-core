@@ -1,0 +1,12 @@
+{
+  "name": "aegis-core",
+  "owner": { "name": "TristanL567" },
+  "description": "AEGIS: ticket-scoped, independently validated agent work in Claude Code.",
+  "plugins": [
+    {
+      "name": "aegis",
+      "source": ".",
+      "description": "AEGIS skills, the ux-persona agent, and the Claude Code hooks that guard ticket scope and record verdicts."
+    }
+  ]
+}

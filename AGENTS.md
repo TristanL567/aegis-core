@@ -83,10 +83,12 @@ pushing, never `git stash`; stop everything you started, also on failure.
 
 ## Hooks
 
-In Claude Code, `.claude/hooks/` blocks edits outside the active ticket's
-scope and `git stash`, and records the validator's verdict in
-`.aegis/verdicts/<ID>`. Git's hook in `.githooks/` refuses a commit without
-the `[ID]` subject or an APPROVED verdict. Never write a verdict yourself;
+In Claude Code, `.claude/hooks/` blocks Edit/Write tool edits outside the
+active ticket's scope and `git stash`, and records the validator's verdict
+in `.aegis/verdicts/<ID>`; writes through the shell aren't blocked, but the
+scope still holds. Git's hooks in `.githooks/` refuse a commit without the
+`[ID]` subject or an APPROVED verdict, and clear `.aegis/active-ticket` after
+the ticket's own commit. Never write a verdict yourself;
 only the human records an override. Where no hook runs, the rules still
 hold.
 

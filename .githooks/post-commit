@@ -1,0 +1,6 @@
+#!/bin/sh
+# AEGIS: the active ticket's own commit finishes it, so .aegis/active-ticket is
+# cleared. Installed with commit-msg; never fails the commit.
+root=$(git rev-parse --show-toplevel) || exit 0
+sh "$root/.claude/hooks/aegis-guard.sh" post-commit
+exit 0

@@ -1,0 +1,32 @@
+{
+  "name": "aegis",
+  "description": "AEGIS for Claude Code: the write-ticket, validate, design-track and ux-test skills, the ux-persona agent, and hooks that keep Edit/Write inside the active ticket, block git stash and record the validator's verdict.",
+  "author": { "name": "TristanL567" },
+  "homepage": "https://github.com/TristanL567/aegis-core",
+  "repository": "https://github.com/TristanL567/aegis-core",
+  "skills": ["./.claude/skills/"],
+  "agents": ["./.claude/agents/ux-persona.md"],
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit|NotebookEdit",
+        "hooks": [
+          { "type": "command", "command": "sh", "args": ["${CLAUDE_PLUGIN_ROOT}/.claude/hooks/aegis-guard.sh", "edit"] }
+        ]
+      },
+      {
+        "matcher": "Bash|PowerShell",
+        "hooks": [
+          { "type": "command", "command": "sh", "args": ["${CLAUDE_PLUGIN_ROOT}/.claude/hooks/aegis-guard.sh", "bash"] }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          { "type": "command", "command": "sh", "args": ["${CLAUDE_PLUGIN_ROOT}/.claude/hooks/aegis-guard.sh", "subagent-stop"] }
+        ]
+      }
+    ]
+  }
+}

@@ -60,7 +60,8 @@ class Install(unittest.TestCase):
     def test_fresh_repo(self):
         code, out = self.install()
         self.assertEqual(code, 0, out)
-        for rel in (".claude/hooks/aegis-guard.sh", ".claude/hooks/aegis_guard.py", ".githooks/commit-msg"):
+        for rel in (".claude/hooks/aegis-guard.sh", ".claude/hooks/aegis_guard.py", ".githooks/commit-msg",
+                    ".githooks/post-commit"):
             self.assertTrue((self.repo / rel).exists(), rel)
         self.assertEqual(self.git("config", "core.hooksPath").stdout.strip(), ".githooks")
         ignore = (self.repo / ".gitignore").read_text()
@@ -69,6 +70,18 @@ class Install(unittest.TestCase):
         self.start_ticket()
         self.assertNotEqual(self.commit("[T-001] no verdict"), 0)
         self.assertEqual(self.commit("[T-001] WIP ok"), 0)
+        self.assertCommitClearsTicket()
+
+    def approve(self, root=None):
+        (root or self.repo).joinpath(".aegis", "verdicts").mkdir(parents=True, exist_ok=True)
+        (root or self.repo).joinpath(".aegis", "verdicts", "T-001").write_text("APPROVED test\n")
+
+    def assertCommitClearsTicket(self, root=None):
+        root = root or self.repo
+        self.assertTrue((root / ".aegis" / "active-ticket").exists())
+        self.approve(root)
+        self.assertEqual(self.commit("[T-001] done", root=root), 0)
+        self.assertFalse((root / ".aegis" / "active-ticket").exists(), "post-commit clears the active ticket")
 
     def test_rerun_changes_nothing(self):
         self.install()
@@ -91,6 +104,8 @@ class Install(unittest.TestCase):
         self.assertNotEqual(self.commit("[T-001] no verdict"), 0)
         self.assertEqual(self.commit("[T-001] WIP ok"), 0)
         self.assertTrue((self.repo / "pre-commit-ran").exists())
+        self.assertTrue((hooks / "post-commit").exists(), out)
+        self.assertCommitClearsTicket()
 
     def test_existing_commit_msg_hook_is_chained(self):
         hooks = Path(self.git("rev-parse", "--path-format=absolute", "--git-path", "hooks").stdout.strip())
@@ -106,6 +121,7 @@ class Install(unittest.TestCase):
         self.assertNotEqual(self.commit("[T-001] no verdict"), 0)
         self.assertEqual(self.commit("[T-001] WIP ok"), 0)
         self.assertTrue((self.repo / "own-ran").exists())
+        self.assertCommitClearsTicket()
 
     def test_settings_merged_and_kept(self):
         (self.repo / ".claude").mkdir()
@@ -124,7 +140,7 @@ class Install(unittest.TestCase):
     def test_update_replaces_older_aegis_files(self):
         self.install()
         old = self.repo / ".claude" / "hooks" / "aegis_guard.py"
-        old.write_text('"""AEGIS guard, an older version."""\n')
+        old.write_text('"""AEGIS guard: enforces the rules that must always hold.\n\nAn older version."""\n')
         code, out = self.install()
         self.assertEqual(old.read_bytes(), (CORE / ".claude" / "hooks" / "aegis_guard.py").read_bytes())
         self.assertIn("updated", out)
@@ -152,6 +168,23 @@ class Install(unittest.TestCase):
         self.assertIn("the team's own message check", text, out)
         self.assertEqual(text.count("aegis-guard.sh"), 1)
 
+    def test_own_hook_with_an_aegis_header_is_kept(self):
+        own = "#!/bin/sh\n# AEGIS: our own subject-length check\nexit 0\n"
+        (self.repo / ".githooks").mkdir()
+        for name in ("commit-msg", "post-commit"):
+            (self.repo / ".githooks" / name).write_text(own)
+        self.git("config", "core.hooksPath", ".githooks")
+        code, out = self.install()
+        self.assertEqual(code, 0, out)
+        for name in ("commit-msg", "post-commit"):
+            text = (self.repo / ".githooks" / name).read_text()
+            self.assertIn("our own subject-length check", text, out)
+            self.assertEqual(text.count("aegis-guard.sh"), 1, text)
+        self.assertIn("kept the repo's own file", out)
+        self.start_ticket()
+        self.assertNotEqual(self.commit("[T-001] no verdict"), 0)
+        self.assertCommitClearsTicket()
+
     def test_global_hooks_path_is_left_alone(self):
         shared = Path(self.tmp.name) / "shared-hooks"
         shared.mkdir()
@@ -160,6 +193,7 @@ class Install(unittest.TestCase):
         code, out = self.install()
         self.assertEqual(code, 0, out)
         self.assertFalse((shared / "commit-msg").exists())
+        self.assertFalse((shared / "post-commit").exists())
         self.assertIn("not active", out.lower())
         self.assertEqual(self.git("config", "--local", "core.hooksPath").returncode, 1)
 
@@ -177,8 +211,9 @@ class Install(unittest.TestCase):
     def test_hook_files_are_committed_executable(self):
         self.install()
         self.git("add", "-A")
-        modes = self.git("ls-files", "-s", ".githooks/commit-msg", ".claude/hooks/aegis-guard.sh").stdout
-        self.assertEqual([l.split()[0] for l in modes.splitlines()], ["100755", "100755"], modes)
+        modes = self.git("ls-files", "-s", ".githooks/commit-msg", ".githooks/post-commit",
+                         ".claude/hooks/aegis-guard.sh").stdout
+        self.assertEqual([l.split()[0] for l in modes.splitlines()], ["100755"] * 3, modes)
 
     def test_update_replaces_stale_aegis_settings(self):
         (self.repo / ".claude").mkdir()
@@ -231,6 +266,19 @@ class Install(unittest.TestCase):
         gitignore.write_bytes(b"a/\nb/\n")
         self.install()
         self.assertNotIn(b"\r\n", gitignore.read_bytes())  # LF file stays LF
+
+    def test_mixed_line_endings_are_kept(self):
+        before = b"#!/bin/sh\r\necho a\nexit 0\r\n"
+        hook = self.own_hook(before)
+        code, out = self.install()
+        self.assertEqual(code, 0, out)
+        data = hook.read_bytes()
+        added = [l for l in data.splitlines(keepends=True) if b"aegis-guard.sh" in l]
+        self.assertEqual(len(added), 1, data)
+        self.assertTrue(added[0].endswith(b"# AEGIS\r\n"), added)
+        self.assertEqual(data.replace(added[0], b""), before)
+        self.install()
+        self.assertEqual(hook.read_bytes(), data)
 
     def test_old_aegis_line_is_upgraded(self):
         old = b'#!/bin/sh\nsh "$(git rev-parse --show-toplevel)/.claude/hooks/aegis-guard.sh" commit-msg "$1" || exit $?  # AEGIS\nexit 0\n'
@@ -315,6 +363,7 @@ class Install(unittest.TestCase):
         code, out = self.install()
         self.assertTrue((self.repo / ".husky" / "commit-msg").exists(), out)
         self.assertFalse((self.repo / ".husky" / "_" / "commit-msg").exists())
+        self.assertTrue((self.repo / ".husky" / "post-commit").exists(), out)
 
     def test_linked_worktree(self):
         hooks = Path(self.git("rev-parse", "--path-format=absolute", "--git-path", "hooks").stdout.strip())
