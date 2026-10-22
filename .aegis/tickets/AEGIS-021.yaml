@@ -1,0 +1,49 @@
+id: AEGIS-021
+goal: AGENTS.md is a short, always-loaded core of rules that hooks cannot enforce, plus session hygiene and a short-ticket lane, with no loss in how agents ticket and validate.
+context: >
+  The best-practices guide says a bloated always-loaded file makes agents
+  ignore the real rules, and the docs advise under 200 lines; keep only lines
+  whose removal would cause mistakes. AGENTS.md is 1,214 words. After
+  AEGIS-020 the hooks enforce scope, the commit subject, stash and the
+  validator gate, so the text can shrink to the rule plus a pointer. Knowledge
+  needed only sometimes (the ticket format) moves into the write-ticket skill.
+  The guide's session advice (one task per session, a fresh session to
+  implement a written plan, start fresh after repeated corrections, subagents
+  for exploration) and its "one-sentence diff needs no plan" rule are added.
+  Installing the hooks into other repos was split off into AEGIS-023 by the
+  human after three validation rounds failed only on the install script.
+epic: AEGIS-E2
+depends_on: [AEGIS-020]
+human_gates: []
+allowed_areas:
+  - .aegis/tickets/AEGIS-021.yaml
+  - AGENTS.md
+  - .claude/skills/write-ticket/
+  - .claude/skills/validate/SKILL.md
+  - evals/agents-slim/
+must_not_touch:
+  - .claude/hooks/
+  - .claude/settings.json
+  - .claude/skills/design-track/
+  - .claude/skills/ux-test/
+  - README.md
+non_goals:
+  - Changing what any rule requires, beyond the short-ticket lane and the session rules.
+  - The README and CONSIDER.md (AEGIS-022).
+  - Installing the hooks through the bootstrap and update prompts (AEGIS-023).
+acceptance_criteria:
+  - AGENTS.md is at most 850 words and 130 lines, still between the aegis markers, and keeps every rule of today's file that no hook enforces (the loop, gates, the always-stop list, isolation, scope and ask-don't-guess, failing check first, smallest diff, validator rules, one commit per ticket, design trigger and parity, completion report).
+  - "The ticket format moves to `.claude/skills/write-ticket/ticket-format.md`; AGENTS.md and the validate skill point to it."
+  - "AGENTS.md says which rules the hooks in `.claude/hooks/` enforce, that forging a verdict is forbidden, and that a rule still holds when no hook runs (other tools than Claude Code)."
+  - "AGENTS.md adds session rules: one ticket per session; implement a ticket drafted in an earlier conversation from a fresh one; after two corrections on the same issue, stop and restate; delegate broad exploration to subagents."
+  - "Short-ticket lane: when the whole change can be stated in one sentence, the ticket may hold only id, goal, allowed_areas, one acceptance criterion and verify; it is still validated."
+  - "Blind regression, recorded in evals/agents-slim/README.md: with the slim AGENTS.md, (a) the UI-parity fixtures still get APPROVED on clean and FIXES_REQUIRED on gap, 2 of 2 each; (b) write-ticket drafts complete tickets (every required field) for the three small UI requests from AEGIS-017, 3 of 3, with the parity criteria; (c) a one-sentence request ('fix the typo \"recieve\" in README.md') gets a short ticket, 3 of 3."
+verify:
+  - test "$(wc -w < AGENTS.md)" -le 850
+  - test "$(wc -l < AGENTS.md)" -le 130
+  - test -f .claude/skills/write-ticket/ticket-format.md
+  - grep -q "ticket-format.md" AGENTS.md
+  - grep -q ".claude/hooks/" AGENTS.md
+smoke: []
+manual_checks:
+  - Read the new AGENTS.md and judge whether anything you rely on is missing.

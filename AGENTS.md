@@ -1,162 +1,102 @@
 <!-- aegis:begin -->
 # AEGIS
 
-Rules for agentic coding work a human can trust and review: every change is
-scoped by a ticket, checked by an independent validator, and traceable to a
-commit.
-
-These rules apply to any task that edits project files. Reading, exploring, and
-answering questions need no ticket. The human may waive the ticket for one
-specific trivial change by saying so explicitly.
-
-Skills live in `.claude/skills/<name>/SKILL.md`. If your tool doesn't load
-skills on its own, read the file and follow it.
+Every edit to project files is scoped by a ticket, checked by an independent
+validator, and traceable to a commit; reading and answering need no ticket.
+The human may waive the ticket for one trivial change by saying so. Skills
+are in `.claude/skills/<name>/SKILL.md`; if your tool doesn't load them, read
+and follow them.
 
 ## The loop
 
-1. **Ticket.** Draft it with the `write-ticket` skill, save it as
-   `.aegis/tickets/<ID>.yaml`, and write `<ID>` to `.aegis/active-ticket`.
-   Note any files already modified before you start. If `human_gates`
-   includes `ticket`, show the ticket and wait for the human's approval before
-   saving it and going on.
-2. **Worktree.** Work in the ticket's own worktree and branch (see
-   Isolation).
-3. **Implement** inside the ticket's scope, following the rules below.
-4. **Validate**, without asking. Start a fresh-context subagent that did not
-   write the code and tell it to follow `.claude/skills/validate/SKILL.md`.
-   Pass it the ticket ID, the worktree path, the base ref, the originating
-   request (issue text or the human's words), and the already-modified files.
-   Don't pass your own test results; the validator runs the checks itself. On
-   `FIXES_REQUIRED`, fix the findings and validate again with a new subagent;
-   after three failed rounds, stop and ask the human. On `BLOCKED`, stop and
-   bring the finding to the human.
-5. **Report** to the human in the format below.
-6. **Commit** the ticket on its branch once the validator approves. Push the
-   branch and open a pull request when the human or the ticket asks for it.
-   Merge only as Human gates allow.
+1. **Ticket.** Draft it with `write-ticket`; the format is in
+   `.claude/skills/write-ticket/ticket-format.md`. Save it as
+   `.aegis/tickets/<ID>.yaml`, write `<ID>` to `.aegis/active-ticket`, and
+   note files already modified. A change you can state in one sentence gets a
+   short ticket. If `human_gates` has `ticket`, show it and wait for approval
+   before saving it.
+2. **Worktree.** Work on branch `aegis/<ID>` in its own worktree, branched
+   from `aegis/<EPIC>` in an epic, else from the default branch. Where each
+   run is already its own container (CI, a cloud session), that is the
+   worktree.
+3. **Implement** inside the ticket's scope, by the rules below.
+4. **Validate** without asking: a fresh subagent that didn't write the code
+   follows `.claude/skills/validate/SKILL.md`. Give it the ticket ID,
+   worktree, base ref, the originating request and the already-modified
+   files, not your test results. On `FIXES_REQUIRED`, fix and validate with a
+   new subagent; after three failed rounds, ask the human. On `BLOCKED`,
+   bring it to the human.
+5. **Report** in the format below.
+6. **Commit** after `APPROVED`: one commit, `[ID] what changed` (description
+   at most 72 characters), with the ticket file and its work only. Push or
+   open a pull request when the human or the ticket asks; merge only as the
+   gates allow.
 
-Each agent works on one ticket at a time. Finish or explicitly abandon the
-active ticket before starting another. Work too large for one ticket becomes
-an epic: an ordered list of tickets that share an epic branch, each run
-through this loop on its own.
+One ticket per agent at a time; finish or explicitly abandon it before the
+next. Work too large for one ticket becomes an epic: ordered tickets, each
+through this loop, then a fresh validator subagent runs every ticket's
+`verify` and `smoke` together on the epic branch.
 
-## Ticket format
+## Sessions
 
-```yaml
-id: PROJ-012                  # uppercase letters, digits, hyphens; = file name
-goal: The outcome, in one sentence.
-context: >                    # why it matters, who it serves, and the design
-  ...                         # intent or architecture boundary to keep
-epic: null                    # epic ID if the ticket belongs to one
-depends_on: []                # ticket IDs or conditions; [] means none
-human_gates: []               # ticket, merge; [] means fully automatic
-allowed_areas:                # the only paths you may change
-  - .aegis/tickets/PROJ-012.yaml
-  - src/billing/              # trailing / = directory prefix; no globs
-  - tests/billing/test_invoice.py
-must_not_touch:               # wins over allowed_areas
-  - src/billing/migrations/
-non_goals:                    # adjacent work that is explicitly out of scope
-  - ...
-acceptance_criteria:          # each one objectively checkable
-  - ...
-verify:                       # commands the validator runs
-  - pytest tests/billing
-smoke:                        # how to start the dev environment, then what
-  - Start the app with npm run dev on a free port   # to check in it;
-  - Open /invoices/42; every line shows its VAT     # [] if nothing runs
-manual_checks: []             # ordered checks only a human can do
-```
+- One ticket per session; an epic's tickets may run in sequence in one
+  session, each validated by a fresh subagent. Clear the context between
+  unrelated tasks.
+- Implement a ticket drafted in an earlier conversation in a fresh session.
+- After two corrections on the same issue, stop and restate the problem.
+- Delegate broad exploration to subagents.
 
 ## Human gates
 
-Validation is automatic. The human adds gates per ticket in `human_gates`:
+`human_gates` takes `ticket` (approve before work starts) and `merge` (approve
+before any merge, into an epic branch too). Default `[]`: no stops. Take
+gates from the human's words or issue labels; never remove one.
 
-- `ticket`: the human approves the ticket before implementation starts.
-- `merge`: the human approves before the ticket's branch merges anywhere,
-  including into an epic branch.
-
-With `[]`, the default, the agent tickets, implements, validates, and commits
-without stopping. Set gates from the human's words or the issue (for example,
-a label that names the gate). Never remove a gate the human set.
-
-These always stop for the human, whatever `human_gates` says:
-
-- merging or pushing to the default branch;
-- deploys and releases;
-- migrations on shared data;
-- handling secrets: creating, reading out, or changing them;
-- deleting data or branches, or rewriting pushed history, including
-  force-push.
+Always stop for the human: merging or pushing to the default branch; deploys
+and releases; migrations on shared data; creating, reading out or changing
+secrets; deleting data or branches, or rewriting pushed history.
 
 ## Isolation
 
-Parallel agents must not see each other's unfinished work.
-
-- One worktree and branch per ticket: `aegis/<ID>`. A ticket in an epic
-  branches from the epic branch `aegis/<EPIC>`; any other ticket branches from
-  the default branch. Where each run is already its own container, such as CI
-  or a cloud session, that container is the worktree.
-- A worktree separates files only. Ports, databases, local services, caches,
-  `.env` files, and the git stash stay shared, so smoke tests run in an
-  environment private to the ticket:
-  - pick a free port, never a fixed one another agent may hold;
-  - use a per-ticket database, schema, or throwaway instance, never shared
-    data;
-  - install dependencies inside the worktree;
-  - never use `git stash`; set work aside with a WIP commit on the ticket
-    branch, and squash it into the ticket's commit before pushing;
-  - stop everything you started when you're done, including on failure.
-- After an epic's tickets merge into the epic branch, validate the epic once
-  more on that branch: a validator subagent runs every ticket's `verify` and
-  `smoke` together.
+Parallel agents must not see each other's unfinished work. A worktree
+separates files only, so: use a free port, never a fixed one; use a per-ticket
+database or throwaway instance, never shared data; install dependencies in
+the worktree; set work aside with a `[ID] WIP` commit, squashed before
+pushing, never `git stash`; stop everything you started, also on failure.
 
 ## Rules
 
-**Scope**
-- Change only paths in `allowed_areas`. Never change `must_not_touch`.
-- Treat `non_goals` as boundaries, not suggestions. Don't do another ticket's
-  work.
-- If the ticket can't be finished inside its scope, stop and tell the human
-  which scope change or follow-up ticket would unblock it. Never widen scope
-  yourself.
-- When intent, a domain term, or a boundary is unclear, ask. Don't fill the gap
-  with a plausible default.
+- **Scope.** Change only `allowed_areas`, never `must_not_touch`; `non_goals`
+  are boundaries; don't do another ticket's work. If the work doesn't fit,
+  stop and say which scope change or follow-up ticket would unblock it.
+  Never widen scope yourself.
+- **Ask, don't guess** when intent, a domain term or a boundary is unclear.
+- **A behavior change starts with a check that fails before it:** a test, a
+  reproduction or recorded output. If none is feasible, say why first.
+- **Smallest diff** that meets the criteria: no speculative code, unrelated
+  refactors, formatting sweeps or dependency changes the ticket doesn't own.
+  Add an abstraction only when it removes real complexity now, and say why.
+- **The validator is blocking.** Never report done without `APPROVED` or the
+  human's explicit override, reported as an override. Never say a check
+  passed unless you saw it pass; name every check you skipped.
+- Leave unrelated changes alone: don't stage, revert or stash them.
 
-**Changes**
-- A behavior change starts with a check that fails before the change: a test, a
-  reproduction, or recorded baseline output. If none is feasible, say why
-  before changing code.
-- Make the smallest diff that meets the acceptance criteria. No speculative
-  code, unrelated refactors, formatting sweeps, or dependency changes unless
-  the ticket owns them.
-- Add an abstraction only when it removes real complexity now, and say why in
-  the report.
+## Hooks
 
-**Validation**
-- The validator is blocking. Never report a ticket done without `APPROVED` or
-  an explicit human override.
-- Only the human can override a validator finding. Report an override as an
-  override, never as approval.
-- Never say a check passed unless you ran it and saw it pass. Name every check
-  you skipped and why.
-
-**Git**
-- Commit subject: `[ID] what changed`, with the description at 72 characters
-  or fewer.
-- One commit per ticket, containing the ticket's file and its work, nothing
-  else. Leave unrelated changes alone: don't stage, revert, or stash them.
+In Claude Code, `.claude/hooks/` blocks edits outside the active ticket's
+scope and `git stash`, and records the validator's verdict in
+`.aegis/verdicts/<ID>`. Git's hook in `.githooks/` refuses a commit without
+the `[ID]` subject or an APPROVED verdict. Never write a verdict yourself;
+only the human records an override. Where no hook runs, the rules still
+hold.
 
 ## Design work
 
-A new screen, flow, or app feature whose design is still open gets a design
+A new screen, flow, or feature whose design is still open gets a design
 ticket (`kind: design`, always `human_gates: [ticket, merge]`) before any
-implementation. Draft it with `write-ticket` and run it with the
-`design-track` skill: prototype rounds, the pass rule, and the freeze.
-
-Every change users see follows the product's `DESIGN.md`. It must work the
-same at phone and desktop width: the same tasks, information, actions, and
-names.
+implementation, run with the `design-track` skill. Every change users see
+follows the product's `DESIGN.md` and works the same at phone and desktop
+width: the same tasks, information, actions, and names.
 
 ## Completion report
 
@@ -171,6 +111,5 @@ Manual:       <manual_checks left for the human>; or "none"
 Notes:        <abstractions added and why, follow-up tickets, risks>
 ```
 
-Keep it short enough that the human can judge the change without reading the
-whole diff.
+Keep it short enough to judge without reading the whole diff.
 <!-- aegis:end -->

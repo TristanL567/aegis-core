@@ -20,9 +20,11 @@ started. Work only inside that worktree.
 
 ## Procedure
 
-1. **Read the ticket** at `.aegis/tickets/<ID>.yaml`. If it is missing, or has
-   no `goal`, `allowed_areas`, `must_not_touch`, `acceptance_criteria`, or
-   `verify` (a design ticket may have `verify: []`), stop with `BLOCKED`.
+1. **Read the ticket** at `.aegis/tickets/<ID>.yaml` (format:
+   `.claude/skills/write-ticket/ticket-format.md`). If it is missing, or has
+   no `goal`, `allowed_areas`, `acceptance_criteria`, or `verify` (a design
+   ticket may have `verify: []`), stop with `BLOCKED`. A full ticket also
+   needs `must_not_touch`; a short one may omit it.
 2. **Check the ticket against the request.** Does the `goal` match what was
    asked? Do the `acceptance_criteria` cover all of it? Is anything that was
    asked for missing or listed under `non_goals`? A mismatch is blocking,
