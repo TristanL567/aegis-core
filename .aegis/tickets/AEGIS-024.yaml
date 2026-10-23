@@ -1,0 +1,59 @@
+id: AEGIS-024
+goal: PR #12's non-blocking follow-ups are done; the docs agree with each other and the hooks, a ticket's own commit clears it, the installer handles two more edge cases, and AEGIS's skills, agent and Claude Code hooks install as a Claude Code plugin.
+context: >
+  Follow-ups listed in PR #12 (epic AEGIS-E2). The human asked for them as one
+  ticket, the plugin included (the human widened the scope after the first
+  validation). The docs disagreed ("start over" vs "stop and restate"), left out
+  the epic exception, how a human records an override, and that only
+  Edit/Write tool edits are guarded. A finished ticket stayed active until
+  cleared by hand. The installer took a repo's own hook whose header starts
+  with "# AEGIS:" for its own, and rewrote every line ending of a hook with
+  mixed endings. The installer must keep its AEGIS-023 guarantees: it never
+  changes a repo's own hooks beyond one AEGIS line, and checks before writing.
+epic: null
+depends_on: []
+human_gates: []
+allowed_areas:
+  - .aegis/tickets/AEGIS-024.yaml
+  - AGENTS.md
+  - README.md
+  - CONSIDER.md
+  - PROMPTS.md
+  - .claude/hooks/aegis_guard.py
+  - .githooks/post-commit
+  - tools/install_hooks.py
+  - evals/hooks/
+  - evals/install/
+  - evals/plugin/
+  - .claude-plugin/
+must_not_touch:
+  - .claude/settings.json
+  - .claude/hooks/aegis-guard.sh
+  - .githooks/commit-msg
+  - .claude/skills/
+non_goals:
+  - Shipping AGENTS.md or the git hooks through the plugin (a plugin can't); they stay with the bootstrap prompt and tools/install_hooks.py.
+  - Moving this repo's own hooks from .claude/settings.json to the plugin.
+  - Guarding writes made through the shell.
+  - Tying a verdict to the committed content, or clearing verdict files.
+  - Other wording changes to AGENTS.md beyond the items above.
+acceptance_criteria:
+  - "README.md and CONSIDER.md say to stop and restate the problem after two corrections, as AGENTS.md does; neither says \"start over\". CONSIDER.md's session-rules row includes the epic exception (an epic's tickets may run in sequence in one session, each validated by a fresh subagent)."
+  - "README.md tells the human how to record a validator override by hand: the exact line to write to .aegis/verdicts/<ID>, in a form the commit-msg hook accepts."
+  - "AGENTS.md (Hooks), README.md and CONSIDER.md (hooks row) say that only edits through the Edit/Write tools are blocked, not writes through the shell."
+  - "A new .githooks/post-commit runs aegis_guard.py post-commit, which deletes .aegis/active-ticket after a commit whose subject starts with \"[<active ID>] \" and is not WIP. It leaves the file for a WIP commit, any other subject, and during a rebase; it never fails the commit. Tested in real git repositories."
+  - "tools/install_hooks.py installs .githooks/post-commit and activates it the same way as commit-msg: through core.hooksPath, or one chained line (doing nothing on a branch without the AEGIS files) in the repo's own shell post-commit hook, with the line given by hand where it can't. The update prompt in PROMPTS.md lists the post-commit hook among the paths the script may touch."
+  - "The installer recognises its files only by AEGIS's exact header lines, so a repo's own .githooks/commit-msg or post-commit whose header merely starts with \"# AEGIS:\" is kept. Chaining into a hook with mixed line endings changes only the added or replaced line; every other byte stays."
+  - "The repo root is a Claude Code plugin named aegis and its own marketplace (.claude-plugin/plugin.json and marketplace.json), reusing .claude/skills/, .claude/agents/ux-persona.md and .claude/hooks/ without copies. The plugin's hooks are the same events, matchers and guard modes as .claude/settings.json, run from ${CLAUDE_PLUGIN_ROOT}. README.md says how to install it, what it does not cover (AGENTS.md, the git hooks), and that it must not be combined with the hooks in .claude/settings.json."
+  - "python evals/hooks/test_guard.py and python evals/install/test_install.py pass, with new tests for each behaviour above."
+verify:
+  - python evals/hooks/test_guard.py
+  - python evals/install/test_install.py
+  - python evals/plugin/test_plugin.py
+  - claude plugin validate .
+  - "! grep -n \"start over\" README.md CONSIDER.md"
+  - grep -q "post-commit" PROMPTS.md
+  - grep -q "OVERRIDDEN" README.md
+smoke: []
+manual_checks:
+  - In your next ticket, check that its commit clears .aegis/active-ticket (after merging, this clone's core.hooksPath points at the main checkout's .githooks, which then has post-commit).

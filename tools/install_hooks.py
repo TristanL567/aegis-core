@@ -3,19 +3,21 @@
 Usage: python tools/install_hooks.py <aegis-core checkout> <target repo> [--dry-run]
 
 What it does, and prints:
-- copies .claude/hooks/aegis-guard.sh, .claude/hooks/aegis_guard.py and
-  .githooks/commit-msg, replacing only missing files or earlier AEGIS versions
-  (a same-named file whose header doesn't name AEGIS is the repo's own and is
-  left alone), and stages the two scripts as executable;
+- copies .claude/hooks/aegis-guard.sh, .claude/hooks/aegis_guard.py,
+  .githooks/commit-msg and .githooks/post-commit, replacing only missing files
+  or earlier AEGIS versions (a same-named file without AEGIS's exact header
+  line is the repo's own and is left alone), and stages the scripts as
+  executable;
 - sets the AEGIS "hooks" entries in .claude/settings.json, replacing older
   AEGIS entries and keeping every other setting;
 - adds .aegis/active-ticket, .aegis/verdicts/ and .claude/worktrees/ to
   .gitignore;
-- activates the commit check: sets core.hooksPath to .githooks when the repo
-  has no hooks of its own, otherwise adds one line to the shell commit-msg hook
-  in use (husky's .husky/commit-msg under husky). That line does nothing on a
-  branch without the AEGIS files. A hooks folder outside the repo, or a hook
-  in another language or encoding, is never changed: the report says the
+- activates the commit check (commit-msg) and the ticket clearing
+  (post-commit): sets core.hooksPath to .githooks when the repo has no hooks
+  of its own, otherwise adds one line to each shell hook in use (husky's
+  .husky/<hook> under husky), changing no other byte. That line does nothing
+  on a branch without the AEGIS files. A hooks folder outside the repo, or a
+  hook in another language or encoding, is never changed: the report says the
   check is not active and gives the line to add by hand. core.hooksPath is
   per clone.
 
@@ -29,12 +31,21 @@ import subprocess
 import sys
 from pathlib import Path
 
-FILES = [".claude/hooks/aegis-guard.sh", ".claude/hooks/aegis_guard.py", ".githooks/commit-msg"]
-EXECUTABLE = {".claude/hooks/aegis-guard.sh", ".githooks/commit-msg"}
+FILES = [".claude/hooks/aegis-guard.sh", ".claude/hooks/aegis_guard.py", ".githooks/commit-msg",
+         ".githooks/post-commit"]
+EXECUTABLE = {".claude/hooks/aegis-guard.sh", ".githooks/commit-msg", ".githooks/post-commit"}
 IGNORES = [".aegis/active-ticket", ".aegis/verdicts/", ".claude/worktrees/"]
 # Does nothing on a branch without the AEGIS files, so other branches still commit.
 CHAIN = ('g="$(git rev-parse --show-toplevel)/.claude/hooks/aegis-guard.sh"; '
          '[ ! -f "$g" ] || sh "$g" commit-msg "$1" || exit $?  # AEGIS')
+CHAIN_POST = ('g="$(git rev-parse --show-toplevel)/.claude/hooks/aegis-guard.sh"; '
+              '[ ! -f "$g" ] || sh "$g" post-commit  # AEGIS')
+# Each git hook AEGIS activates: (line chained into a repo's own hook, report label, what to call by hand).
+HOOKS = {
+    "commit-msg": (CHAIN, "commit check", "Call .claude/hooks/aegis-guard.sh commit-msg <message file> from it, "
+                                          "and stop the commit when it fails."),
+    "post-commit": (CHAIN_POST, "ticket clearing", "Call .claude/hooks/aegis-guard.sh post-commit from it."),
+}
 SHELLS = re.compile(r"^#!\s*(?:/usr/bin/env\s+)?(?:\S*/)?(?:sh|bash|dash|zsh|ksh)\b")
 
 
@@ -68,21 +79,27 @@ def header(path):
     return None
 
 
-# The exact start of each AEGIS file's header, in every version so far (case-sensitive).
+# Each AEGIS file's exact header line, in every version so far (case-sensitive).
 HEADERS = {
-    ".claude/hooks/aegis-guard.sh": "# Runs aegis_guard.py",
-    ".claude/hooks/aegis_guard.py": '"""AEGIS guard',
-    ".githooks/commit-msg": "# AEGIS:",
+    ".claude/hooks/aegis-guard.sh": ("# Runs aegis_guard.py with the first Python that really starts (on Windows,",),
+    ".claude/hooks/aegis_guard.py": ('"""AEGIS guard: enforces the rules that must always hold.',),
+    ".githooks/commit-msg": ("# AEGIS: a commit's subject names the active ticket, and the validator approved",),
+    ".githooks/post-commit": ("# AEGIS: the active ticket's own commit finishes it, so .aegis/active-ticket is",),
 }
 
 
 def is_aegis(path, rel):
-    """An AEGIS file, maybe an older version: it opens with AEGIS's own header.
+    """An AEGIS file, maybe an older version: its header is one of AEGIS's own.
 
-    A repo's hook that had the AEGIS line chained into it, or that merely
-    mentions "aegis", keeps its own header, so it is never mistaken for one."""
-    h = header(path)
-    return h is not None and h.startswith(HEADERS[rel])
+    A repo's hook that had the AEGIS line chained into it, that merely
+    mentions "aegis", or whose own header starts with "# AEGIS:", keeps its
+    own header, so it is never mistaken for one."""
+    return header(path) in HEADERS[rel]
+
+
+def split_lines(text):
+    """Lines with their own endings, so a file with mixed endings is written back as it was."""
+    return re.findall(r"[^\n]*\n|[^\n]+$", text)
 
 
 def inside(path, roots):
@@ -148,66 +165,74 @@ class Installer:
             self.gitignore = read_text(gi) if gi.exists() else ("", "\n")
         except (OSError, UnicodeDecodeError):
             return ".gitignore can't be read as UTF-8"
-        self.own_commit_msg = False
-        for rel in FILES:
-            dst = self.target / rel
-            if rel == ".githooks/commit-msg" and dst.exists() and not is_aegis(dst, rel):
-                self.own_commit_msg = True
+        self.own_githooks = {name for name in HOOKS if (self.target / ".githooks" / name).exists()
+                             and not is_aegis(self.target / ".githooks" / name, f".githooks/{name}")}
         self.plan = self.plan_activation(Path(hooks), Path(common))
         return None
 
     def plan_activation(self, hooks_dir, common):
-        """('note', message) | ('config', message) | ('chain', hook, text, newline, message)."""
+        """A list of ('note', message) | ('config', message) | ('chain', hook, text, message)."""
         local = git(self.target, "config", "--local", "--type=path", "--get", "core.hooksPath")
         anywhere = git(self.target, "config", "--type=path", "--get", "core.hooksPath")  # expands ~
         if anywhere:
             p = Path(anywhere)
             hooks_dir = (p if p.is_absolute() else self.target / p).resolve()
-        manual = f"To activate it, add this line near the top of the commit-msg hook git uses: {CHAIN}"
+        both = "commit check and ticket clearing"
         if not inside(hooks_dir, [self.target.resolve(), common.resolve()]):
             where = "this repo's core.hooksPath" if local else "a global or system core.hooksPath"
-            return ("note", f"commit check: NOT active. Git runs hooks from {hooks_dir}, outside this repo "
-                            f"({where}), which this script leaves alone. {manual}")
+            manual = "; ".join(f"near the top of the {name} hook git uses: {line}" for name, (line, _, _) in HOOKS.items())
+            return [("note", f"{both}: NOT active. Git runs hooks from {hooks_dir}, outside this repo "
+                             f"({where}), which this script leaves alone. To activate them, add this line {manual}")]
         githooks = (self.target / ".githooks").resolve()
-        if anywhere and hooks_dir == githooks and not self.own_commit_msg:
-            return ("note", "commit check: active (core.hooksPath is .githooks)")
+        if anywhere and hooks_dir == githooks and not self.own_githooks:
+            return [("note", f"{both}: active (core.hooksPath is .githooks)")]
         own_hooks = [p for p in hooks_dir.glob("*") if p.is_file() and not p.name.endswith(".sample")] \
             if hooks_dir.is_dir() else []
-        if not anywhere and not own_hooks and not self.own_commit_msg:
-            dormant = sorted(p.name for p in githooks.glob("*") if p.is_file() and p.name != "commit-msg")
+        if not anywhere and not own_hooks and not self.own_githooks:
+            dormant = sorted(p.name for p in githooks.glob("*") if p.is_file() and p.name not in HOOKS)
             note = f"; this also turns on .githooks/{', .githooks/'.join(dormant)}" if dormant else ""
-            return ("config", f"commit check: set core.hooksPath to .githooks (repeat in every other clone){note}")
+            return [("config", f"{both}: set core.hooksPath to .githooks (repeat in every other clone){note}")]
         if hooks_dir.name == "_" and hooks_dir.parent.name == ".husky":
-            hook = hooks_dir.parent / "commit-msg"  # husky runs .husky/<hook>; .husky/_ is generated
-        else:
-            hook = hooks_dir / "commit-msg"
+            hooks_dir = hooks_dir.parent  # husky runs .husky/<hook>; .husky/_ is generated
+        return [self.plan_chain(hooks_dir / name, name, common) for name in HOOKS]
+
+    def plan_chain(self, hook, name, common):
+        """Add or update the AEGIS line in one hook, changing no other byte of it."""
+        chain, label, by_hand = HOOKS[name]
+        manual = f"To activate it, add this line near the top of the {name} hook git uses: {chain}"
+        if hook.resolve() == (self.target / ".githooks" / name).resolve() and name not in self.own_githooks:
+            return ("note", f"{label}: active (.githooks/{name} is AEGIS's)")
         if hook.is_symlink() and not inside(hook.resolve(), [self.target.resolve(), common.resolve()]):
-            return ("note", f"commit check: NOT active. {hook} links to {hook.resolve()}, outside this repo, "
+            return ("note", f"{label}: NOT active. {hook} links to {hook.resolve()}, outside this repo, "
                             f"which this script leaves alone. {manual}")
         if not hook.exists():
-            return ("chain", hook, "#!/bin/sh\n" + CHAIN + "\n", "\n", f"commit check: created {hook}")
+            return ("chain", hook, "#!/bin/sh\n" + chain + "\n", f"{label}: created {hook}")
         try:
-            text, newline = read_text(hook)
+            text = hook.read_bytes().decode("utf-8")
         except (OSError, UnicodeDecodeError):
-            return ("note", f"commit check: NOT active. {hook} isn't UTF-8 text, so it was left alone. {manual}")
-        lines = text.split("\n")
-        if lines[0].startswith("#!") and not SHELLS.match(lines[0]):
-            return ("note", f"commit check: NOT active. {hook} isn't a shell script ({lines[0]}), so it was "
-                            f"left alone. Call .claude/hooks/aegis-guard.sh commit-msg <message file> from it, "
-                            "and stop the commit when it fails.")
+            return ("note", f"{label}: NOT active. {hook} isn't UTF-8 text, so it was left alone. {manual}")
+        parts = split_lines(text)
+        lines = [p.rstrip("\r\n") for p in parts]
+        ends = [p[len(l):] for p, l in zip(parts, lines)]
+        first = lines[0].lstrip("﻿") if lines else ""
+        if first.startswith("#!") and not SHELLS.match(first):
+            return ("note", f"{label}: NOT active. {hook} isn't a shell script ({first}), so it was "
+                            f"left alone. {by_hand}")
         aegis_lines = [i for i, l in enumerate(lines) if "aegis-guard.sh" in l and l.rstrip().endswith("# AEGIS")]
         if aegis_lines:
-            if all(lines[i] == CHAIN for i in aegis_lines):
-                return ("note", f"commit check: already called from {hook}")
+            if all(lines[i] == chain for i in aegis_lines):
+                return ("note", f"{label}: already called from {hook}")
             for i in aegis_lines:
-                lines[i] = CHAIN
-            return ("chain", hook, "\n".join(lines), newline, f"commit check: updated the AEGIS line in {hook}")
+                parts[i] = chain + ends[i]
+            return ("chain", hook, "".join(parts), f"{label}: updated the AEGIS line in {hook}")
         if "aegis-guard.sh" in text:
-            return ("note", f"commit check: {hook} already calls aegis-guard.sh in its own way; left alone")
-        at = 1 if lines and lines[0].startswith("#!") else 0
-        lines.insert(at, CHAIN)
-        return ("chain", hook, "\n".join(lines), newline,
-                f"commit check: added one line to {hook}, which keeps its own checks")
+            return ("note", f"{label}: {hook} already calls aegis-guard.sh in its own way; left alone")
+        newline = next((e for e in ends if e), "\n")
+        at = 1 if first.startswith("#!") else 0
+        if at and not ends[0]:
+            parts[0] += newline  # a lone shebang line without an ending
+        parts.insert(at, chain + newline)
+        return ("chain", hook, "".join(parts), f"{label}: added one line to {hook}, which keeps its own checks")
 
     # --- writes ------------------------------------------------------------------------------
 
@@ -276,20 +301,24 @@ class Installer:
                 lambda: write_text(self.target / ".gitignore", text + "".join(m + "\n" for m in missing), newline))
 
     def activate(self):
-        kind = self.plan[0]
+        for plan in self.plan:
+            self.activate_one(plan)
+
+    def activate_one(self, plan):
+        kind = plan[0]
         if kind == "note":
-            self.report.append(self.plan[1])
+            self.report.append(plan[1])
         elif kind == "config":
             def configure():
                 if git(self.target, "config", "core.hooksPath", ".githooks") is None:
-                    return "commit check: NOT active (git config core.hooksPath .githooks failed)"
-                return self.plan[1]
-            self.do(self.plan[1], configure)
+                    return "commit check and ticket clearing: NOT active (git config core.hooksPath .githooks failed)"
+                return plan[1]
+            self.do(plan[1], configure)
         else:
-            _, hook, text, newline, message = self.plan
+            _, hook, text, message = plan
 
             def chain():
-                write_text(hook, text if text.endswith("\n") else text + "\n", newline)
+                write_text(hook, text)
                 hook.chmod(hook.stat().st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
                 git_dir = Path(git(self.target, "rev-parse", "--path-format=absolute", "--git-common-dir"))
                 if inside(hook, [self.target.resolve()]) and not inside(hook, [git_dir.resolve()]):

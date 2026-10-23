@@ -47,6 +47,26 @@ What you approve, and when:
 [`PROMPTS.md`](PROMPTS.md) also has prompts to implement or validate one
 ticket, and to [update AEGIS](PROMPTS.md#update-aegis-from-upstream).
 
+### As a Claude Code plugin
+
+This repository is also a Claude Code plugin, `aegis`, and its own
+marketplace:
+
+```text
+/plugin install aegis --marketplace TristanL567/aegis-core
+```
+
+It gives Claude Code the skills (as `/aegis:write-ticket` and so on), the
+`ux-persona` agent, and the Claude Code hooks: Edit/Write kept inside the
+active ticket, no `git stash`, the validator's verdict recorded. It has no
+version number, so every commit to `main` is an update.
+
+It does not bring `AGENTS.md` or the git hooks (commit-msg, post-commit); a
+plugin can't. For those, still run the bootstrap prompt, or
+`tools/install_hooks.py` for the git hooks alone. Use the plugin *or* the
+hooks in `.claude/settings.json` that the bootstrap installs, not both;
+with both, every guard runs twice.
+
 ## How it works
 
 ```text
@@ -78,7 +98,7 @@ validate (fresh subagent)    │
 | --- | --- |
 | [`AGENTS.md`](AGENTS.md) | The core rules, always loaded: the loop, sessions, human gates, isolation, hooks, when design work starts, and the completion report. |
 | [`.claude/skills/`](.claude/skills/) | [`write-ticket`](.claude/skills/write-ticket/SKILL.md) turns a request into a ticket ([format](.claude/skills/write-ticket/ticket-format.md), with a short form for one-sentence changes) and asks instead of guessing. [`validate`](.claude/skills/validate/SKILL.md) is the independent review, run only by a subagent that didn't write the code. [`design-track`](.claude/skills/design-track/SKILL.md) runs a design ticket from brief to frozen spec. [`ux-test`](.claude/skills/ux-test/SKILL.md) usability-tests a prototype or build at phone and desktop width; [`ux-persona`](.claude/agents/ux-persona.md) is its screen-only persona subagent. |
-| Hooks | [`.claude/hooks/`](.claude/hooks/) blocks edits outside the ticket's scope and `git stash`, and records the validator's verdict; [`.githooks/commit-msg`](.githooks/commit-msg) refuses a commit without the `[ID]` subject or that verdict. [`tools/install_hooks.py`](tools/install_hooks.py) installs both without switching off a repo's own hooks. |
+| Hooks | [`.claude/hooks/`](.claude/hooks/) blocks Edit/Write tool edits outside the ticket's scope (writes through the shell aren't guarded) and `git stash`, and records the validator's verdict; [`.githooks/commit-msg`](.githooks/commit-msg) refuses a commit without the `[ID]` subject or that verdict, and [`.githooks/post-commit`](.githooks/post-commit) clears the active ticket after its own commit. [`tools/install_hooks.py`](tools/install_hooks.py) installs them without switching off a repo's own hooks. |
 | [`CONSIDER.md`](CONSIDER.md) | For taking one part into a repo with its own process. |
 | [`PROMPTS.md`](PROMPTS.md) | Copyable prompts: install AEGIS into a repo, start work or a design, implement, validate, ask for gates, update. Says when to use each skill. |
 
@@ -94,12 +114,16 @@ never need this repository.
   default.
 - Make the smallest diff that meets the acceptance criteria: no speculative
   code, no unrelated refactors.
-- Only the human can override the validator.
+- Only the human can override the validator. To let a commit through
+  anyway, write the override yourself, as UTF-8, in a terminal (Git Bash; in
+  Windows PowerShell 5.1, `> file` writes UTF-16, so use `Set-Content -Encoding utf8`):
+  `echo "OVERRIDDEN <date> by <your name>: <finding>, <reason>" > .aegis/verdicts/<ID>`.
 - Never claim a check passed without running it, and name every skipped check.
 - One commit per ticket, `[ID] description`, containing the ticket file and
   its work.
 - One ticket per session; implement a plan written earlier in a fresh
-  session, and start over after two corrections on the same issue.
+  session, and stop and restate the problem after two corrections on the
+  same issue.
 
 The full rules are in [`AGENTS.md`](AGENTS.md).
 
